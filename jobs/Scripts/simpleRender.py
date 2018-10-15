@@ -7,6 +7,7 @@ import json
 import ctypes
 import pyscreenshot
 import platform
+import datetime
 
 def createArgsParser():
     parser = argparse.ArgumentParser()
@@ -20,39 +21,64 @@ def createArgsParser():
     parser.add_argument('--resolution_y', required=True)
     parser.add_argument('--package_name', required=True)
     parser.add_argument('--output', required=True)
+    parser.add_argument('--test_list', required=True)
 
     return parser
 
 def main(args):
 
-    work_dir = args.output
-
     try:
-        os.makedirs(work_dir)
+        os.makedirs(args.output)
     except OSError as e:
         pass
+
+    with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
+        scenes = f.read()
+        scene_list = scenes.split(",\n")
 
     with open(os.path.join(os.path.dirname(sys.argv[0]), args.template)) as f:
         core_json = f.read()
 
-    scene_name = "first_test.png"
-    Script = core_json.format(work_dir=work_dir, render_mode=args.render_mode,
-                                                   pass_limit=args.pass_limit,
-                                                   res_path=args.res_path, resolution_x=args.resolution_x,
-                                                   resolution_y=args.resolution_y, package_name=args.package_name, scene_name=scene_name)
+    cmdRun = ""
+    itr = 1
+    for each in scene_list:
 
-    ScriptPath = os.path.join(work_dir, 'cfg.json')
-    with open(ScriptPath, 'w') as f:
-        f.write(Script)
+        Script = core_json.format(work_dir=args.output, render_mode=args.render_mode,
+                                                       pass_limit=args.pass_limit,
+                                                       res_path=args.res_path, resolution_x=args.resolution_x,
+                                                       resolution_y=args.resolution_y, package_name=args.package_name, scene_name=each)
 
-    scene = os.path.join(args.res_path, "test.rpr")
-    cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=args.tool, scene=scene, template=ScriptPath)
+        ScriptPath = os.path.join(args.output, "cfg_" + each + ".json")
+        with open(ScriptPath, 'w') as f:
+            f.write(Script)
 
-    cmdScriptPath = os.path.join(work_dir, 'script.bat')
+        FakeJson = os.path.join(args.output, "fake_" + each + ".json")
+        report = {}
+        report['core_version'] = 1.0
+        report['render_mode'] = 'gpu0'
+        report['render_device'] = "no information"
+        report['test_group'] = args.package_name
+        report['tool'] = "Core"
+        report['file_name'] = each + ".png"
+        report['render_time'] = 1
+        report['render_color_path'] = os.path.join("Color", each + ".png")
+        report['date_time'] = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
+        report['difference_color'] = "not compared yet"
+        report['test_case'] = "CORE_"+ args.package_name + "_" + str(itr)
+        report['test_status'] = "passed"
+        with open(FakeJson, 'w') as f:
+            json.dump([report], f, indent=' ')
+        itr+=1
+
+        scene = os.path.join(args.res_path, each)
+        cmdRun += '"{tool}" "{scene}" "{template}"\n'.format(tool=args.tool, scene=scene, template=ScriptPath)
+
+    cmdScriptPath = os.path.join(args.output, 'script.bat')
     with open(cmdScriptPath, 'w') as f:
         f.write(cmdRun)
 
-    os.chdir(work_dir)
+    os.makedirs(os.path.join(args.output, "Color"))
+    os.chdir(args.output)
     p = subprocess.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
 

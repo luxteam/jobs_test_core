@@ -3,7 +3,7 @@
 	"height": {resolution_y}, 
 	"iterations":{pass_limit},
 	"threads":4,
-	"output":"{scene_name}",
+	"output":"Color/{scene_name}.png",
 	"context":{{
 		"gpu0":1,
 		"gpu1":0,

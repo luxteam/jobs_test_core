@@ -1,0 +1,14 @@
+{{
+	"width": {resolution_x},
+	"height": {resolution_y}, 
+	"iterations":{pass_limit},
+	"threads":4,
+	"output":"Color/{scene_name}.png",
+	"context":{{
+		"gpu0":1,
+		"gpu1":0,
+		"threads":16,
+		"debug":1
+	}}
+}}
+
