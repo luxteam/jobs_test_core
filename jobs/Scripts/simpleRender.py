@@ -54,12 +54,12 @@ def main(args):
 
         FakeJson = os.path.join(args.output, "fake_" + each + ".json")
         report = {}
-        report['core_version'] = 1.0
+        report['core_version'] = "1.0"
         report['render_mode'] = 'gpu0'
         report['render_device'] = "no information"
         report['test_group'] = args.package_name
         report['tool'] = "Core"
-        report['scene'] = each
+        report['scene_name'] = each
         report['file_name'] = each + ".png"
         report['render_time'] = 1
         report['render_color_path'] = os.path.join("Color", each + ".png")
