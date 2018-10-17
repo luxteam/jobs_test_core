@@ -70,19 +70,17 @@ def main(args):
 
         os.rename("tahoe.log", "{}.log".format(each)) 
 
-    try:
-        rc = p.wait(timeout=200)
-    except psutil.TimeoutExpired as err:
-        rc = -1
-        for child in reversed(p.children(recursive=True)):
-            child.terminate()
-        p.terminate()
-
-    return rc
+        try:
+            rc = p.wait(timeout=200)
+        except psutil.TimeoutExpired as err:
+            rc = -1
+            for child in reversed(p.children(recursive=True)):
+                child.terminate()
+            p.terminate()
 
 
 if __name__ == "__main__":
 
     args = createArgsParser().parse_args()
-    rc = main(args)     
+    main(args)     
     exit(1)
