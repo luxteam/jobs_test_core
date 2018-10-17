@@ -68,8 +68,6 @@ def main(args):
         p = subprocess.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
 
-        os.rename("tahoe.log", "{}.log".format(each)) 
-
         try:
             rc = p.wait(timeout=200)
         except psutil.TimeoutExpired as err:
@@ -77,6 +75,10 @@ def main(args):
             for child in reversed(p.children(recursive=True)):
                 child.terminate()
             p.terminate()
+
+        os.rename("tahoe.log", "{}.log".format(each)) 
+
+        
 
 
 if __name__ == "__main__":
