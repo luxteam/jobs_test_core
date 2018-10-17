@@ -23,6 +23,8 @@ def generateJsonForReport(directory):
 
         report = {}
         report["core_version"] = testJson["version"]
+        report["minor_version"] = testJson["version.minor"]
+        report["gpu_memory_usage"] = testJson["gpumem.usage.mb"]
         report["render_mode"] = "GPU"
         report["render_device"] = testJson["gpu00"]
         if "/" in testJson["input"]:
