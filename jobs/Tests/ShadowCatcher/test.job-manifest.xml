@@ -5,15 +5,14 @@
 
     <execute command='python "{ResourcesDir}/simpleRender.py"'>
         <argument>--tool "{Tool}"</argument>
-        <argument>--template "{ResourcesDir}/Templates/template_light.json"</argument>
         <argument>--render_mode "{RenderDevice}"</argument>
         <argument>--pass_limit {PassLimit}</argument>
     	<argument>--resolution_x {rx}</argument>
     	<argument>--resolution_y {ry}</argument>
         <argument>--output "{OutputDir}"</argument>
-	    <argument>--package_name "Light"</argument>
+	    <argument>--package_name "ShadowCatcher"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
-        <argument>--test_list "{Root}/Tests/Light/SceneList.txt"</argument>
+        <argument>--test_list "{Root}/Tests/ShadowCatcher/SceneList.txt"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>
