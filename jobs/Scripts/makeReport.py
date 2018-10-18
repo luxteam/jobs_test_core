@@ -22,9 +22,12 @@ def generateJsonForReport(directory):
         testJson = json.loads(tmp_json)
 
         report = {}
-        report["core_version"] = testJson["version"]
-        report["minor_version"] = testJson["version.minor"]
+        report["core_version"] = core_ver_str(int(testJson["version"], 16))
+        report["minor_version"] = core_ver_str(int(testJson["version.minor"], 16))
+        report["gpu_memory_total"] = testJson["gpumem.total.mb"]
+        report["gpu_memory_max"] = testJson["gpumem.max.alloc.mb"]
         report["gpu_memory_usage"] = testJson["gpumem.usage.mb"]
+        report["system_memory_usage"] = testJson["sysmem.usage.mb"]
         report["render_mode"] = "GPU"
         report["render_device"] = testJson["gpu00"]
         if "/" in testJson["input"]:
@@ -44,6 +47,9 @@ def generateJsonForReport(directory):
         report['date_time'] = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
         report['difference_color'] = "not compared yet"
         report['test_status'] = "passed"
+        report['width'] = testJson['width']
+        report['height'] = testJson['height']
+        report['iterations'] = testJson['iteration']
 
         reportName = jsonReport.replace("original", "RPR")
         with open(os.path.join(directory, reportName), 'w') as f:
