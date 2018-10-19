@@ -15,9 +15,9 @@ def createArgsParser():
     parser.add_argument('--tool', required=True, metavar="<path>")
     parser.add_argument('--res_path', required=True)
     parser.add_argument('--render_mode', required=True)
-    parser.add_argument('--pass_limit', required=True)
-    parser.add_argument('--resolution_x', required=True)
-    parser.add_argument('--resolution_y', required=True)
+    parser.add_argument('--pass_limit', required=True, type=int)
+    parser.add_argument('--resolution_x', required=True, type=int)
+    parser.add_argument('--resolution_y', required=True, type=int)
     parser.add_argument('--package_name', required=True)
     parser.add_argument('--output', required=True)
     parser.add_argument('--test_list', required=True)
@@ -49,10 +49,10 @@ def main(args):
         args.resolution_x = args.resolution_x if args.resolution_x else jsonReport["width"]
         args.resolution_y = args.resolution_y if args.resolution_y else jsonReport["height"]
         args.pass_limit = args.pass_limit if args.pass_limit else jsonReport["iterations"]
-        
-        jsonReport["width"] = int(args.resolution_x)
-        jsonReport["height"] = int(args.resolution_y)
-        jsonReport["iterations"] = int(args.pass_limit)
+
+        jsonReport["width"] = args.resolution_x
+        jsonReport["height"] = args.resolution_y
+        jsonReport["iterations"] = args.pass_limit
 
         ScriptPath = os.path.join(args.output, "cfg_{}.json".format(each))
         with open(ScriptPath, 'w') as f:
