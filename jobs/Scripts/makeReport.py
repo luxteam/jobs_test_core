@@ -2,6 +2,7 @@ import argparse
 import os
 import json
 import datetime
+import platform
 
 def core_ver_str(core_ver):
     mj = (core_ver & 0xFFFF00000) >> 28
@@ -30,18 +31,19 @@ def generateJsonForReport(directory):
         report["system_memory_usage"] = testJson["sysmem.usage.mb"]
         report["render_mode"] = "GPU"
         report["render_device"] = testJson["gpu00"]
-        if "/" in testJson["input"]:
-            report["test_group"] = testJson["input"].split("/")[-2]
-            report["scene_name"] = testJson["input"].split("/")[-1]
-            report["test_case"] = testJson["input"].split("/")[-1]
-            report["file_name"] = testJson["input"].split("/")[-1] + ".png"
-            report["render_color_path"]  = os.path.join("Color", testJson["input"].split("/")[-1] + ".png")
-        else:
+        system_pl = platform.system()
+        if (system_pl == "Windows"):
             report["test_group"] = testJson["input"].split("\\")[-2]
             report["scene_name"] = testJson["input"].split("\\")[-1]
             report["test_case"] = testJson["input"].split("\\")[-1]
             report["file_name"] = testJson["input"].split("\\")[-1] + ".png"
             report["render_color_path"]  = os.path.join("Color", testJson["input"].split("\\")[-1] + ".png")
+        else:
+            report["test_group"] = testJson["input"].split("/")[-2]
+            report["scene_name"] = testJson["input"].split("/")[-1]
+            report["test_case"] = testJson["input"].split("/")[-1]
+            report["file_name"] = testJson["input"].split("/")[-1] + ".png"
+            report["render_color_path"]  = os.path.join("Color", testJson["input"].split("/")[-1] + ".png")
         report["tool"] = "Core"
         report["render_time"] = testJson["render.time.ms"] / 1000
         report['date_time'] = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
