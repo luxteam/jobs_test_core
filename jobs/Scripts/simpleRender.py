@@ -70,7 +70,7 @@ def main(args):
         stdout, stderr = p.communicate()
 
         try:
-            rc = p.wait(timeout=200)
+            rc = p.wait(timeout=600)
         except psutil.TimeoutExpired as err:
             rc = -1
             for child in reversed(p.children(recursive=True)):
