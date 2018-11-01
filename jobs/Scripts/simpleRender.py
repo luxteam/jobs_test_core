@@ -39,20 +39,21 @@ def main(args):
 
     for each in scene_list:
 
+        jsonReport = []
         with open(os.path.join(args.res_path, args.package_name, each.split(".")[0] + ".json")) as f:
             coreJson = f.read()
+            jsonReport = json.loads(coreJson)
 
-        jsonReport = json.loads(coreJson)
         jsonReport["output"] = os.path.join("Color", each + ".png")
         jsonReport["output.json"] = each + "_original.json"
         # if arg zero - use default value
-        args.resolution_x = args.resolution_x if args.resolution_x else jsonReport["width"]
-        args.resolution_y = args.resolution_y if args.resolution_y else jsonReport["height"]
-        args.pass_limit = args.pass_limit if args.pass_limit else jsonReport["iterations"]
+        jsonReport["width"] = args.resolution_x if args.resolution_x else jsonReport["width"]
+        jsonReport["height"] = args.resolution_y if args.resolution_y else jsonReport["height"]
+        jsonReport["iterations"] = args.pass_limit if args.pass_limit else jsonReport["iterations"]
 
-        jsonReport["width"] = args.resolution_x
-        jsonReport["height"] = args.resolution_y
-        jsonReport["iterations"] = args.pass_limit
+        jsonReport["width"] = jsonReport["width"]
+        jsonReport["height"] = jsonReport["height"]
+        jsonReport["iterations"] = jsonReport["iterations"]
 
         ScriptPath = os.path.join(args.output, "cfg_{}.json".format(each))
         with open(ScriptPath, 'w') as f:
