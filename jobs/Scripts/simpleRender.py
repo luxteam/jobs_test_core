@@ -9,6 +9,7 @@ import pyscreenshot
 import platform
 import datetime
 
+
 def createArgsParser():
     parser = argparse.ArgumentParser()
 
@@ -24,6 +25,7 @@ def createArgsParser():
 
     return parser
 
+
 def main(args):
 
     try:
@@ -36,6 +38,13 @@ def main(args):
         scene_list = scenes.split(",\n")
 
     os.makedirs(os.path.join(args.output, "Color"))
+
+    # TODO: check expected rork
+    expected = []
+    for each in scene_list:
+        expected.append(each)
+    with open(os.path.join(args.output, 'expected.json'), 'w') as file:
+        json.dumps(expected, file, indent=4)
 
     for each in scene_list:
 
@@ -70,6 +79,7 @@ def main(args):
         p = subprocess.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
 
+        # TODO: timeout as arg
         try:
             rc = p.wait(timeout=600)
         except psutil.TimeoutExpired as err:
@@ -80,11 +90,10 @@ def main(args):
 
         os.rename("tahoe.log", "{}.log".format(each)) 
 
-        
-
 
 if __name__ == "__main__":
 
     args = createArgsParser().parse_args()
-    main(args)     
+    # TODO: fix exit code
+    main(args)
     exit(1)

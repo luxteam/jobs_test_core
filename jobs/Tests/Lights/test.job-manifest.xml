@@ -19,6 +19,10 @@
         <argument>--work_dir "{OutputDir}"</argument>
     </execute>
 
+    <execute command='python "{CommonDir}/scripts/checkExpected.py"'>
+        <argument>--work_dir "{OutputDir}"</argument>
+    </execute>
+
     <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
         <argument>--base_dir "{BaselineDir}"</argument>
