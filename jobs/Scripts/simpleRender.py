@@ -4,10 +4,8 @@ import os
 import subprocess
 import psutil
 import json
-import ctypes
-import pyscreenshot
-import platform
-import datetime
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)))
+from jobs_launcher.core.config import main_logger
 
 
 def createArgsParser():
@@ -22,78 +20,69 @@ def createArgsParser():
     parser.add_argument('--package_name', required=True)
     parser.add_argument('--output', required=True)
     parser.add_argument('--test_list', required=True)
+    parser.add_argument('--timeout', required=False, default=600)
 
     return parser
 
 
 def main(args):
-
+    scenes_list = []
     try:
-        os.makedirs(args.output)
+        with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
+            scenes_list = f.readlines()
+
+        os.makedirs(os.path.join(args.output, "Color"))
+        main_logger.info(scenes_list)
+        with open(os.path.join(args.output, 'expected.json'), 'w') as file:
+            json.dump(scenes_list, file, indent=4)
     except OSError as e:
-        pass
+        main_logger.error(str(e))
 
-    with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
-        scenes = f.read()
-        scene_list = scenes.split(",\n")
+    for scene in scenes_list:
+        config_json = []
+        try:
+            with open(os.path.join(args.res_path, args.package_name, scene.replace('.rpr', '.json'))) as file:
+                config_json = json.loads(file.read())
+        except OSError as err:
+            main_logger.error("Can't read CoreAssets: {}".format(str(err)))
+            continue
 
-    os.makedirs(os.path.join(args.output, "Color"))
+        config_json["output"] = os.path.join("Color", scene + ".png")
+        config_json["output.json"] = scene + "_original.json"
 
-    # TODO: check expected rork
-    expected = []
-    for each in scene_list:
-        expected.append(each)
-    with open(os.path.join(args.output, 'expected.json'), 'w') as file:
-        json.dumps(expected, file, indent=4)
-
-    for each in scene_list:
-
-        jsonReport = []
-        with open(os.path.join(args.res_path, args.package_name, each.split(".")[0] + ".json")) as f:
-            coreJson = f.read()
-            jsonReport = json.loads(coreJson)
-
-        jsonReport["output"] = os.path.join("Color", each + ".png")
-        jsonReport["output.json"] = each + "_original.json"
         # if arg zero - use default value
-        jsonReport["width"] = args.resolution_x if args.resolution_x else jsonReport["width"]
-        jsonReport["height"] = args.resolution_y if args.resolution_y else jsonReport["height"]
-        jsonReport["iterations"] = args.pass_limit if args.pass_limit else jsonReport["iterations"]
+        config_json["width"] = args.resolution_x if args.resolution_x else config_json["width"]
+        config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
+        config_json["iterations"] = args.pass_limit if args.pass_limit else config_json["iterations"]
 
-        jsonReport["width"] = jsonReport["width"]
-        jsonReport["height"] = jsonReport["height"]
-        jsonReport["iterations"] = jsonReport["iterations"]
-
-        ScriptPath = os.path.join(args.output, "cfg_{}.json".format(each))
+        # TODO: try-catch-log
+        ScriptPath = os.path.join(args.output, "cfg_{}.json".format(scene))
         with open(ScriptPath, 'w') as f:
-            json.dump(jsonReport, f, indent=' ')
+            json.dump(config_json, f, indent=4)
 
-        scene = os.path.join(args.res_path, args.package_name, each)
-        cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=args.tool, scene=scene, template=ScriptPath)
+        scene_path = os.path.join(args.res_path, args.package_name, scene)
+        cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=args.tool, scene=scene_path, template=ScriptPath)
 
-        cmdScriptPath = os.path.join(args.output, '{}.bat'.format(each))
+        cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
         with open(cmdScriptPath, 'w') as f:
             f.write(cmdRun)
 
         os.chdir(args.output)
-        p = subprocess.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = psutil.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
 
-        # TODO: timeout as arg
         try:
-            rc = p.wait(timeout=600)
+            rc = p.wait(timeout=args.timeout)
         except psutil.TimeoutExpired as err:
             rc = -1
             for child in reversed(p.children(recursive=True)):
                 child.terminate()
             p.terminate()
-
-        os.rename("tahoe.log", "{}.log".format(each)) 
+        finally:
+            os.rename("tahoe.log", "{}.log".format(scene))
 
 
 if __name__ == "__main__":
-
     args = createArgsParser().parse_args()
-    # TODO: fix exit code
-    main(args)
-    exit(1)
+    if not main(args):
+        exit(0)
