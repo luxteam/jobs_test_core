@@ -5,7 +5,7 @@ import subprocess
 import psutil
 import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)))
-from jobs_launcher.core.config import main_logger
+import jobs_launcher.core.config as core_config
 
 
 def createArgsParser():
@@ -32,11 +32,11 @@ def main(args):
             scenes_list = f.readlines()
 
         os.makedirs(os.path.join(args.output, "Color"))
-        main_logger.info(scenes_list)
+        core_config.main_logger.info("Scenes to render: {}".format(scenes_list))
         with open(os.path.join(args.output, 'expected.json'), 'w') as file:
             json.dump(scenes_list, file, indent=4)
     except OSError as e:
-        main_logger.error(str(e))
+        core_config.main_logger.error(str(e))
 
     for scene in scenes_list:
         config_json = []
@@ -44,7 +44,7 @@ def main(args):
             with open(os.path.join(args.res_path, args.package_name, scene.replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
-            main_logger.error("Can't read CoreAssets: {}".format(str(err)))
+            core_config.main_logger.error("Can't read CoreAssets: {}".format(str(err)))
             continue
 
         config_json["output"] = os.path.join("Color", scene + ".png")
@@ -55,21 +55,25 @@ def main(args):
         config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
         config_json["iterations"] = args.pass_limit if args.pass_limit else config_json["iterations"]
 
-        # TODO: try-catch-log
         ScriptPath = os.path.join(args.output, "cfg_{}.json".format(scene))
-        with open(ScriptPath, 'w') as f:
-            json.dump(config_json, f, indent=4)
-
         scene_path = os.path.join(args.res_path, args.package_name, scene)
         cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=args.tool, scene=scene_path, template=ScriptPath)
-
         cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
-        with open(cmdScriptPath, 'w') as f:
-            f.write(cmdRun)
+
+        try:
+            with open(ScriptPath, 'w') as f:
+                json.dump(config_json, f, indent=4)
+
+            with open(cmdScriptPath, 'w') as f:
+                f.write(cmdRun)
+        except OSError as err:
+            core_config.main_logger.error("Can't save render scripts: {}".format(str(err)))
+            continue
 
         os.chdir(args.output)
         p = psutil.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
+        rc = 0
 
         try:
             rc = p.wait(timeout=args.timeout)
@@ -79,7 +83,10 @@ def main(args):
                 child.terminate()
             p.terminate()
         finally:
-            os.rename("tahoe.log", "{}.log".format(scene))
+            if rc:
+                core_config.main_logger.error("Non-zero exit: {}".format(str(rc)))
+            if os.path.exists("tahoe.log"):
+                os.rename("tahoe.log", "{}.log".format(scene))
 
 
 if __name__ == "__main__":

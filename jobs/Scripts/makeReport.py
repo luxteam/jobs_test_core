@@ -2,12 +2,16 @@ import argparse
 import os
 import json
 import datetime
-import platform
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)))
+import jobs_launcher.core.config as core_config
+
 
 def core_ver_str(core_ver):
     mj = (core_ver & 0xFFFF00000) >> 28
     mn = (core_ver & 0xFFFFF) >> 8
     return "%x.%x" % (mj, mn)
+
 
 def generateJsonForReport(directory):
 
@@ -22,7 +26,8 @@ def generateJsonForReport(directory):
         tmp_json = tmp_json.replace("\\", "\\\\")
         testJson = json.loads(tmp_json)
 
-        report = {}
+        report = core_config.RENDER_REPORT_BASE
+
         report["core_version"] = core_ver_str(int(testJson["version"], 16))
         report["minor_version"] = core_ver_str(int(testJson["version.minor"], 16))
         report["gpu_memory_total"] = testJson["gpumem.total.mb"]
@@ -31,19 +36,11 @@ def generateJsonForReport(directory):
         report["system_memory_usage"] = testJson["sysmem.usage.mb"]
         report["render_mode"] = "GPU"
         report["render_device"] = testJson["gpu00"]
-        system_pl = platform.system()
-        if (system_pl == "Windows"):
-            report["test_group"] = testJson["input"].split("\\")[-2]
-            report["scene_name"] = testJson["input"].split("\\")[-1]
-            report["test_case"] = testJson["input"].split("\\")[-1]
-            report["file_name"] = testJson["input"].split("\\")[-1] + ".png"
-            report["render_color_path"]  = os.path.join("Color", testJson["input"].split("\\")[-1] + ".png")
-        else:
-            report["test_group"] = testJson["input"].split("/")[-2]
-            report["scene_name"] = testJson["input"].split("/")[-1]
-            report["test_case"] = testJson["input"].split("/")[-1]
-            report["file_name"] = testJson["input"].split("/")[-1] + ".png"
-            report["render_color_path"]  = os.path.join("Color", testJson["input"].split("/")[-1] + ".png")
+        report["test_group"] = testJson["input"].split(os.path.sep)[-2]
+        report["scene_name"] = testJson["input"].split(os.path.sep)[-1]
+        report["test_case"] = testJson["input"].split(os.path.sep)[-1]
+        report["file_name"] = testJson["input"].split(os.path.sep)[-1] + ".png"
+        report["render_color_path"]  = os.path.join("Color", testJson["input"].split(os.path.sep)[-1] + ".png")
         report["tool"] = "Core"
         report["render_time"] = testJson["render.time.ms"] / 1000
         report['date_time'] = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
@@ -100,6 +97,7 @@ def generateReport(directory):
 
     with open(os.path.join(directory, "report.json"), 'w') as file:
         file.write(result_json)
+
 
 if __name__ == "__main__":
 
