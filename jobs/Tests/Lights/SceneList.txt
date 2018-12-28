@@ -1,4 +1,4 @@
-Caustic_Single_Test.rpr,
-Directional_Light.rpr,
-IES_Light.rpr,
+Caustic_Single_Test.rpr
+Directional_Light.rpr
+IES_Light.rpr
 Physical_Light.rpr

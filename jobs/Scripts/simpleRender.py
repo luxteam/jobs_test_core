@@ -29,7 +29,7 @@ def main(args):
     scenes_list = []
     try:
         with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
-            scenes_list = f.readlines()
+            scenes_list = [x for x in f.read().splitlines() if x]
 
         os.makedirs(os.path.join(args.output, "Color"))
         core_config.main_logger.info("Scenes to render: {}".format(scenes_list))
