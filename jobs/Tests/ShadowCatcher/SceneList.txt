@@ -1,2 +1,2 @@
-InstanceMotionBlurTest.rpr,
+InstanceMotionBlurTest.rpr
 MotionBlurTest.rpr

@@ -19,13 +19,13 @@
         <argument>--work_dir "{OutputDir}"</argument>
     </execute>
 
-    <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
+    <execute command='python "{CommonDir}/scripts/checkExpected.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
-        <argument>--base_dir "{BaselineDir}"</argument>
     </execute>
 
-    <execute command='python "{CommonDir}/scripts/HtmlTemplate/htmlBuilder.py"'>
+    <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
+        <argument>--base_dir "{BaselineDir}/Material_Test"</argument>
     </execute>
 
 </job-manifest>
