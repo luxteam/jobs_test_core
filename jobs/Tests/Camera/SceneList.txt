@@ -1,6 +1,5 @@
 CameraTest.rpr
 CubeMap.rpr
 CubeMapStereo.rpr
-Default.rpr
 SpericalPanorama.rpr
 SpericalPanoramaStereo.rpr
