@@ -10,9 +10,9 @@
     	<argument>--resolution_x {rx}</argument>
     	<argument>--resolution_y {ry}</argument>
         <argument>--output "{OutputDir}"</argument>
-	    <argument>--package_name "AA_Test_Scene"</argument>
+	    <argument>--package_name "Tone_Mapping"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
-        <argument>--test_list "{Root}/Tests/AA_Test_Scene/SceneList.txt"</argument>
+        <argument>--test_list "{Root}/Tests/Tone_Mapping/SceneList.txt"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>
@@ -25,7 +25,7 @@
 
     <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
-        <argument>--base_dir "{BaselineDir}/AA_Test_Scene"</argument>
+        <argument>--base_dir "{BaselineDir}/Tone_Mapping"</argument>
     </execute>
 
 </job-manifest>
