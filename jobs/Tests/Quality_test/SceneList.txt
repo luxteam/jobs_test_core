@@ -11,6 +11,6 @@ RayDepth2.rpr
 RayDepth3.rpr
 RayDepth4.rpr
 RayEpsilon0.rpr
-RayEpsilon0_2.rpr
-RayEpsilon0_5.rpr
-RayEpsilon1.rpr
+RayEpsilon0_001.rpr
+RayEpsilon0_01.rpr
+RayEpsilon0_1.rpr
