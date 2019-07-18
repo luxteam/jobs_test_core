@@ -1,3 +1,2 @@
 IBL_Rotation.rpr
-IBLOverride.rpr
 Sun_and_Sky.rpr
