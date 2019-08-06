@@ -1,3 +1,4 @@
+RPR_Nodes.rpr
 Material_Test.rpr
 Material_Test_NonSSS.rpr
 Material_TestSSS.rpr
