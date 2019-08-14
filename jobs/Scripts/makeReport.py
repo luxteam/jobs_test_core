@@ -40,7 +40,7 @@ def generateJsonForReport(directory):
         report["scene_name"] = testJson["input"].split(os.path.sep)[-1]
         report["test_case"] = testJson["input"].split(os.path.sep)[-1]
         report["file_name"] = testJson["input"].split(os.path.sep)[-1] + ".png"
-        report["render_color_path"]  = os.path.join("Color", testJson["input"].split(os.path.sep)[-1] + ".png")
+        report["render_color_path"] = os.path.join("Color", testJson["input"].split(os.path.sep)[-1] + ".png")
         report["tool"] = "Core"
         report["render_time"] = testJson["render.time.ms"] / 1000
         report['date_time'] = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
@@ -53,6 +53,15 @@ def generateJsonForReport(directory):
         reportName = jsonReport.replace("original", "RPR")
         with open(os.path.join(directory, reportName), 'w') as f:
             json.dump([report], f, indent=' ')
+
+        if 'aovs' in testJson.keys():
+            for key, value in testJson['aovs'].items():
+                report['file_name'] = value.split(os.path.sep)[-1]
+                report['render_color_path'] = value
+                report['test_case'] = testJson['input'].split(os.path.sep)[-1] + key
+
+                with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'w') as file:
+                    json.dump([report], file, indent=4)
 
 
 def generateReport(directory):

@@ -47,6 +47,10 @@ def main(args):
             core_config.main_logger.error("Can't read CoreAssets: {}".format(str(err)))
             continue
 
+        if 'aovs' in config_json.keys():
+            for key, value in config_json['aovs'].items():
+                config_json['aovs'].update({key: 'Color/' + value})
+
         config_json["output"] = os.path.join("Color", scene + ".png")
         config_json["output.json"] = scene + "_original.json"
 
