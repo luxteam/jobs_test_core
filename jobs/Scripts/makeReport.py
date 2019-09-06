@@ -61,9 +61,10 @@ def generateJsonForReport(directory):
             for key, value in testJson['aovs'].items():
                 if type(value) is str:
                     report['file_name'] = value.split(os.path.sep)[-1]
+                    report['render_color_path'] = value
                 elif type(value) is list:
                     report['file_name'] = value[0].split(os.path.sep)[-1]
-                report['render_color_path'] = value
+                    report['render_color_path'] = value[0]
                 report['test_case'] = testJson['input'].split(os.path.sep)[-1] + key
 
                 with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'w') as file:
