@@ -39,7 +39,10 @@ def generateJsonForReport(directory):
         report["test_group"] = testJson["input"].split(os.path.sep)[-2]
         report["scene_name"] = testJson["input"].split(os.path.sep)[-1]
         report["test_case"] = testJson["input"].split(os.path.sep)[-1]
-        report["file_name"] = testJson["input"].split(os.path.sep)[-1] + ".png"
+        if type(testJson["input"]) is str:
+            report["file_name"] = testJson["input"].split(os.path.sep)[-1] + ".png"
+        elif type(testJson["input"]) is list:
+            report["file_name"] = testJson["input"][0].split(os.path.sep)[-1] + ".png"
         report["render_color_path"] = os.path.join("Color", testJson["input"].split(os.path.sep)[-1] + ".png")
         report["tool"] = "Core"
         report["render_time"] = testJson["render.time.ms"] / 1000
@@ -56,7 +59,10 @@ def generateJsonForReport(directory):
 
         if 'aovs' in testJson.keys():
             for key, value in testJson['aovs'].items():
-                report['file_name'] = value.split(os.path.sep)[-1]
+                if type(value) is str:
+                    report['file_name'] = value.split(os.path.sep)[-1]
+                elif type(value) is list:
+                    report['file_name'] = value[0].split(os.path.sep)[-1]
                 report['render_color_path'] = value
                 report['test_case'] = testJson['input'].split(os.path.sep)[-1] + key
 
