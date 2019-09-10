@@ -57,8 +57,10 @@ def generateJsonForReport(directory):
         with open(os.path.join(directory, reportName), 'w') as f:
             json.dump([report], f, indent=' ')
 
+        # duct tape for aov tests
         if 'aovs' in testJson.keys():
             for key, value in testJson['aovs'].items():
+                report["render_time"] = 0.0
                 if type(value) is str:
                     report['file_name'] = value.split(os.path.sep)[-1]
                     report['render_color_path'] = value
