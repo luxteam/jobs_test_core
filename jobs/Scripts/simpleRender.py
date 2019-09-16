@@ -5,7 +5,7 @@ import subprocess
 import psutil
 import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)))
-import jobs_launcher.core.config as core_config
+from jobs_launcher.core.config import *
 
 
 def createArgsParser():
@@ -32,11 +32,20 @@ def main(args):
             scenes_list = [x for x in f.read().splitlines() if x]
 
         os.makedirs(os.path.join(args.output, "Color"))
-        core_config.main_logger.info("Scenes to render: {}".format(scenes_list))
+        main_logger.info("Scenes to render: {}".format(scenes_list))
         with open(os.path.join(args.output, 'expected.json'), 'w') as file:
             json.dump(scenes_list, file, indent=4)
     except OSError as e:
-        core_config.main_logger.error(str(e))
+        main_logger.error(str(e))
+
+    for scene in scenes_list:
+        report = RENDER_REPORT_BASE.copy()
+        report.update({'test_case': scene,
+                       'test_status': TEST_CRASH_STATUS,
+                       'test_group': args.package_name, })
+
+        with open(os.path.join(args.output, scene + CASE_REPORT_SUFFIX), 'w') as file:
+            json.dump(report, file, indent=4)
 
     for scene in scenes_list:
         config_json = []
@@ -76,7 +85,6 @@ def main(args):
 
         os.chdir(args.output)
         p = psutil.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = p.communicate()
         rc = 0
 
         try:
