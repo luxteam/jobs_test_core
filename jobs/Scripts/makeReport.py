@@ -3,14 +3,17 @@ import os
 import json
 import datetime
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)))
+
+ROOT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
+sys.path.append(ROOT_DIR_PATH)
 import jobs_launcher.core.config as core_config
 
 
 def core_ver_str(core_ver):
-    mj = (core_ver & 0xFFFF00000) >> 28
-    mn = (core_ver & 0xFFFFF) >> 8
-    return "%x.%x" % (mj, mn)
+    mj = (core_ver & 0xF00000) >> 20
+    mn = (core_ver & 0x00FF00) >> 8
+    r = (core_ver & 0x00000F)
+    return "%x.%x.%x" % (mj, mn, r)
 
 
 def generateJsonForReport(directory):
@@ -29,7 +32,7 @@ def generateJsonForReport(directory):
         report = core_config.RENDER_REPORT_BASE
 
         report["core_version"] = core_ver_str(int(testJson["version"], 16))
-        report["minor_version"] = core_ver_str(int(testJson["version.minor"], 16))
+        report["minor_version"] = testJson["version.minor"]
         report["gpu_memory_total"] = testJson["gpumem.total.mb"]
         report["gpu_memory_max"] = testJson["gpumem.max.alloc.mb"]
         report["gpu_memory_usage"] = testJson["gpumem.usage.mb"]
