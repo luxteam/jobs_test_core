@@ -49,7 +49,7 @@ def generateJsonForReport(directory):
         report["render_color_path"] = os.path.join("Color", testJson["input"].split(os.path.sep)[-1] + ".png")
         report["tool"] = "Core"
         report["render_time"] = testJson["render.time.ms"] / 1000
-        report['date_time'] = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
+        report['date_time'] = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
         report['difference_color'] = "not compared yet"
         report['test_status'] = "passed"
         report['width'] = testJson['width']
