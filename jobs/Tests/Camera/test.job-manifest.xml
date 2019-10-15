@@ -5,28 +5,27 @@
 
     <execute command='python "{ResourcesDir}/simpleRender.py"'>
         <argument>--tool "{Tool}"</argument>
-        <argument>--engine "{engine}"</argument>
         <argument>--render_mode "{RenderDevice}"</argument>
         <argument>--pass_limit {PassLimit}</argument>
     	<argument>--resolution_x {rx}</argument>
     	<argument>--resolution_y {ry}</argument>
-        <argument>--output "{OutputDir}_{engine}"</argument>
+        <argument>--output "{OutputDir}"</argument>
 	    <argument>--package_name "Camera"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
         <argument>--test_list "{Root}/Tests/Camera/SceneList.txt"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>
-        <argument>--work_dir "{OutputDir}_{engine}"</argument>
+        <argument>--work_dir "{OutputDir}"</argument>
     </execute>
 
     <execute command='python "{CommonDir}/scripts/checkExpected.py"'>
-        <argument>--work_dir "{OutputDir}_{engine}"</argument>
+        <argument>--work_dir "{OutputDir}"</argument>
     </execute>
 
     <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
-        <argument>--work_dir "{OutputDir}_{engine}"</argument>
-        <argument>--base_dir "{BaselineDir}/Camera_{engine}"</argument>
+        <argument>--work_dir "{OutputDir}"</argument>
+        <argument>--base_dir "{BaselineDir}/Camera"</argument>
     </execute>
 
 </job-manifest>

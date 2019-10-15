@@ -17,7 +17,6 @@ def createArgsParser():
     parser.add_argument('--tool', required=True, metavar="<path>")
     parser.add_argument('--res_path', required=True)
     parser.add_argument('--render_mode', required=True)
-    parser.add_argument('--engine', required=True)
     parser.add_argument('--pass_limit', required=True, type=int)
     parser.add_argument('--resolution_x', required=True, type=int)
     parser.add_argument('--resolution_y', required=True, type=int)
@@ -79,7 +78,6 @@ def main():
 
         config_json["output"] = os.path.join("Color", scene + ".png")
         config_json["output.json"] = scene + "_original.json"
-        config_json["plugin"] = "{}.dll".format(args.engine)
 
         # if arg zero - use default value
         config_json["width"] = args.resolution_x if args.resolution_x else config_json["width"]
