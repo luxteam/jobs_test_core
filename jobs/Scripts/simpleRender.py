@@ -10,6 +10,7 @@ import datetime
 ROOT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
 from jobs_launcher.core.config import *
+from jobs_launcher.core.system_info import get_gpu
 
 
 def createArgsParser():
@@ -122,7 +123,7 @@ def main():
             if not os.path.exists('{}_original.json'.format(scene)):
                 report = RENDER_REPORT_BASE
 
-                report["render_device"] = "Unknown"
+                report["render_device"] = get_gpu()
                 report["test_group"] = package_name
                 report["scene_name"] = scene
                 report["test_case"] = scene
