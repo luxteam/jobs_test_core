@@ -25,7 +25,7 @@
     </execute>
 
     <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
-        <argument>--work_dir "{OutputDir}"</argument>
+        <argument>--work_dir "{OutputDir}_{engine}"</argument>
         <argument>--base_dir "{BaselineDir}/Lights_{engine}"</argument>
     </execute>
 
