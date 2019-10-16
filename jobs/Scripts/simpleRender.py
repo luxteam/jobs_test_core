@@ -5,6 +5,7 @@ import subprocess
 import psutil
 import shutil
 import json
+import datetime
 
 ROOT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
@@ -118,6 +119,25 @@ def main():
         finally:
             if os.path.exists("tahoe.log"):
                 os.rename("tahoe.log", "{}_render.log".format(scene))
+            if not os.path.exists('{}_original.json'.format(scene)):
+                report = RENDER_REPORT_BASE
+
+                report["render_device"] = "Unknown"
+                report["test_group"] = package_name
+                report["scene_name"] = scene
+                report["test_case"] = scene
+                report["file_name"] = scene + ".png"
+                report["render_color_path"] = os.path.join("Color", scene + ".png")
+                report["tool"] = "Core"
+                report['date_time'] = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+                report['test_status'] = "failed"
+                report['width'] = args.resolution_x
+                report['height'] = args.resolution_y
+                report['iterations'] = args.pass_limit
+
+                reportName = "{}_RPR.json".format(scene)
+                with open(os.path.join(args.output, reportName), 'w') as f:
+                    json.dump([report], f, indent=' ')
 
 
 if __name__ == "__main__":
