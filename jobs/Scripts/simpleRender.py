@@ -32,6 +32,8 @@ def createArgsParser():
 def main():
     args = createArgsParser().parse_args()
 
+    package_name = args.package_name + "_" + args.engine
+
     scenes_list = []
     try:
         with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
@@ -48,7 +50,7 @@ def main():
         report = RENDER_REPORT_BASE.copy()
         report.update({'test_case': scene,
                        'test_status': TEST_CRASH_STATUS,
-                       'test_group': args.package_name,
+                       'test_group': package_name,
                        'render_color_path': 'Color/' + scene + ".png",
                        'file_name': scene + ".png"})
 

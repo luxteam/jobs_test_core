@@ -39,7 +39,7 @@ def generateJsonForReport(directory):
         report["system_memory_usage"] = testJson["sysmem.usage.mb"]
         report["render_mode"] = "GPU"
         report["render_device"] = testJson["gpu00"]
-        report["test_group"] = testJson["input"].split(os.path.sep)[-2]
+        report["test_group"] = directory.split(os.path.sep)[-1]
         report["scene_name"] = testJson["input"].split(os.path.sep)[-1]
         report["test_case"] = testJson["input"].split(os.path.sep)[-1]
         if type(testJson["input"]) is str:
