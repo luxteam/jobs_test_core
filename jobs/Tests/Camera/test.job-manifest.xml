@@ -5,7 +5,7 @@
 
     <execute command='python "{ResourcesDir}/simpleRender.py"'>
         <argument>--tool "{Tool}"</argument>
-        <argument>--engine "{engine}"</argument>
+        <argument>--engine "{current_engine}"</argument>
         <argument>--render_mode "{RenderDevice}"</argument>
         <argument>--pass_limit {PassLimit}</argument>
     	<argument>--resolution_x {rx}</argument>
@@ -26,7 +26,7 @@
 
     <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
-        <argument>--base_dir "{BaselineDir}/Camera_{engine}"</argument>
+        <argument>--base_dir "{BaselineDir}/Camera_{current_engine}"</argument>
     </execute>
 
 </job-manifest>
