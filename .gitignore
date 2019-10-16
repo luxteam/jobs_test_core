@@ -3,7 +3,7 @@
 *.log
 run_dev.bat
 Baseline/
-Work_/
+Work/
 .idea
 
 scripts/AOV_Test.bat

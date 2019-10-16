@@ -10,7 +10,7 @@
         <argument>--pass_limit {PassLimit}</argument>
     	<argument>--resolution_x {rx}</argument>
     	<argument>--resolution_y {ry}</argument>
-        <argument>--output "{OutputDir}}"</argument>
+        <argument>--output "{OutputDir}"</argument>
 	    <argument>--package_name "Tone_Mapping"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
         <argument>--test_list "{Root}/Tests/Tone_Mapping/SceneList.txt"</argument>
