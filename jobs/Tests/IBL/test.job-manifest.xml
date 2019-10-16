@@ -10,22 +10,22 @@
         <argument>--pass_limit {PassLimit}</argument>
     	<argument>--resolution_x {rx}</argument>
     	<argument>--resolution_y {ry}</argument>
-        <argument>--output "{OutputDir}_{engine}"</argument>
+        <argument>--output "{OutputDir}"</argument>
 	    <argument>--package_name "IBL"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
         <argument>--test_list "{Root}/Tests/IBL/SceneList.txt"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>
-        <argument>--work_dir "{OutputDir}_{engine}"</argument>
+        <argument>--work_dir "{OutputDir}"</argument>
     </execute>
 
     <execute command='python "{CommonDir}/scripts/checkExpected.py"'>
-        <argument>--work_dir "{OutputDir}_{engine}"</argument>
+        <argument>--work_dir "{OutputDir}"</argument>
     </execute>
 
     <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
-        <argument>--work_dir "{OutputDir}_{engine}"</argument>
+        <argument>--work_dir "{OutputDir}"</argument>
         <argument>--base_dir "{BaselineDir}/IBL_{engine}"</argument>
     </execute>
 
