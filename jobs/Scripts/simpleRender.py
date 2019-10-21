@@ -136,6 +136,10 @@ def main():
 				report['height'] = args.resolution_y
 				report['iterations'] = args.pass_limit
 
+				reportName = "{}_RPR.json".format(scene)
+				with open(os.path.join(args.output, reportName), 'w') as f:
+					json.dump([report], f, indent=' ')
+
 				if 'aovs' in config_json.keys():
 					for key, value in config_json['aovs'].items():
 						report["render_time"] = 0.0
@@ -156,10 +160,6 @@ def main():
 								os.path.join(args.output, report['file_name']))
 						except OSError or FileNotFoundError as err:
 							main_logger.error("Can't create img stub: {}".format(str(err)))
-
-				reportName = "{}_RPR.json".format(scene)
-				with open(os.path.join(args.output, reportName), 'w') as f:
-					json.dump([report], f, indent=' ')
 
 
 if __name__ == "__main__":
