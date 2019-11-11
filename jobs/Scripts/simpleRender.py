@@ -81,6 +81,8 @@ def main():
 			for key, value in config_json['aovs'].items():
 				config_json['aovs'].update({key: 'Color/' + value})
 
+		config_json.pop('gamma', None)
+
 		config_json["output"] = os.path.join("Color", scene + ".png")
 		config_json["output.json"] = scene + "_original.json"
 		config_json["plugin"] = "{}.dll".format(args.engine)
@@ -118,6 +120,16 @@ def main():
 				child.terminate()
 			p.terminate()
 		finally:
+			# save logs
+			with open("render_log.txt", 'a', encoding='utf-8') as file:
+				stdout = stdout.decode("utf-8")
+				file.write(stdout)
+
+			with open("render_log.txt", 'a', encoding='utf-8') as file:
+				file.write("\n ----STEDERR---- \n")
+				stderr = stderr.decode("utf-8")
+				file.write(stderr)
+
 			if os.path.exists("tahoe.log"):
 				os.rename("tahoe.log", "{}_render.log".format(scene))
 			if not os.path.exists('{}_original.json'.format(scene)):
