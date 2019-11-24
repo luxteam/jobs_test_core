@@ -135,7 +135,7 @@ def main():
 			if not os.path.exists('{}_original.json'.format(scene)):
 				report = RENDER_REPORT_BASE
 
-				report["render_device"] = get_gpu()
+				report["render_device"] = get_gpu().replace('NVIDIA ', '')
 				report["test_group"] = package_name
 				report["scene_name"] = scene
 				report["test_case"] = scene
