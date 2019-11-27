@@ -18,62 +18,65 @@ def core_ver_str(core_ver):
 
 def generateJsonForReport(directory):
 
-    jsonForFormat = list(filter(lambda x: x.endswith('original.json'), os.listdir(directory)))
+    cfgJson = list(filter(lambda x: x.startswith('cfg_'), os.listdir(directory)))    
+    jsonForFormat = []
+    for i in cfgJson:
+        jsonForFormat.append("{}_original.json".format(i[4:-5]))
 
     # format values 
     for jsonReport in jsonForFormat:
+        if os.path.exists(os.path.join(directory,jsonReport)):
+            with open(os.path.join(directory, jsonReport)) as f:
+                tmp_json = f.read()
 
-        with open(os.path.join(directory, jsonReport)) as f:
-            tmp_json = f.read()
+            tmp_json = tmp_json.replace("\\", "\\\\")
+            testJson = json.loads(tmp_json)
 
-        tmp_json = tmp_json.replace("\\", "\\\\")
-        testJson = json.loads(tmp_json)
+            report = core_config.RENDER_REPORT_BASE
 
-        report = core_config.RENDER_REPORT_BASE
+            report["core_version"] = core_ver_str(int(testJson["version"], 16))
+            report["minor_version"] = testJson["version.minor"]
+            report["gpu_memory_total"] = testJson["gpumem.total.mb"]
+            report["gpu_memory_max"] = testJson["gpumem.max.alloc.mb"]
+            report["gpu_memory_usage"] = testJson["gpumem.usage.mb"]
+            report["system_memory_usage"] = testJson["sysmem.usage.mb"]
+            report["render_mode"] = "GPU"
+            report["render_device"] = testJson["gpu00"]
+            report["test_group"] = directory.split(os.path.sep)[-1]
+            report["scene_name"] = testJson["input"].split(os.path.sep)[-1]
+            report["test_case"] = testJson["input"].split(os.path.sep)[-1]
+            if type(testJson["input"]) is str:
+                report["file_name"] = testJson["input"].split(os.path.sep)[-1] + ".png"
+            elif type(testJson["input"]) is list:
+                report["file_name"] = testJson["input"][0].split(os.path.sep)[-1] + ".png"
+            report["render_color_path"] = os.path.join("Color", testJson["input"].split(os.path.sep)[-1] + ".png")
+            report["tool"] = "Core"
+            report["render_time"] = testJson["render.time.ms"] / 1000
+            report['date_time'] = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+            report['difference_color'] = 0
+            report['test_status'] = "passed"
+            report['width'] = testJson['width']
+            report['height'] = testJson['height']
+            report['iterations'] = testJson['iteration']
 
-        report["core_version"] = core_ver_str(int(testJson["version"], 16))
-        report["minor_version"] = testJson["version.minor"]
-        report["gpu_memory_total"] = testJson["gpumem.total.mb"]
-        report["gpu_memory_max"] = testJson["gpumem.max.alloc.mb"]
-        report["gpu_memory_usage"] = testJson["gpumem.usage.mb"]
-        report["system_memory_usage"] = testJson["sysmem.usage.mb"]
-        report["render_mode"] = "GPU"
-        report["render_device"] = testJson["gpu00"]
-        report["test_group"] = testJson["input"].split(os.path.sep)[-2]
-        report["scene_name"] = testJson["input"].split(os.path.sep)[-1]
-        report["test_case"] = testJson["input"].split(os.path.sep)[-1]
-        if type(testJson["input"]) is str:
-            report["file_name"] = testJson["input"].split(os.path.sep)[-1] + ".png"
-        elif type(testJson["input"]) is list:
-            report["file_name"] = testJson["input"][0].split(os.path.sep)[-1] + ".png"
-        report["render_color_path"] = os.path.join("Color", testJson["input"].split(os.path.sep)[-1] + ".png")
-        report["tool"] = "Core"
-        report["render_time"] = testJson["render.time.ms"] / 1000
-        report['date_time'] = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-        report['difference_color'] = "not compared yet"
-        report['test_status'] = "passed"
-        report['width'] = testJson['width']
-        report['height'] = testJson['height']
-        report['iterations'] = testJson['iteration']
+            reportName = jsonReport.replace("original", "RPR")
+            with open(os.path.join(directory, reportName), 'w') as f:
+                json.dump([report], f, indent=' ')
 
-        reportName = jsonReport.replace("original", "RPR")
-        with open(os.path.join(directory, reportName), 'w') as f:
-            json.dump([report], f, indent=' ')
+            # duct tape for aov tests
+            if 'aovs' in testJson.keys():
+                for key, value in testJson['aovs'].items():
+                    report["render_time"] = 0.0
+                    if type(value) is str:
+                        report['file_name'] = value.split(os.path.sep)[-1]
+                        report['render_color_path'] = value
+                    elif type(value) is list:
+                        report['file_name'] = value[0].split(os.path.sep)[-1]
+                        report['render_color_path'] = value[0]
+                    report['test_case'] = testJson['input'].split(os.path.sep)[-1] + key
 
-        # duct tape for aov tests
-        if 'aovs' in testJson.keys():
-            for key, value in testJson['aovs'].items():
-                report["render_time"] = 0.0
-                if type(value) is str:
-                    report['file_name'] = value.split(os.path.sep)[-1]
-                    report['render_color_path'] = value
-                elif type(value) is list:
-                    report['file_name'] = value[0].split(os.path.sep)[-1]
-                    report['render_color_path'] = value[0]
-                report['test_case'] = testJson['input'].split(os.path.sep)[-1] + key
-
-                with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'w') as file:
-                    json.dump([report], file, indent=4)
+                    with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'w') as file:
+                        json.dump([report], file, indent=4)
 
 
 def generateReport(directory):
