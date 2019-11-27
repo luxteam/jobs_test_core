@@ -1,6 +1,6 @@
 set PATH=c:\python35\;c:\python35\scripts\;%PATH%
 set FILE_FILTER=%1
-set TESTS_FILTER=%2
+set TESTS_FILTER="%2"
 set RX=%3
 set RY=%4
 set PASS_LIMIT=%5
