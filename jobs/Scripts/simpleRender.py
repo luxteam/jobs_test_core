@@ -65,7 +65,7 @@ def main():
 			main_logger.error("Can't create img stub: {}".format(str(err)))
 
 		with open(os.path.join(args.output, scene + CASE_REPORT_SUFFIX), 'w') as file:
-			json.dump(report, file, indent=4)
+			json.dump([report], file, indent=4)
 
 		# FIXME: implement the same for AOVS
 
@@ -150,7 +150,7 @@ def main():
 
 				reportName = "{}_RPR.json".format(scene)
 				with open(os.path.join(args.output, reportName), 'w') as f:
-					json.dump([report], f, indent=' ')
+					json.dump([report], f, indent=4)
 
 				if 'aovs' in config_json.keys():
 					for key, value in config_json['aovs'].items():
