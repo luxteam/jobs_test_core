@@ -6,6 +6,7 @@ import psutil
 import shutil
 import json
 import datetime
+import platform
 
 ROOT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
@@ -95,7 +96,11 @@ def main():
 		ScriptPath = os.path.join(args.output, "cfg_{}.json".format(scene))
 		scene_path = os.path.join(args.res_path, args.package_name, scene)
 		cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=args.tool, scene=scene_path, template=ScriptPath)
-		cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
+
+		if platform.system() == "Windows":
+			cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
+		else:
+			cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene))
 
 		try:
 			with open(ScriptPath, 'w') as f:
