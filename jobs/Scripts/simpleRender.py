@@ -101,6 +101,7 @@ def main():
 			cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
 		else:
 			cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene))
+			os.system('chmod +x {}'.format(cmdScriptPath))
 
 		try:
 			with open(ScriptPath, 'w') as f:
