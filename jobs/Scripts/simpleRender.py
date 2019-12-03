@@ -25,7 +25,7 @@ def createArgsParser():
 	parser.add_argument('--resolution_x', required=True, type=int)
 	parser.add_argument('--resolution_y', required=True, type=int)
 	parser.add_argument('--package_name', required=True)
-	parser.add_argument('--output', required=True)
+	parser.add_argument('--output', required=True, metavar="<path>")
 	parser.add_argument('--test_list', required=True)
 	parser.add_argument('--timeout', required=False, default=600)
 
@@ -95,13 +95,12 @@ def main():
 
 		ScriptPath = os.path.join(args.output, "cfg_{}.json".format(scene))
 		scene_path = os.path.join(args.res_path, args.package_name, scene)
-		cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=args.tool, scene=scene_path, template=ScriptPath)
+		cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path, template=ScriptPath)
 
 		if platform.system() == "Windows":
 			cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
 		else:
 			cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene))
-			os.system('chmod +x {}'.format(cmdScriptPath))
 
 		try:
 			with open(ScriptPath, 'w') as f:
@@ -109,6 +108,8 @@ def main():
 
 			with open(cmdScriptPath, 'w') as f:
 				f.write(cmdRun)
+			if platform.system() != "Windows":
+				os.system('chmod +x {}'.format(cmdScriptPath))
 		except OSError as err:
 			main_logger.error("Can't save render scripts: {}".format(str(err)))
 			continue
