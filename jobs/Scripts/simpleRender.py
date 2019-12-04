@@ -117,7 +117,6 @@ def main():
             with open(cmdScriptPath, 'w') as f:
                 f.write(cmdRun)
             if platform.system() != "Windows":
-                psutil.Popen()
                 os.system('chmod +x {}'.format(cmdScriptPath))
 
         except OSError as err:
