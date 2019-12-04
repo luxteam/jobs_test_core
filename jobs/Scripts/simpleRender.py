@@ -38,7 +38,7 @@ def main():
     package_name = args.package_name + "_" + args.engine
 
     args.tool = os.path.abspath(args.tool)
-    args.ouput = os.path.abspath(args.ouput)
+    args.output = os.path.abspath(args.output)
 
     if platform.system() != "Windows":
         os.system('chmod +x {}'.format(os.path.abspath(args.tool)))
