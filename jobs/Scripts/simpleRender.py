@@ -37,6 +37,9 @@ def main():
 
     package_name = args.package_name + "_" + args.engine
 
+    if platform.system() != "Windows":
+        os.system('chmod +x {}'.format(os.path.abspath(args.tool)))
+
     scenes_list = []
     try:
         with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
@@ -105,7 +108,7 @@ def main():
         if platform.system() == "Windows":
             cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
         else:
-            cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene))
+            cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene.replace(" ", "_")))
 
         try:
             with open(ScriptPath, 'w') as f:
@@ -114,8 +117,9 @@ def main():
             with open(cmdScriptPath, 'w') as f:
                 f.write(cmdRun)
             if platform.system() != "Windows":
+                psutil.Popen()
                 os.system('chmod +x {}'.format(cmdScriptPath))
-                os.system('chmod +x {}'.format(os.path.abspath(args.tool)))
+
         except OSError as err:
             main_logger.error("Can't save render scripts: {}".format(str(err)))
             continue
