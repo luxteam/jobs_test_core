@@ -106,11 +106,14 @@ def main():
 
         ScriptPath = os.path.join(args.output, "cfg_{}.json".format(scene))
         scene_path = os.path.join(args.res_path, args.package_name, scene)
-        cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path, template=ScriptPath)
 
         if platform.system() == "Windows":
+            cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
+                                                                template=ScriptPath)
             cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
         else:
+            cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
+                ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=ScriptPath)
             cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene.replace(" ", "_")))
 
         try:
