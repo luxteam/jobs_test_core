@@ -5,3 +5,4 @@ Material_TestSSS.rpr
 SSSTypesTest.rpr
 PBR_Test.rpr
 Refraction.rpr
+Material_TestVolume.rpr
