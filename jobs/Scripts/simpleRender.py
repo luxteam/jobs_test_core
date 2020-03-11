@@ -20,7 +20,6 @@ def createArgsParser():
     parser.add_argument('--tool', required=True, metavar="<path>")
     parser.add_argument('--res_path', required=True)
     parser.add_argument('--render_mode', required=True)
-    parser.add_argument('--engine', required=True)
     parser.add_argument('--pass_limit', required=True, type=int)
     parser.add_argument('--resolution_x', required=True, type=int)
     parser.add_argument('--resolution_y', required=True, type=int)
@@ -35,7 +34,10 @@ def createArgsParser():
 def main():
     args = createArgsParser().parse_args()
 
-    package_name = args.package_name + "_" + args.engine
+    if "Hybrid" in args.package_name:
+        engine = "Hybrid"
+    elif "Tahoe64" in args.package_name:
+        engine = "Tahoe64"
 
     args.tool = os.path.abspath(args.tool)
     args.output = os.path.abspath(args.output)
@@ -59,7 +61,7 @@ def main():
         report = RENDER_REPORT_BASE.copy()
         report.update({'test_case': scene,
                        'test_status': TEST_CRASH_STATUS,
-                       'test_group': package_name,
+                       'test_group': args.package_name,
                        'render_color_path': 'Color/' + scene + ".png",
                        'file_name': scene + ".png"})
 
@@ -93,11 +95,11 @@ def main():
         config_json["output"] = os.path.join("Color", scene + ".png")
         config_json["output.json"] = scene + "_original.json"
         if platform.system() == 'Windows':
-            config_json["plugin"] = "{}.dll".format(args.engine)
+            config_json["plugin"] = "{}.dll".format(engine)
         elif platform.system() == 'Darwin':
-            config_json["plugin"] = "lib{}.dylib".format(args.engine)
+            config_json["plugin"] = "lib{}.dylib".format(engine)
         else:
-            config_json["plugin"] = "lib{}.so".format(args.engine)
+            config_json["plugin"] = "lib{}.so".format(engine)
 
         # if arg zero - use default value
         config_json["width"] = args.resolution_x if args.resolution_x else config_json["width"]
@@ -158,7 +160,7 @@ def main():
                 report = RENDER_REPORT_BASE
 
                 report["render_device"] = get_gpu().replace('NVIDIA ', '')
-                report["test_group"] = package_name
+                report["test_group"] = args.package_name
                 report["scene_name"] = scene
                 report["test_case"] = scene
                 report["file_name"] = scene + ".png"
