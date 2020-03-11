@@ -34,15 +34,25 @@ def createArgsParser():
 def main():
     args = createArgsParser().parse_args()
 
+    # get OS
+    platform_system = platform.system()
+
+    # parse package naming for getting engien
     if "Hybrid" in args.package_name:
         engine = "Hybrid"
     elif "Tahoe64" in args.package_name:
         engine = "Tahoe64"
 
+    if platform_system == "Darwin" and engine == "Hybrid":
+        main_logger.error("OSX don't support Hybrid.")
+
+    # get tool path and abspath
     args.tool = os.path.abspath(args.tool)
+    tool_path = os.path.dirname(args.tool)
     args.output = os.path.abspath(args.output)
 
-    if platform.system() != "Windows":
+    # unix systems executive file permissions
+    if platform_system != "Windows":
         os.system('chmod +x {}'.format(os.path.abspath(args.tool)))
 
     scenes_list = []
@@ -94,36 +104,44 @@ def main():
 
         config_json["output"] = os.path.join("Color", scene + ".png")
         config_json["output.json"] = scene + "_original.json"
-        if platform.system() == 'Windows':
+
+        if platform_system == 'Windows':
             config_json["plugin"] = "{}.dll".format(engine)
-        elif platform.system() == 'Darwin':
-            config_json["plugin"] = "lib{}.dylib".format(engine)
+        elif platform_system == 'Darwin':
+            if os.path.isfile(os.path.join(tool_path, "lib{}.dylib".format(engine))):
+                config_json["plugin"] = "lib{}.dylib".format(engine)
+            else:
+                config_json["plugin"] = "{}.dylib".format(engine)
         else:
-            config_json["plugin"] = "lib{}.so".format(engine)
+            if os.path.isfile(os.path.join(tool_path, "lib{}.so".format(engine))):
+                config_json["plugin"] = "lib{}.so".format(engine)
+            else:
+                config_json["plugin"] = "{}.so".format(engine)
 
         # if arg zero - use default value
         config_json["width"] = args.resolution_x if args.resolution_x else config_json["width"]
         config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
         config_json["iterations"] = args.pass_limit if args.pass_limit else config_json["iterations"]
 
-        ScriptPath = os.path.join(args.output, "cfg_{}.json".format(scene))
+        script_path = os.path.join(args.output, "cfg_{}.json".format(scene))
         scene_path = os.path.join(args.res_path, args.package_name, scene)
 
-        if platform.system() == "Windows":
+        if platform_system == "Windows":
             cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
-                                                                template=ScriptPath)
+                                                                template=script_path)
             cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
         else:
             cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
-                ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=ScriptPath)
+                ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=script_path)
             cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene.replace(" ", "_")))
 
         try:
-            with open(ScriptPath, 'w') as f:
+            with open(script_path, 'w') as f:
                 json.dump(config_json, f, indent=4)
 
             with open(cmdScriptPath, 'w') as f:
                 f.write(cmdRun)
+
             if platform.system() != "Windows":
                 os.system('chmod +x {}'.format(cmdScriptPath))
 
@@ -144,7 +162,7 @@ def main():
                 child.terminate()
             p.terminate()
         finally:
-            # save logs
+            
             with open("render_log.txt", 'a', encoding='utf-8') as file:
                 stdout = stdout.decode("utf-8")
                 file.write(stdout)
