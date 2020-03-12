@@ -45,6 +45,7 @@ def main():
 
     if platform_system == "Darwin" and engine == "Hybrid":
         main_logger.error("OSX don't support Hybrid.")
+        exit()
 
     # get tool path and abspath
     args.tool = os.path.abspath(args.tool)
