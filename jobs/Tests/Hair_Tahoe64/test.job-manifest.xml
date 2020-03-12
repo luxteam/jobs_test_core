@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<job-manifest enable="False">
+
+    <outpath value="{OutputDir}"/>
+
+    <execute command='python "{ResourcesDir}/simpleRender.py"'>
+        <argument>--tool "{Tool}"</argument>
+        <argument>--render_mode "{RenderDevice}"</argument>
+        <argument>--pass_limit {PassLimit}</argument>
+    	<argument>--resolution_x {rx}</argument>
+    	<argument>--resolution_y {ry}</argument>
+        <argument>--output "{OutputDir}"</argument>
+	    <argument>--package_name "Hair_Tahoe64"</argument>
+        <argument>--res_path "{ScenesDir}"</argument>
+        <argument>--test_list "{Root}/Tests/Hair_Tahoe64/SceneList.txt"</argument>
+    </execute>
+
+    <execute command='python "{ResourcesDir}/makeReport.py"'>
+        <argument>--work_dir "{OutputDir}"</argument>
+    </execute>
+
+    <execute command='python "{CommonDir}/scripts/checkExpected.py"'>
+        <argument>--work_dir "{OutputDir}"</argument>
+    </execute>
+
+    <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
+        <argument>--work_dir "{OutputDir}"</argument>
+        <argument>--base_dir "{BaselineDir}/Hair_Tahoe64"</argument>
+    </execute>
+
+</job-manifest>

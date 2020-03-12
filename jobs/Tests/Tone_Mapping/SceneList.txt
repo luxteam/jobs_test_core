@@ -1,7 +1,0 @@
-Tone Mapping Autolinear.rpr
-Tone Mapping Linear.rpr
-Tone Mapping MaxWhite.rpr
-Tone Mapping None.rpr
-Tone Mapping Photolinear.rpr
-Tone Mapping Reinhard02.rpr
-Tone Mapping White_Balance.rpr
