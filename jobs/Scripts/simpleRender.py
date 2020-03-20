@@ -44,9 +44,9 @@ def main():
     elif "Tahoe64" in args.package_name:
         engine = "Tahoe64"
 
-    if platform_system == "Darwin" and engine == "Hybrid":
-        main_logger.error("OSX don't support Hybrid.")
-        exit()
+    # if platform_system == "Darwin" and engine == "Hybrid":
+    #     main_logger.error("OSX don't support Hybrid.")
+    #     exit()
 
     # get tool path and abspath
     args.tool = os.path.abspath(args.tool)
