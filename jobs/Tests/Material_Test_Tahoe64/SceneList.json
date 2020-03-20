@@ -1,10 +1,26 @@
 [
-    "RPR_Nodes.rpr",
-    "Material_Test.rpr",
-    "Material_Test_NonSSS.rpr",
-    "Material_TestSSS.rpr",
-    "SSSTypesTest.rpr",
-    "PBR_Test.rpr",
-    "Refraction.rpr",
-    "Material_TestVolume.rpr"
+    {
+        "scene": "RPR_Nodes.rpr"
+    },
+    {
+        "scene": "Material_Test.rpr"
+    },
+    {
+        "scene": "Material_Test_NonSSS.rpr"
+    },
+    {
+        "scene": "Material_TestSSS.rpr"
+    },
+    {
+        "scene": "SSSTypesTest.rpr"
+    },
+    {
+        "scene": "PBR_Test.rpr"
+    },
+    {
+        "scene": "Refraction.rpr"
+    },
+    {
+        "scene": "Material_TestVolume.rpr"
+    }
 ]

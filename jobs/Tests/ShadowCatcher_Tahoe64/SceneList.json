@@ -1,4 +1,8 @@
 [
-    "InstanceMotionBlurTest.rpr",
-    "MotionBlurTest.rpr"
+    {
+        "scene": "InstanceMotionBlurTest.rpr"
+    },
+    {
+        "scene": "MotionBlurTest.rpr"
+    }
 ]

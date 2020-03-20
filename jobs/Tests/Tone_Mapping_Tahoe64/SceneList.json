@@ -1,9 +1,23 @@
 [
-    "Tone Mapping Autolinear.rpr",
-    "Tone Mapping Linear.rpr",
-    "Tone Mapping MaxWhite.rpr",
-    "Tone Mapping None.rpr",
-    "Tone Mapping Photolinear.rpr",
-    "Tone Mapping Reinhard02.rpr",
-    "Tone Mapping White_Balance.rpr"
+    {
+        "scene": "Tone Mapping Autolinear.rpr"
+    },
+    {
+        "scene": "Tone Mapping Linear.rpr"
+    },
+    {
+        "scene": "Tone Mapping MaxWhite.rpr"
+    },
+    {
+        "scene": "Tone Mapping None.rpr"
+    },
+    {
+        "scene": "Tone Mapping Photolinear.rpr"
+    },
+    {
+        "scene": "Tone Mapping Reinhard02.rpr"
+    },
+    {
+        "scene": "Tone Mapping White_Balance.rpr"
+    }
 ]

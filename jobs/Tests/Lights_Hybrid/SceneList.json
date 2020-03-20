@@ -1,5 +1,11 @@
 [
-    "Caustic_Single_Test.rpr",
-    "Directional_Light.rpr",
-    "Physical_Light.rpr"
+    {
+        "scene": "Caustic_Single_Test.rpr"
+    },
+    {
+        "scene": "Directional_Light.rpr"
+    },
+    {
+        "scene": "Physical_Light.rpr"
+    }
 ]

@@ -1,7 +1,17 @@
 [
-    "Caustic_Single_Test.rpr",
-    "Directional_Light.rpr",
-    "IES_Light.rpr",
-    "Physical_Light.rpr",
-    "Portal_Light_Test.rpr"
+    {
+        "scene": "Caustic_Single_Test.rpr"
+    },
+    {
+        "scene": "Directional_Light.rpr"
+    },
+    {
+        "scene": "IES_Light.rpr"
+    },
+    {
+        "scene": "Physical_Light.rpr"
+    },
+    {
+        "scene": "Portal_Light_Test.rpr"
+    }
 ]

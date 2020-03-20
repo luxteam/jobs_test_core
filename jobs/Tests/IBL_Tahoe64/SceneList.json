@@ -1,4 +1,8 @@
 [
-    "IBL_Rotation.rpr",
-    "Sun_and_Sky.rpr"
+    {
+        "scene": "IBL_Rotation.rpr"
+    },
+    {
+        "scene": "Sun_and_Sky.rpr"
+    }
 ]

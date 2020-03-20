@@ -1,7 +1,17 @@
 [
-    "Material_Test.rpr",
-    "Material_Test_NonSSS.rpr",
-    "SSSTypesTest.rpr",
-    "PBR_Test.rpr",
-    "Refraction.rpr"
+    {
+        "scene": "Material_Test.rpr"
+    },
+    {
+        "scene": "Material_Test_NonSSS.rpr"
+    },
+    {
+        "scene": "SSSTypesTest.rpr"
+    },
+    {
+        "scene": "PBR_Test.rpr"
+    },
+    {
+        "scene": "Refraction.rpr"
+    }
 ]

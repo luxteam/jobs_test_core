@@ -67,26 +67,38 @@ def main():
     except OSError as e:
         main_logger.error(str(e))
 
+    gpu = get_gpu()
+    if not gpu:
+        main_logger.error("Can't get gpu name")
+    render_platform = {platform.system(), gpu}
+
     for scene in scenes_list:
-        report = RENDER_REPORT_BASE.copy()
-        report.update({'test_case': scene,
-                       'test_status': TEST_CRASH_STATUS,
-                       'test_group': args.package_name,
-                       'render_color_path': 'Color/' + scene + ".png",
-                       'file_name': scene + ".png"})
+        if sum([render_platform & set(skip_conf) == set(skip_conf) for skip_conf in scene.get('skip_on', '')]):
+            for i in scene['skip_on']:
+                skip_on = set(i)
+                if render_platform.intersection(skip_on) != skip_on:
+                    report = RENDER_REPORT_BASE.copy()
+                    report.update({'test_case': scene,
+                                'test_status': TEST_CRASH_STATUS,
+                                'test_group': args.package_name,
+                                'render_color_path': 'Color/' + scene + ".png",
+                                'file_name': scene + ".png"})
 
-        # TODO: refactor img paths
-        try:
-            shutil.copyfile(
-                os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
-                os.path.join(args.output, 'Color', report['file_name']))
-        except OSError or FileNotFoundError as err:
-            main_logger.error("Can't create img stub: {}".format(str(err)))
+                    # TODO: refactor img paths
+                    try:
+                        shutil.copyfile(
+                            os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
+                            os.path.join(args.output, 'Color', report['file_name']))
+                    except OSError or FileNotFoundError as err:
+                        main_logger.error("Can't create img stub: {}".format(str(err)))
 
-        with open(os.path.join(args.output, scene + CASE_REPORT_SUFFIX), 'w') as file:
-            json.dump([report], file, indent=4)
+                    with open(os.path.join(args.output, scene + CASE_REPORT_SUFFIX), 'w') as file:
+                        json.dump([report], file, indent=4)
 
-        # FIXME: implement the same for AOVS
+                    # FIXME: implement the same for AOVS
+                else:
+                    shutil.copyfile(os.path.abspath(os.path.join(args.output, '..', '..', '..', '..', 'jobs_launcher',
+									'common', 'img', 'error.jpg')), os.path.join(args.output, 'Color', 'skipped.jpg'))
 
     for scene in scenes_list:
         try:
