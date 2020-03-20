@@ -12,7 +12,7 @@
         <argument>--output "{OutputDir}"</argument>
         <argument>--package_name "Lights_Tahoe64"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
-        <argument>--test_list "{Root}/Tests/Lights_Tahoe64/SceneList.txt"</argument>
+        <argument>--test_list "{Root}/Tests/Lights_Tahoe64/SceneList.json"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>

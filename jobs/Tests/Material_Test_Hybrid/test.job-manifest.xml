@@ -12,7 +12,7 @@
         <argument>--output "{OutputDir}"</argument>
         <argument>--package_name "Material_Test_Hybrid"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
-        <argument>--test_list "{Root}/Tests/Material_Test_Hybrid/SceneList.txt"</argument>
+        <argument>--test_list "{Root}/Tests/Material_Test_Hybrid/SceneList.json"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>

@@ -1,0 +1,10 @@
+[
+    "RPR_Nodes.rpr",
+    "Material_Test.rpr",
+    "Material_Test_NonSSS.rpr",
+    "Material_TestSSS.rpr",
+    "SSSTypesTest.rpr",
+    "PBR_Test.rpr",
+    "Refraction.rpr",
+    "Material_TestVolume.rpr"
+]

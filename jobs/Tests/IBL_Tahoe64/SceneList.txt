@@ -1,2 +1,0 @@
-IBL_Rotation.rpr
-Sun_and_Sky.rpr
