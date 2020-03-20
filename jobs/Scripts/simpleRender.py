@@ -102,7 +102,7 @@ def main():
 
     for scene in scenes_list:
         try:
-            with open(os.path.join(args.res_path, args.package_name, scene.replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
@@ -114,8 +114,8 @@ def main():
 
         config_json.pop('gamma', None)
 
-        config_json["output"] = os.path.join("Color", scene + ".png")
-        config_json["output.json"] = scene + "_original.json"
+        config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
+        config_json["output.json"] = scene['scene'] + "_original.json"
 
         if platform_system == 'Windows':
             config_json["plugin"] = "{}.dll".format(engine)
@@ -135,17 +135,17 @@ def main():
         config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
         config_json["iterations"] = args.pass_limit if args.pass_limit else config_json["iterations"]
 
-        script_path = os.path.join(args.output, "cfg_{}.json".format(scene))
-        scene_path = os.path.join(args.res_path, args.package_name, scene)
+        script_path = os.path.join(args.output, "cfg_{}.json".format(scene['scene']))
+        scene_path = os.path.join(args.res_path, args.package_name, scene['scene'])
 
         if platform_system == "Windows":
             cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
                                                                 template=script_path)
-            cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
+            cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene['scene']))
         else:
             cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
                 ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=script_path)
-            cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene.replace(" ", "_")))
+            cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene['scene'].replace(" ", "_")))
 
         try:
             with open(script_path, 'w') as f:
@@ -185,16 +185,16 @@ def main():
                 file.write(stderr)
 
             if os.path.exists("tahoe.log"):
-                os.rename("tahoe.log", "{}_render.log".format(scene))
-            if not os.path.exists('{}_original.json'.format(scene)):
+                os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
+            if not os.path.exists('{}_original.json'.format(scene['scene'])):
                 report = RENDER_REPORT_BASE
 
                 report["render_device"] = get_gpu().replace('NVIDIA ', '')
                 report["test_group"] = args.package_name
-                report["scene_name"] = scene
-                report["test_case"] = scene
-                report["file_name"] = scene + ".png"
-                report["render_color_path"] = os.path.join("Color", scene + ".png")
+                report["scene_name"] = scene['scene']
+                report["test_case"] = scene['scene']
+                report["file_name"] = scene['scene'] + ".png"
+                report["render_color_path"] = os.path.join("Color", scene['scene'] + ".png")
                 report["tool"] = "Core"
                 report['date_time'] = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
                 report['test_status'] = "error"
@@ -202,7 +202,7 @@ def main():
                 report['height'] = args.resolution_y
                 report['iterations'] = args.pass_limit
 
-                reportName = "{}_RPR.json".format(scene)
+                reportName = "{}_RPR.json".format(scene['scene'])
                 with open(os.path.join(args.output, reportName), 'w') as f:
                     json.dump([report], f, indent=4)
 
@@ -215,9 +215,9 @@ def main():
                         elif type(value) is list:
                             report['file_name'] = value[0].split(os.path.sep)[-1]
                             report['render_color_path'] = value[0]
-                        report['test_case'] = scene + key
+                        report['test_case'] = scene['scene'] + key
 
-                        with open(os.path.join(args.output, "{}_{}_RPR.json".format(scene, key)), 'w') as file:
+                        with open(os.path.join(args.output, "{}_{}_RPR.json".format(scene['scene'], key)), 'w') as file:
                             json.dump([report], file, indent=4)
 
                         try:
