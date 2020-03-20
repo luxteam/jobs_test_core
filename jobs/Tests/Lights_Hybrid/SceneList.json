@@ -1,11 +1,20 @@
 [
     {
-        "scene": "Caustic_Single_Test.rpr"
+        "scene": "Caustic_Single_Test.rpr",
+        "skip_on": [
+            "Darwin"
+        ]
     },
     {
-        "scene": "Directional_Light.rpr"
+        "scene": "Directional_Light.rpr",
+        "skip_on": [
+            "Darwin"
+        ]
     },
     {
-        "scene": "Physical_Light.rpr"
+        "scene": "Physical_Light.rpr",
+        "skip_on": [
+            "Darwin"
+        ]
     }
 ]
