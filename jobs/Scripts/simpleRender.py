@@ -8,7 +8,8 @@ import json
 import datetime
 import platform
 
-ROOT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
+ROOT_DIR_PATH = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
 from jobs_launcher.core.config import *
 from jobs_launcher.core.system_info import get_gpu
@@ -58,7 +59,8 @@ def main():
 
     scenes_list = []
     try:
-        scenes_list = json.load(open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)))
+        scenes_list = json.load(
+            open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)))
 
         os.makedirs(os.path.join(args.output, "Color"))
         main_logger.info("Scenes to render: {}".format(scenes_list))
@@ -77,20 +79,14 @@ def main():
             for i in scene['skip_on']:
                 skip_on = set(i)
                 if render_platform.intersection(skip_on) != skip_on:
-                    report = RENDER_REPORT_BASE.copy()
-                    report.update({'test_case': scene,
-                                'test_status': TEST_CRASH_STATUS,
-                                'test_group': args.package_name,
-                                'render_color_path': 'Color/' + scene + ".png",
-                                'file_name': scene + ".png"})
-
-                    # TODO: refactor img paths
                     try:
                         shutil.copyfile(
-                            os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
+                            os.path.join(
+                                ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
                             os.path.join(args.output, 'Color', report['file_name']))
                     except OSError or FileNotFoundError as err:
-                        main_logger.error("Can't create img stub: {}".format(str(err)))
+                        main_logger.error(
+                            "Can't create img stub: {}".format(str(err)))
 
                     with open(os.path.join(args.output, scene + CASE_REPORT_SUFFIX), 'w') as file:
                         json.dump([report], file, indent=4)
@@ -98,7 +94,15 @@ def main():
                     # FIXME: implement the same for AOVS
                 else:
                     shutil.copyfile(os.path.abspath(os.path.join(args.output, '..', '..', '..', '..', 'jobs_launcher',
-									'common', 'img', 'error.jpg')), os.path.join(args.output, 'Color', 'skipped.jpg'))
+                                                                 'common', 'img', 'skipped.png')), os.path.join(args.output, 'Color', scene['scene'] + '.png'))
+                report = RENDER_REPORT_BASE.copy()
+                report.update({'test_case': scene['scene'],
+                               'test_status': TEST_CRASH_STATUS,
+                               'test_group': args.package_name,
+                               'render_color_path': 'Color/' + scene['scene'] + ".png",
+                               'file_name': scene['scene'] + ".png"})
+
+                # TODO: refactor img paths
 
     for scene in scenes_list:
         try:
@@ -135,17 +139,21 @@ def main():
         config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
         config_json["iterations"] = args.pass_limit if args.pass_limit else config_json["iterations"]
 
-        script_path = os.path.join(args.output, "cfg_{}.json".format(scene['scene']))
-        scene_path = os.path.join(args.res_path, args.package_name, scene['scene'])
+        script_path = os.path.join(
+            args.output, "cfg_{}.json".format(scene['scene']))
+        scene_path = os.path.join(
+            args.res_path, args.package_name, scene['scene'])
 
         if platform_system == "Windows":
             cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
                                                                 template=script_path)
-            cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene['scene']))
+            cmdScriptPath = os.path.join(
+                args.output, '{}.bat'.format(scene['scene']))
         else:
             cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
                 ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=script_path)
-            cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene['scene'].replace(" ", "_")))
+            cmdScriptPath = os.path.join(
+                args.output, '{}.sh'.format(scene['scene'].replace(" ", "_")))
 
         try:
             with open(script_path, 'w') as f:
@@ -162,7 +170,8 @@ def main():
             continue
 
         os.chdir(args.output)
-        p = psutil.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = psutil.Popen(cmdScriptPath, shell=True,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         rc = 1
 
         try:
@@ -174,7 +183,7 @@ def main():
                 child.terminate()
             p.terminate()
         finally:
-            
+
             with open("render_log.txt", 'a', encoding='utf-8') as file:
                 stdout = stdout.decode("utf-8")
                 file.write(stdout)
@@ -194,9 +203,11 @@ def main():
                 report["scene_name"] = scene['scene']
                 report["test_case"] = scene['scene']
                 report["file_name"] = scene['scene'] + ".png"
-                report["render_color_path"] = os.path.join("Color", scene['scene'] + ".png")
+                report["render_color_path"] = os.path.join(
+                    "Color", scene['scene'] + ".png")
                 report["tool"] = "Core"
-                report['date_time'] = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+                report['date_time'] = datetime.datetime.now().strftime(
+                    "%m/%d/%Y %H:%M:%S")
                 report['test_status'] = "error"
                 report['width'] = args.resolution_x
                 report['height'] = args.resolution_y
@@ -213,7 +224,8 @@ def main():
                             report['file_name'] = value.split(os.path.sep)[-1]
                             report['render_color_path'] = value
                         elif type(value) is list:
-                            report['file_name'] = value[0].split(os.path.sep)[-1]
+                            report['file_name'] = value[0].split(
+                                os.path.sep)[-1]
                             report['render_color_path'] = value[0]
                         report['test_case'] = scene['scene'] + key
 
@@ -222,12 +234,13 @@ def main():
 
                         try:
                             shutil.copyfile(
-                                os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
+                                os.path.join(
+                                    ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
                                 os.path.join(args.output, report['file_name']))
                         except OSError or FileNotFoundError as err:
-                            main_logger.error("Can't create img stub: {}".format(str(err)))
+                            main_logger.error(
+                                "Can't create img stub: {}".format(str(err)))
 
 
 if __name__ == "__main__":
     exit(main())
-
