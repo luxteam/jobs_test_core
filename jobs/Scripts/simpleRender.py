@@ -63,7 +63,7 @@ def main():
         os.makedirs(os.path.join(args.output, "Color"))
         main_logger.info("Scenes to render: {}".format(scenes_list))
         with open(os.path.join(args.output, 'expected.json'), 'w') as file:
-            json.dump(scenes_list, file, indent=4)
+            json.dump([s['scene'] for s in scenes_list], file, indent=4)
     except OSError as e:
         main_logger.error(str(e))
 
