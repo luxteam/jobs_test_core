@@ -78,6 +78,12 @@ def main():
         if sum([render_platform & set(skip_conf) == set(skip_conf) for skip_conf in scene.get('skip_on', '')]):
             for i in scene['skip_on']:
                 skip_on = set(i)
+                report = RENDER_REPORT_BASE.copy()
+                report.update({'test_case': scene['scene'],
+                               'test_status': TEST_CRASH_STATUS,
+                               'test_group': args.package_name,
+                               'render_color_path': 'Color/' + scene['scene'] + ".png",
+                               'file_name': scene['scene'] + ".png"})
                 if render_platform.intersection(skip_on) != skip_on:
                     try:
                         shutil.copyfile(
@@ -95,12 +101,6 @@ def main():
                 else:
                     shutil.copyfile(os.path.abspath(os.path.join(args.output, '..', '..', '..', '..', 'jobs_launcher',
                                                                  'common', 'img', 'skipped.png')), os.path.join(args.output, 'Color', scene['scene'] + '.png'))
-                report = RENDER_REPORT_BASE.copy()
-                report.update({'test_case': scene['scene'],
-                               'test_status': TEST_CRASH_STATUS,
-                               'test_group': args.package_name,
-                               'render_color_path': 'Color/' + scene['scene'] + ".png",
-                               'file_name': scene['scene'] + ".png"})
 
                 # TODO: refactor img paths
 
