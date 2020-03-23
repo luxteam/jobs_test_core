@@ -44,7 +44,7 @@ def main():
     elif "Tahoe64" in args.package_name:
         engine = "Tahoe64"
 
-    # get tool path and abspath
+    # get tool path and abspath.
     args.tool = os.path.abspath(args.tool)
     tool_path = os.path.dirname(args.tool)
     args.output = os.path.abspath(args.output)
@@ -59,7 +59,7 @@ def main():
             open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)))
 
         os.makedirs(os.path.join(args.output, "Color"))
-        main_logger.info("Scenes to render: {}".format([name['scene'] for name['scene'] in scenes_list]))
+        main_logger.info("Scenes to render: {}".format([name['scene'] for name in scenes_list]))
     except OSError as e:
         main_logger.error(str(e))
         exit(-1)
