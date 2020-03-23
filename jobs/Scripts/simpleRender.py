@@ -75,8 +75,6 @@ def main():
         scene['status'] = TEST_CRASH_STATUS
         if sum([render_platform & set(skip_config) == set(skip_config) for skip_config in scene.get('skip_on', '')]):
             scene['status'] = TEST_IGNORE_STATUS
-            shutil.copyfile(os.path.abspath(os.path.join(args.output, '..', '..', '..', '..', 'jobs_launcher',
-                                                            'common', 'img', 'skipped.png')), os.path.join(args.output, 'Color', scene['scene'] + '.png'))
 
         report = RENDER_REPORT_BASE.copy()
         report.update({'test_case': scene['scene'],
@@ -98,9 +96,10 @@ def main():
 
         # FIXME: implement the same for AOVS
 
-                # TODO: refactor img paths
+        # TODO: refactor img paths
 
     for scene in scenes_list:
+        main_logger.warn("status of {}: {}".format(scene['scene'], scene['status'])) # need to be removed before merge to master
         if scene['status'] == TEST_IGNORE_STATUS:
             continue
         try:
