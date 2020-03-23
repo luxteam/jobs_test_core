@@ -73,7 +73,7 @@ def main():
     for scene in scenes_list:
         scene['status'] = TEST_CRASH_STATUS
         if sum([render_platform & set(skip_config) == set(skip_config) for skip_config in scene.get('skip_on', '')]):
-            status = TEST_IGNORE_STATUS
+            scene['status'] = TEST_IGNORE_STATUS
             shutil.copyfile(os.path.abspath(os.path.join(args.output, '..', '..', '..', '..', 'jobs_launcher',
                                                             'common', 'img', 'skipped.png')), os.path.join(args.output, 'Color', scene['scene'] + '.png'))
 
@@ -205,7 +205,7 @@ def main():
                 report["tool"] = "Core"
                 report['date_time'] = datetime.datetime.now().strftime(
                     "%m/%d/%Y %H:%M:%S")
-                report['test_status'] = "error"
+                report['test_status'] = TEST_CRASH_STATUS
                 report['width'] = args.resolution_x
                 report['height'] = args.resolution_y
                 report['iterations'] = args.pass_limit
