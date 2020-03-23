@@ -55,8 +55,8 @@ def main():
 
     scenes_list = []
     try:
-        scenes_list = json.load(
-            open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)))
+        with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
+            scenes_list = json.load(f)
 
         os.makedirs(os.path.join(args.output, "Color"))
         main_logger.info("Scenes to render: {}".format([name['scene'] for name in scenes_list]))
