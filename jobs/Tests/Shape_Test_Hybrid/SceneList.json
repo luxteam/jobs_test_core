@@ -2,7 +2,7 @@
     {
         "scene": "Instances_multi_materials.rpr",
         "skip_on": [
-            "Darwin"
+            ["Darwin"]
         ]
     }
 ]

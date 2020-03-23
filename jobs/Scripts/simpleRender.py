@@ -99,7 +99,6 @@ def main():
         # TODO: refactor img paths
 
     for scene in scenes_list:
-        main_logger.warn("status of {}: {}".format(scene['scene'], scene['status'])) # need to be removed before merge to master
         if scene['status'] == TEST_IGNORE_STATUS:
             continue
         try:

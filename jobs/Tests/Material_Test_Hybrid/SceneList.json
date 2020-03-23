@@ -2,31 +2,31 @@
     {
         "scene": "Material_Test.rpr",
         "skip_on": [
-            "Darwin"
+            ["Darwin"]
         ]
     },
     {
         "scene": "Material_Test_NonSSS.rpr",
         "skip_on": [
-            "Darwin"
+            ["Darwin"]
         ]
     },
     {
         "scene": "SSSTypesTest.rpr",
         "skip_on": [
-            "Darwin"
+            ["Darwin"]
         ]
     },
     {
         "scene": "PBR_Test.rpr",
         "skip_on": [
-            "Darwin"
+            ["Darwin"]
         ]
     },
     {
         "scene": "Refraction.rpr",
         "skip_on": [
-            "Darwin"
+            ["Darwin"]
         ]
     }
 ]
