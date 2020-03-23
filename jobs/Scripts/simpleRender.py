@@ -79,7 +79,7 @@ def main():
 
         report = RENDER_REPORT_BASE.copy()
         report.update({'test_case': scene,
-                       'test_status': scene['status'] ,
+                       'test_status': scene['status'],
                        'test_group': args.package_name,
                        'render_color_path': 'Color/' + scene + ".png",
                        'file_name': scene + ".png"})
