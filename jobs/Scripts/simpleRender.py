@@ -62,11 +62,12 @@ def main():
         main_logger.info("Scenes to render: {}".format([name['scene'] for name['scene'] in scenes_list]))
     except OSError as e:
         main_logger.error(str(e))
+        exit(-1)
 
     gpu = get_gpu()
     if not gpu:
         main_logger.error("Can't get gpu name")
-        exit(-1)
+        exit(-2)
     render_platform = {platform.system(), gpu}
 
     for scene in scenes_list:
