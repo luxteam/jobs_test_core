@@ -61,6 +61,7 @@ def main():
         os.makedirs(os.path.join(args.output, "Color"))
         main_logger.info("Scenes to render: {}".format([name['scene'] for name in scenes_list]))
     except OSError as e:
+        main_logger.error("Failed to read test cases json. ")
         main_logger.error(str(e))
         exit(-1)
 
