@@ -78,11 +78,11 @@ def main():
                                                             'common', 'img', 'skipped.png')), os.path.join(args.output, 'Color', scene['scene'] + '.png'))
 
         report = RENDER_REPORT_BASE.copy()
-        report.update({'test_case': scene,
+        report.update({'test_case': scene['scene'],
                        'test_status': scene['status'],
                        'test_group': args.package_name,
-                       'render_color_path': 'Color/' + scene + ".png",
-                       'file_name': scene + ".png"})
+                       'render_color_path': 'Color/' + scene['scene'] + ".png",
+                       'file_name': scene['scene'] + ".png"})
 
         # TODO: refactor img paths
         try:
@@ -92,7 +92,7 @@ def main():
         except OSError or FileNotFoundError as err:
             main_logger.error("Can't create img stub: {}".format(str(err)))
 
-        with open(os.path.join(args.output, scene + CASE_REPORT_SUFFIX), 'w') as file:
+        with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
 
         # FIXME: implement the same for AOVS
