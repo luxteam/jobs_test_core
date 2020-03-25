@@ -8,7 +8,8 @@ import json
 import datetime
 import platform
 
-ROOT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
+ROOT_DIR_PATH = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
 from jobs_launcher.core.config import *
 from jobs_launcher.core.system_info import get_gpu
@@ -43,11 +44,7 @@ def main():
     elif "Tahoe64" in args.package_name:
         engine = "Tahoe64"
 
-    if platform_system == "Darwin" and engine == "Hybrid":
-        main_logger.error("OSX don't support Hybrid.")
-        exit()
-
-    # get tool path and abspath
+    # get tool path and abspath.
     args.tool = os.path.abspath(args.tool)
     tool_path = os.path.dirname(args.tool)
     args.output = os.path.abspath(args.output)
@@ -59,22 +56,35 @@ def main():
     scenes_list = []
     try:
         with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
-            scenes_list = [x for x in f.read().splitlines() if x]
+            scenes_list = json.load(f)
 
         os.makedirs(os.path.join(args.output, "Color"))
-        main_logger.info("Scenes to render: {}".format(scenes_list))
-        with open(os.path.join(args.output, 'expected.json'), 'w') as file:
-            json.dump(scenes_list, file, indent=4)
+        main_logger.info("Scenes to render: {}".format([name['scene'] for name in scenes_list]))
     except OSError as e:
+        main_logger.error("Failed to read test cases json. ")
         main_logger.error(str(e))
+        exit(-1)
+
+    gpu = get_gpu()
+    if not gpu:
+        main_logger.error("Can't get gpu name")
+        exit(-2)
+    render_platform = {platform.system(), gpu}
 
     for scene in scenes_list:
+        scene['status'] = TEST_CRASH_STATUS
+        # there is list with lists of gpu/os/gpu&os in skip_on
+        # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
+        # with that skip_on case will be skipped on OSX, GeForce GTX 1080 Ti and Windows with Vega
+        if sum([render_platform & set(skip_config) == set(skip_config) for skip_config in scene.get('skip_on', '')]):
+            scene['status'] = TEST_IGNORE_STATUS
+
         report = RENDER_REPORT_BASE.copy()
-        report.update({'test_case': scene,
-                       'test_status': TEST_CRASH_STATUS,
+        report.update({'test_case': scene['scene'],
+                       'test_status': scene['status'],
                        'test_group': args.package_name,
-                       'render_color_path': 'Color/' + scene + ".png",
-                       'file_name': scene + ".png"})
+                       'render_color_path': 'Color/' + scene['scene'] + ".png",
+                       'file_name': scene['scene'] + ".png"})
 
         # TODO: refactor img paths
         try:
@@ -84,14 +94,18 @@ def main():
         except OSError or FileNotFoundError as err:
             main_logger.error("Can't create img stub: {}".format(str(err)))
 
-        with open(os.path.join(args.output, scene + CASE_REPORT_SUFFIX), 'w') as file:
+        with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
 
         # FIXME: implement the same for AOVS
 
+        # TODO: refactor img paths
+
     for scene in scenes_list:
+        if scene['status'] == TEST_IGNORE_STATUS:
+            continue
         try:
-            with open(os.path.join(args.res_path, args.package_name, scene.replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
@@ -103,8 +117,8 @@ def main():
 
         config_json.pop('gamma', None)
 
-        config_json["output"] = os.path.join("Color", scene + ".png")
-        config_json["output.json"] = scene + "_original.json"
+        config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
+        config_json["output.json"] = scene['scene'] + "_original.json"
 
         if platform_system == 'Windows':
             config_json["plugin"] = "{}.dll".format(engine)
@@ -124,17 +138,21 @@ def main():
         config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
         config_json["iterations"] = args.pass_limit if args.pass_limit else config_json["iterations"]
 
-        script_path = os.path.join(args.output, "cfg_{}.json".format(scene))
-        scene_path = os.path.join(args.res_path, args.package_name, scene)
+        script_path = os.path.join(
+            args.output, "cfg_{}.json".format(scene['scene']))
+        scene_path = os.path.join(
+            args.res_path, args.package_name, scene['scene'])
 
         if platform_system == "Windows":
             cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
                                                                 template=script_path)
-            cmdScriptPath = os.path.join(args.output, '{}.bat'.format(scene))
+            cmdScriptPath = os.path.join(
+                args.output, '{}.bat'.format(scene['scene']))
         else:
             cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
                 ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=script_path)
-            cmdScriptPath = os.path.join(args.output, '{}.sh'.format(scene.replace(" ", "_")))
+            cmdScriptPath = os.path.join(
+                args.output, '{}.sh'.format(scene['scene'].replace(" ", "_")))
 
         try:
             with open(script_path, 'w') as f:
@@ -151,7 +169,8 @@ def main():
             continue
 
         os.chdir(args.output)
-        p = psutil.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = psutil.Popen(cmdScriptPath, shell=True,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         rc = 1
 
         try:
@@ -163,7 +182,7 @@ def main():
                 child.terminate()
             p.terminate()
         finally:
-            
+
             with open("render_log.txt", 'a', encoding='utf-8') as file:
                 stdout = stdout.decode("utf-8")
                 file.write(stdout)
@@ -174,24 +193,26 @@ def main():
                 file.write(stderr)
 
             if os.path.exists("tahoe.log"):
-                os.rename("tahoe.log", "{}_render.log".format(scene))
-            if not os.path.exists('{}_original.json'.format(scene)):
+                os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
+            if not os.path.exists('{}_original.json'.format(scene['scene'])):
                 report = RENDER_REPORT_BASE
 
                 report["render_device"] = get_gpu().replace('NVIDIA ', '')
                 report["test_group"] = args.package_name
-                report["scene_name"] = scene
-                report["test_case"] = scene
-                report["file_name"] = scene + ".png"
-                report["render_color_path"] = os.path.join("Color", scene + ".png")
+                report["scene_name"] = scene['scene']
+                report["test_case"] = scene['scene']
+                report["file_name"] = scene['scene'] + ".png"
+                report["render_color_path"] = os.path.join(
+                    "Color", scene['scene'] + ".png")
                 report["tool"] = "Core"
-                report['date_time'] = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-                report['test_status'] = "error"
+                report['date_time'] = datetime.datetime.now().strftime(
+                    "%m/%d/%Y %H:%M:%S")
+                report['test_status'] = TEST_CRASH_STATUS
                 report['width'] = args.resolution_x
                 report['height'] = args.resolution_y
                 report['iterations'] = args.pass_limit
 
-                reportName = "{}_RPR.json".format(scene)
+                reportName = "{}_RPR.json".format(scene['scene'])
                 with open(os.path.join(args.output, reportName), 'w') as f:
                     json.dump([report], f, indent=4)
 
@@ -202,21 +223,23 @@ def main():
                             report['file_name'] = value.split(os.path.sep)[-1]
                             report['render_color_path'] = value
                         elif type(value) is list:
-                            report['file_name'] = value[0].split(os.path.sep)[-1]
+                            report['file_name'] = value[0].split(
+                                os.path.sep)[-1]
                             report['render_color_path'] = value[0]
-                        report['test_case'] = scene + key
+                        report['test_case'] = scene['scene'] + key
 
-                        with open(os.path.join(args.output, "{}_{}_RPR.json".format(scene, key)), 'w') as file:
+                        with open(os.path.join(args.output, "{}_{}_RPR.json".format(scene['scene'], key)), 'w') as file:
                             json.dump([report], file, indent=4)
 
                         try:
                             shutil.copyfile(
-                                os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
+                                os.path.join(
+                                    ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
                                 os.path.join(args.output, report['file_name']))
                         except OSError or FileNotFoundError as err:
-                            main_logger.error("Can't create img stub: {}".format(str(err)))
+                            main_logger.error(
+                                "Can't create img stub: {}".format(str(err)))
 
 
 if __name__ == "__main__":
     exit(main())
-

@@ -1,3 +1,0 @@
-Caustic_Single_Test.rpr
-Directional_Light.rpr
-Physical_Light.rpr

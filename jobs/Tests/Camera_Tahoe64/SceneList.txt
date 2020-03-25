@@ -1,5 +1,0 @@
-CameraTest.rpr
-CubeMap.rpr
-CubeMapStereo.rpr
-SpericalPanorama.rpr
-SpericalPanoramaStereo.rpr

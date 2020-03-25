@@ -7,19 +7,15 @@
         <argument>--tool "{Tool}"</argument>
         <argument>--render_mode "{RenderDevice}"</argument>
         <argument>--pass_limit {PassLimit}</argument>
-    	<argument>--resolution_x {rx}</argument>
-    	<argument>--resolution_y {ry}</argument>
+        <argument>--resolution_x {rx}</argument>
+        <argument>--resolution_y {ry}</argument>
         <argument>--output "{OutputDir}"</argument>
-	    <argument>--package_name "Quality_test_Tahoe64"</argument>
+        <argument>--package_name "Quality_test_Tahoe64"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
-        <argument>--test_list "{Root}/Tests/Quality_test_Tahoe64/SceneList.txt"</argument>
+        <argument>--test_list "{Root}/Tests/Quality_test_Tahoe64/SceneList.json"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>
-        <argument>--work_dir "{OutputDir}"</argument>
-    </execute>
-
-    <execute command='python "{CommonDir}/scripts/checkExpected.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
     </execute>
 
