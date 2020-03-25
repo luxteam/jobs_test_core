@@ -73,6 +73,9 @@ def main():
 
     for scene in scenes_list:
         scene['status'] = TEST_CRASH_STATUS
+        # there is list with lists of gpu/os/gpu&os in skip_on
+        # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
+        # with that skip_on case will be skipped on OSX, GeForce GTX 1080 Ti and Windows with Vega
         if sum([render_platform & set(skip_config) == set(skip_config) for skip_config in scene.get('skip_on', '')]):
             scene['status'] = TEST_IGNORE_STATUS
 
