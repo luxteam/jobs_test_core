@@ -68,7 +68,6 @@ def main():
     gpu = get_gpu()
     if not gpu:
         main_logger.error("Can't get gpu name")
-        exit(-2)
     render_platform = {platform.system(), gpu}
 
     for scene in scenes_list:
