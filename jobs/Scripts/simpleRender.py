@@ -43,6 +43,8 @@ def main():
         engine = "Hybrid"
     elif "Tahoe64" in args.package_name:
         engine = "Tahoe64"
+    elif "Northstar64" in args.package_name:
+        engine = "Northstar64"
 
     # get tool path and abspath.
     args.tool = os.path.abspath(args.tool)
