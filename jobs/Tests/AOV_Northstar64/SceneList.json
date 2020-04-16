@@ -1,5 +1,8 @@
 [
     {
-        "scene": "AOVTest.rpr"
+        "scene": "AOVTest.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     }
 ]

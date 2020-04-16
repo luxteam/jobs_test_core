@@ -1,17 +1,32 @@
 [
     {
-        "scene": "CameraTest.rpr"
+        "scene": "CameraTest.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     },
     {
-        "scene": "CubeMap.rpr"
+        "scene": "CubeMap.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     },
     {
-        "scene": "CubeMapStereo.rpr"
+        "scene": "CubeMapStereo.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     },
     {
-        "scene": "SpericalPanorama.rpr"
+        "scene": "SpericalPanorama.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     },
     {
-        "scene": "SpericalPanoramaStereo.rpr"
+        "scene": "SpericalPanoramaStereo.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     }
 ]

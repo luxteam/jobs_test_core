@@ -1,8 +1,14 @@
 [
     {
-        "scene": "InstanceMotionBlurTest.rpr"
+        "scene": "InstanceMotionBlurTest.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     },
     {
-        "scene": "MotionBlurTest.rpr"
+        "scene": "MotionBlurTest.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     }
 ]

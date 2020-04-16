@@ -1,5 +1,8 @@
 [
     {
-        "scene": "Hair_Test.rpr"
+        "scene": "Hair_Test.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     }
 ]

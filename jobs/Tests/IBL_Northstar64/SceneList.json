@@ -1,8 +1,14 @@
 [
     {
-        "scene": "IBL_Rotation.rpr"
+        "scene": "IBL_Rotation.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     },
     {
-        "scene": "Sun_and_Sky.rpr"
+        "scene": "Sun_and_Sky.rpr",
+        "skip_on": [
+            ["Darwin"]
+        ]
     }
 ]
