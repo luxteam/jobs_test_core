@@ -2,31 +2,31 @@
     {
         "scene": "Caustic_Single_Test.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Windows"]
         ]
     },
     {
         "scene": "Directional_Light.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Windows"]
         ]
     },
     {
         "scene": "IES_Light.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Windows"]
         ]
     },
     {
         "scene": "Physical_Light.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Windows"]
         ]
     },
     {
         "scene": "Portal_Light_Test.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Windows"]
         ]
     }
 ]
