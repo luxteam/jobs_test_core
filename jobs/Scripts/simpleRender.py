@@ -73,12 +73,14 @@ def main():
     render_platform = {platform.system(), gpu}
 
     for scene in scenes_list:
-        scene['status'] = TEST_CRASH_STATUS
         # there is list with lists of gpu/os/gpu&os in skip_on
         # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
         # with that skip_on case will be skipped on OSX, GeForce GTX 1080 Ti and Windows with Vega
-        if sum([render_platform & set(skip_config) == set(skip_config) for skip_config in scene.get('skip_on', '')]):
+        main_logger.info("info: {}".format(scene.get('status', '')))
+        if sum([render_platform & set(skip_config) == set(skip_config) for skip_config in scene.get('skip_on', '')]) or scene.get('status', '') == "skipped":
             scene['status'] = TEST_IGNORE_STATUS
+        else:
+            scene['status'] = TEST_CRASH_STATUS
 
         report = RENDER_REPORT_BASE.copy()
         report.update({'test_case': scene['scene'],
@@ -103,8 +105,6 @@ def main():
         # TODO: refactor img paths
 
     for scene in scenes_list:
-        if scene['status'] == TEST_IGNORE_STATUS:
-            continue
         try:
             with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
@@ -114,7 +114,16 @@ def main():
 
         if 'aovs' in config_json.keys():
             for key, value in config_json['aovs'].items():
-                config_json['aovs'].update({key: 'Color/' + value})
+                try:
+                    config_json['aovs'].update({key: 'Color/' + value})
+                    shutil.copyfile(
+                        os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', scene['status'] + ".png"),
+                        os.path.join(args.output, 'Color/' + value))
+                except OSError or FileNotFoundError as err:
+                    main_logger.error("Can't create img stub: {}".format(str(err)))
+
+        if scene['status'] == TEST_IGNORE_STATUS:
+            continue
 
         config_json.pop('gamma', None)
 

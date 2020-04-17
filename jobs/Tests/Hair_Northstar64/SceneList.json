@@ -1,8 +1,9 @@
 [
     {
         "scene": "Hair_Test.rpr",
+        "status": "skipped",
         "skip_on": [
-            ["Darwin"], ["Windows"]
+            ["Darwin"],
         ]
     }
 ]
