@@ -86,8 +86,11 @@ def main():
         report.update({'test_case': scene['scene'],
                        'test_status': scene['status'],
                        'test_group': args.package_name,
-                       'render_color_path': 'Color/' + scene['scene'] + ".png",
+                       'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
+
+        with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
+            json.dump([report], file, indent=4)
 
         # TODO: refactor img paths
         try:
@@ -97,14 +100,6 @@ def main():
         except OSError or FileNotFoundError as err:
             main_logger.error("Can't create img stub: {}".format(str(err)))
 
-        with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
-            json.dump([report], file, indent=4)
-
-        # FIXME: implement the same for AOVS
-
-        # TODO: refactor img paths
-
-    for scene in scenes_list:
         try:
             with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
@@ -114,17 +109,31 @@ def main():
 
         if 'aovs' in config_json.keys():
             for key, value in config_json['aovs'].items():
-                try:
-                    config_json['aovs'].update({key: 'Color/' + value})
-                    shutil.copyfile(
-                        os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', scene['status'] + ".png"),
-                        os.path.join(args.output, 'Color/' + value))
-                except OSError or FileNotFoundError as err:
-                    main_logger.error("Can't create img stub: {}".format(str(err)))
+                report = RENDER_REPORT_BASE.copy()
+                report.update({'test_case': scene['scene'] + key,
+                               'test_status': scene['status'],
+                               'test_group': args.package_name,
+                               'render_color_path': os.path.join('Color', value),
+                               'file_name': value})
+
+                with open(os.path.join(args.output, "{}_{}{}".format(scene['scene'], key, CASE_REPORT_SUFFIX)), 'w') as file:
+                    json.dump([report], file, indent=4)
+                shutil.copyfile(
+                    os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
+                    os.path.join(args.output, 'Color', value))
+
+    for scene in scenes_list:
 
         if scene['status'] == TEST_IGNORE_STATUS:
             continue
 
+        try:
+            with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
+                config_json = json.loads(file.read())
+        except OSError as err:
+            main_logger.error("Can't read CoreAssets: {}".format(str(err)))
+            continue
+                    
         config_json.pop('gamma', None)
 
         config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
@@ -147,6 +156,10 @@ def main():
         config_json["width"] = args.resolution_x if args.resolution_x else config_json["width"]
         config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
         config_json["iterations"] = args.pass_limit if args.pass_limit else config_json["iterations"]
+
+        if 'aovs' in config_json.keys():
+            for key, value in config_json['aovs'].items():
+                config_json['aovs'].update({key: 'Color/' + value})
 
         script_path = os.path.join(
             args.output, "cfg_{}.json".format(scene['scene']))
@@ -230,16 +243,11 @@ def main():
                 if 'aovs' in config_json.keys():
                     for key, value in config_json['aovs'].items():
                         report["render_time"] = 0.0
-                        if type(value) is str:
-                            report['file_name'] = value.split(os.path.sep)[-1]
-                            report['render_color_path'] = value
-                        elif type(value) is list:
-                            report['file_name'] = value[0].split(
-                                os.path.sep)[-1]
-                            report['render_color_path'] = value[0]
+                        report['file_name'] = value.split(os.path.sep)[-1]
+                        report['render_color_path'] = value
                         report['test_case'] = scene['scene'] + key
 
-                        with open(os.path.join(args.output, "{}_{}_RPR.json".format(scene['scene'], key)), 'w') as file:
+                        with open(os.path.join(args.output, "{}_{}{}".format(scene['scene'], key, CASE_REPORT_SUFFIX)), 'w') as file:
                             json.dump([report], file, indent=4)
 
                         try:
