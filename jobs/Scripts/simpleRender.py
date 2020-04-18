@@ -204,10 +204,11 @@ def main():
 
             if os.path.exists("tahoe.log"):
                 os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
+
             if not os.path.exists('{}_original.json'.format(scene['scene'])):
                 report = RENDER_REPORT_BASE
 
-                report["render_device"] = get_gpu().replace('NVIDIA ', '')
+                report["render_device"] = get_gpu()
                 report["test_group"] = args.package_name
                 report["scene_name"] = scene['scene']
                 report["test_case"] = scene['scene']
@@ -249,6 +250,7 @@ def main():
                         except OSError or FileNotFoundError as err:
                             main_logger.error(
                                 "Can't create img stub: {}".format(str(err)))
+            
 
 
 if __name__ == "__main__":
