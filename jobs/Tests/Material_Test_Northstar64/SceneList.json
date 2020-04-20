@@ -2,49 +2,49 @@
     {
         "scene": "RPR_Nodes.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
         ]
     },
     {
         "scene": "Material_Test.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
         ]
     },
     {
         "scene": "Material_Test_NonSSS.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
         ]
     },
     {
         "scene": "Material_TestSSS.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
         ]
     },
     {
         "scene": "SSSTypesTest.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
         ]
     },
     {
         "scene": "PBR_Test.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
         ]
     },
     {
         "scene": "Refraction.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
         ]
     },
     {
         "scene": "Material_TestVolume.rpr",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
         ]
     }
 ]
