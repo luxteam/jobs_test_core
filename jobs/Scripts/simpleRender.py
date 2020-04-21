@@ -68,13 +68,13 @@ def main():
         main_logger.error(str(e))
         exit(-1)
 
-    gpu = get_gpu()
-    os = get_os()
-    if not gpu:
+    gpu_name = get_gpu()
+    os_name = get_os()
+    if not gpu_name:
         main_logger.error("Can't get gpu name")
-    if not gpu:
+    if not os_name:
         main_logger.error("Can't get os name")
-    render_platform = {os, gpu}
+    render_platform = {os_name, gpu_name}
 
     for scene in scenes_list:
         # there is list with lists of gpu/os/gpu&os in skip_on
