@@ -86,13 +86,19 @@ def main():
         report.update({'test_case': scene['scene'],
                        'test_status': scene['status'],
                        'test_group': args.package_name,
+                       'scene_name': scene['scene'],
+                       'render_device': get_gpu(),
+                       'width': args.resolution_x,
+                       'height': args.resolution_y,
+                       'iterations': args.pass_limit,
+                       'tool': "Core",
+                       'date_time': datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
 
         with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
 
-        # TODO: refactor img paths
         try:
             shutil.copyfile(
                 os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
@@ -113,6 +119,7 @@ def main():
                 report.update({'test_case': scene['scene'] + key,
                                'test_status': scene['status'],
                                'test_group': args.package_name,
+                               'render_device': get_gpu(),
                                'render_color_path': os.path.join('Color', value),
                                'file_name': value})
 
@@ -217,48 +224,6 @@ def main():
 
             if os.path.exists("tahoe.log"):
                 os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
-
-            if not os.path.exists('{}_original.json'.format(scene['scene'])):
-                report = RENDER_REPORT_BASE
-
-                report["render_device"] = get_gpu()
-                report["test_group"] = args.package_name
-                report["scene_name"] = scene['scene']
-                report["test_case"] = scene['scene']
-                report["file_name"] = scene['scene'] + ".png"
-                report["render_color_path"] = os.path.join(
-                    "Color", scene['scene'] + ".png")
-                report["tool"] = "Core"
-                report['date_time'] = datetime.datetime.now().strftime(
-                    "%m/%d/%Y %H:%M:%S")
-                report['test_status'] = TEST_CRASH_STATUS
-                report['width'] = args.resolution_x
-                report['height'] = args.resolution_y
-                report['iterations'] = args.pass_limit
-
-                reportName = "{}_RPR.json".format(scene['scene'])
-                with open(os.path.join(args.output, reportName), 'w') as f:
-                    json.dump([report], f, indent=4)
-
-                if 'aovs' in config_json.keys():
-                    for key, value in config_json['aovs'].items():
-                        report["render_time"] = 0.0
-                        report['file_name'] = value.split(os.path.sep)[-1]
-                        report['render_color_path'] = value
-                        report['test_case'] = scene['scene'] + key
-
-                        with open(os.path.join(args.output, "{}_{}{}".format(scene['scene'], key, CASE_REPORT_SUFFIX)), 'w') as file:
-                            json.dump([report], file, indent=4)
-
-                        try:
-                            shutil.copyfile(
-                                os.path.join(
-                                    ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
-                                os.path.join(args.output, report['file_name']))
-                        except OSError or FileNotFoundError as err:
-                            main_logger.error(
-                                "Can't create img stub: {}".format(str(err)))
-            
 
 
 if __name__ == "__main__":
