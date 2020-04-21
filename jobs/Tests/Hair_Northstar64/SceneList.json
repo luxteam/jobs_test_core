@@ -3,7 +3,7 @@
         "scene": "Hair_Test.rpr",
         "status": "skipped",
         "skip_on": [
-            ["Darwin"]
+            ["Darwin 10.14.6(64bit)"]
         ]
     }
 ]
