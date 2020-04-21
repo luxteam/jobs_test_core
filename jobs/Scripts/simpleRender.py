@@ -13,6 +13,7 @@ ROOT_DIR_PATH = os.path.abspath(os.path.join(
 sys.path.append(ROOT_DIR_PATH)
 from jobs_launcher.core.config import *
 from jobs_launcher.core.system_info import get_gpu
+from jobs_launcher.core.system_info import get_os
 
 
 def createArgsParser():
@@ -68,9 +69,12 @@ def main():
         exit(-1)
 
     gpu = get_gpu()
+    os = get_os()
     if not gpu:
         main_logger.error("Can't get gpu name")
-    render_platform = {platform.system(), gpu}
+    if not gpu:
+        main_logger.error("Can't get os name")
+    render_platform = {os, gpu}
 
     for scene in scenes_list:
         # there is list with lists of gpu/os/gpu&os in skip_on
