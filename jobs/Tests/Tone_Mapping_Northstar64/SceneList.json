@@ -2,43 +2,43 @@
     {
         "scene": "Tone Mapping Autolinear.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
         "scene": "Tone Mapping Linear.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
         "scene": "Tone Mapping MaxWhite.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
         "scene": "Tone Mapping None.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
         "scene": "Tone Mapping Photolinear.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
         "scene": "Tone Mapping Reinhard02.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
         "scene": "Tone Mapping White_Balance.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)", "GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"]
         ]
     }
 ]
