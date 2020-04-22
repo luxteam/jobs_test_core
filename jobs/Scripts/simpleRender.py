@@ -13,6 +13,7 @@ ROOT_DIR_PATH = os.path.abspath(os.path.join(
 sys.path.append(ROOT_DIR_PATH)
 from jobs_launcher.core.config import *
 from jobs_launcher.core.system_info import get_gpu
+from jobs_launcher.core.system_info import get_os
 
 
 def createArgsParser():
@@ -43,6 +44,8 @@ def main():
         engine = "Hybrid"
     elif "Tahoe64" in args.package_name:
         engine = "Tahoe64"
+    elif "Northstar64" in args.package_name:
+        engine = "Northstar64"
 
     # get tool path and abspath.
     args.tool = os.path.abspath(args.tool)
@@ -65,27 +68,41 @@ def main():
         main_logger.error(str(e))
         exit(-1)
 
-    gpu = get_gpu()
-    if not gpu:
+    gpu_name = get_gpu()
+    os_name = get_os()
+    if not gpu_name:
         main_logger.error("Can't get gpu name")
-    render_platform = {platform.system(), gpu}
+    if not os_name:
+        main_logger.error("Can't get os name")
+    render_platform = {os_name, gpu_name}
 
     for scene in scenes_list:
-        scene['status'] = TEST_CRASH_STATUS
         # there is list with lists of gpu/os/gpu&os in skip_on
         # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
         # with that skip_on case will be skipped on OSX, GeForce GTX 1080 Ti and Windows with Vega
-        if sum([render_platform & set(skip_config) == set(skip_config) for skip_config in scene.get('skip_on', '')]):
+        main_logger.info("info: {}".format(scene.get('status', '')))
+        if sum([render_platform & set(skip_config) == set(skip_config) for skip_config in scene.get('skip_on', '')]) or scene.get('status', '') == "skipped":
             scene['status'] = TEST_IGNORE_STATUS
+        else:
+            scene['status'] = TEST_CRASH_STATUS
 
         report = RENDER_REPORT_BASE.copy()
         report.update({'test_case': scene['scene'],
                        'test_status': scene['status'],
                        'test_group': args.package_name,
-                       'render_color_path': 'Color/' + scene['scene'] + ".png",
+                       'scene_name': scene['scene'],
+                       'render_device': get_gpu(),
+                       'width': args.resolution_x,
+                       'height': args.resolution_y,
+                       'iterations': args.pass_limit,
+                       'tool': "Core",
+                       'date_time': datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
+                       'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
 
-        # TODO: refactor img paths
+        with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
+            json.dump([report], file, indent=4)
+
         try:
             shutil.copyfile(
                 os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
@@ -93,16 +110,6 @@ def main():
         except OSError or FileNotFoundError as err:
             main_logger.error("Can't create img stub: {}".format(str(err)))
 
-        with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
-            json.dump([report], file, indent=4)
-
-        # FIXME: implement the same for AOVS
-
-        # TODO: refactor img paths
-
-    for scene in scenes_list:
-        if scene['status'] == TEST_IGNORE_STATUS:
-            continue
         try:
             with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
@@ -112,8 +119,32 @@ def main():
 
         if 'aovs' in config_json.keys():
             for key, value in config_json['aovs'].items():
-                config_json['aovs'].update({key: 'Color/' + value})
+                report = RENDER_REPORT_BASE.copy()
+                report.update({'test_case': scene['scene'] + key,
+                               'test_status': scene['status'],
+                               'test_group': args.package_name,
+                               'render_device': get_gpu(),
+                               'render_color_path': os.path.join('Color', value),
+                               'file_name': value})
 
+                with open(os.path.join(args.output, "{}_{}{}".format(scene['scene'], key, CASE_REPORT_SUFFIX)), 'w') as file:
+                    json.dump([report], file, indent=4)
+                shutil.copyfile(
+                    os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
+                    os.path.join(args.output, 'Color', value))
+
+    for scene in scenes_list:
+
+        if scene['status'] == TEST_IGNORE_STATUS:
+            continue
+
+        try:
+            with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
+                config_json = json.loads(file.read())
+        except OSError as err:
+            main_logger.error("Can't read CoreAssets: {}".format(str(err)))
+            continue
+                    
         config_json.pop('gamma', None)
 
         config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
@@ -136,6 +167,10 @@ def main():
         config_json["width"] = args.resolution_x if args.resolution_x else config_json["width"]
         config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
         config_json["iterations"] = args.pass_limit if args.pass_limit else config_json["iterations"]
+
+        if 'aovs' in config_json.keys():
+            for key, value in config_json['aovs'].items():
+                config_json['aovs'].update({key: 'Color/' + value})
 
         script_path = os.path.join(
             args.output, "cfg_{}.json".format(scene['scene']))
@@ -193,51 +228,6 @@ def main():
 
             if os.path.exists("tahoe.log"):
                 os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
-            if not os.path.exists('{}_original.json'.format(scene['scene'])):
-                report = RENDER_REPORT_BASE
-
-                report["render_device"] = get_gpu().replace('NVIDIA ', '')
-                report["test_group"] = args.package_name
-                report["scene_name"] = scene['scene']
-                report["test_case"] = scene['scene']
-                report["file_name"] = scene['scene'] + ".png"
-                report["render_color_path"] = os.path.join(
-                    "Color", scene['scene'] + ".png")
-                report["tool"] = "Core"
-                report['date_time'] = datetime.datetime.now().strftime(
-                    "%m/%d/%Y %H:%M:%S")
-                report['test_status'] = TEST_CRASH_STATUS
-                report['width'] = args.resolution_x
-                report['height'] = args.resolution_y
-                report['iterations'] = args.pass_limit
-
-                reportName = "{}_RPR.json".format(scene['scene'])
-                with open(os.path.join(args.output, reportName), 'w') as f:
-                    json.dump([report], f, indent=4)
-
-                if 'aovs' in config_json.keys():
-                    for key, value in config_json['aovs'].items():
-                        report["render_time"] = 0.0
-                        if type(value) is str:
-                            report['file_name'] = value.split(os.path.sep)[-1]
-                            report['render_color_path'] = value
-                        elif type(value) is list:
-                            report['file_name'] = value[0].split(
-                                os.path.sep)[-1]
-                            report['render_color_path'] = value[0]
-                        report['test_case'] = scene['scene'] + key
-
-                        with open(os.path.join(args.output, "{}_{}_RPR.json".format(scene['scene'], key)), 'w') as file:
-                            json.dump([report], file, indent=4)
-
-                        try:
-                            shutil.copyfile(
-                                os.path.join(
-                                    ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
-                                os.path.join(args.output, report['file_name']))
-                        except OSError or FileNotFoundError as err:
-                            main_logger.error(
-                                "Can't create img stub: {}".format(str(err)))
 
 
 if __name__ == "__main__":

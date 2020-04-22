@@ -6,6 +6,8 @@ import sys
 
 ROOT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
+
+from jobs_launcher.core.system_info import get_gpu
 import jobs_launcher.core.config as core_config
 
 
@@ -41,7 +43,7 @@ def generateJsonForReport(directory):
             report["gpu_memory_usage"] = testJson["gpumem.usage.mb"]
             report["system_memory_usage"] = testJson["sysmem.usage.mb"]
             report["render_mode"] = "GPU"
-            report["render_device"] = testJson["gpu00"]
+            report["render_device"] = get_gpu()
             report["test_group"] = directory.split(os.path.sep)[-1]
             report["scene_name"] = testJson["input"].split(os.path.sep)[-1]
             report["test_case"] = testJson["input"].split(os.path.sep)[-1]
@@ -63,7 +65,6 @@ def generateJsonForReport(directory):
             with open(os.path.join(directory, reportName), 'w') as f:
                 json.dump([report], f, indent=' ')
 
-            # duct tape for aov tests
             if 'aovs' in testJson.keys():
                 for key, value in testJson['aovs'].items():
                     report["render_time"] = 0.0

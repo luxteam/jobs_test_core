@@ -1,0 +1,14 @@
+[
+    {
+        "scene": "IBL_Rotation.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
+    },
+    {
+        "scene": "Sun_and_Sky.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
+    }
+]

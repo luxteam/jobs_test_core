@@ -1,30 +1,31 @@
 [
     {
-        "scene": "Material_Test.rpr",
+        "scene": "Caustic_Single_Test.rpr",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
-        "scene": "Material_Test_NonSSS.rpr",
+        "scene": "Directional_Light.rpr",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
-        "scene": "SSSTypesTest.rpr",
+        "scene": "IES_Light.rpr",
+        "status": "skipped",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
-        "scene": "PBR_Test.rpr",
+        "scene": "Physical_Light.rpr",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
-        "scene": "Refraction.rpr",
+        "scene": "Portal_Light_Test.rpr",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]

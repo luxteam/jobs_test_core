@@ -1,6 +1,7 @@
 [
     {
-        "scene": "Instances_multi_materials.rpr",
+        "scene": "Hair_Test.rpr",
+        "status": "skipped",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]
