@@ -7,12 +7,14 @@
     },
     {
         "scene": "CubeMap.rpr",
+        "status": "skipped",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]
     },
     {
         "scene": "CubeMapStereo.rpr",
+        "status": "skipped",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]
