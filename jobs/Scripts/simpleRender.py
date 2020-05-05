@@ -43,14 +43,14 @@ def main():
     try:
         rbs_use = str2bool(os.getenv('RBS_USE'))
     except Exception as e:
-        core_config.main_logger.warning('Exception when getenv RBS USE: {}'.format(str(e)))
+        main_logger.warning('Exception when getenv RBS USE: {}'.format(str(e)))
 
     if rbs_use:
         try:
             is_client = ISClient(os.getenv("IMAGE_SERVICE_URL"))
-            core_config.main_logger.info("Image Service client created")
+            main_logger.info("Image Service client created")
         except Exception as e:
-            core_config.main_logger.info("Image Service client creation error: {}".format(str(e)))
+            main_logger.info("Image Service client creation error: {}".format(str(e)))
 
         try:
             rbs_client = RBS_Client(
@@ -59,9 +59,9 @@ def main():
                 build_id = os.getenv("RBS_BUILD_ID"),
                 env_label = os.getenv("RBS_ENV_LABEL"),
                 suite_id = None)
-            core_config.main_logger.info("RBS Client created")
+            main_logger.info("RBS Client created")
         except Exception as e:
-            core_config.main_logger.info(" RBS Client creation error: {}".format(str(e)))
+            main_logger.info(" RBS Client creation error: {}".format(str(e)))
 
     # get OS
     platform_system = platform.system()
@@ -247,7 +247,7 @@ def main():
             if rbs_client:
                 res = []
                 try:
-                    core_config.main_logger.info('Try to send results to RBS')
+                    main_logger.info('Try to send results to RBS')
 
                     for case in scenes:
                         case_info =  json.load(open(os.path.realpath(
@@ -273,14 +273,14 @@ def main():
                     env = {"gpu": get_gpu(), **get_machine_info()}
                     env.pop('os')
                     env.update({'hostname': env.pop('host'), 'cpu_count': int(env['cpu_count'])})
-                    core_config.main_logger.info(env)
+                    main_logger.info(env)
 
                     response = rbs_client.send_test_suite(res=res, env=env)
-                    core_config.main_logger.info('Test suite results sent with code {}'.format(response.status_code))
-                    core_config.main_logger.info(response.content)
+                    main_logger.info('Test suite results sent with code {}'.format(response.status_code))
+                    main_logger.info(response.content)
 
                 except Exception as e:
-                    core_config.main_logger.info("Test case result creation error: {}".format(str(e)))
+                    main_logger.info("Test case result creation error: {}".format(str(e)))
 
             with open("render_log.txt", 'a', encoding='utf-8') as file:
                 stdout = stdout.decode("utf-8")
