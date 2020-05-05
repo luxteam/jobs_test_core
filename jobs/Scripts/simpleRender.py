@@ -249,7 +249,7 @@ def main():
                 try:
                     main_logger.info('Try to send results to RBS')
 
-                    for case in scenes:
+                    for case in scenes_list:
                         case_info =  json.load(open(os.path.realpath(
                                             os.path.join(args.output, "{}_{}{}".format(scene['scene'], key, CASE_REPORT_SUFFIX)))))
                         image_id = is_client.send_image(os.path.realpath(
