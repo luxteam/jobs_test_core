@@ -13,7 +13,6 @@ ROOT_DIR_PATH = os.path.abspath(os.path.join(
 sys.path.append(ROOT_DIR_PATH)
 from jobs_launcher.core.config import *
 from jobs_launcher.core.system_info import get_gpu, get_machine_info
-from jobs_launcher.core.system_info import get_os
 from jobs_launcher.image_service_client import ISClient
 from jobs_launcher.rbs_client import RBS_Client, str2bool
 
@@ -97,7 +96,8 @@ def main():
         exit(-1)
 
     gpu_name = get_gpu()
-    os_name = get_os()
+    machine_info = get_machine_info()
+    os_name = machine_info['os']
     if not gpu_name:
         main_logger.error("Can't get gpu name")
     if not os_name:
