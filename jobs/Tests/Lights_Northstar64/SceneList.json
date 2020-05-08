@@ -13,7 +13,6 @@
     },
     {
         "scene": "IES_Light.rpr",
-        "status": "skipped",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"]
         ]
