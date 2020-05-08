@@ -37,32 +37,6 @@ def createArgsParser():
 def main():
     args = createArgsParser().parse_args()
 
-    is_client = None
-    rbs_client = None
-    rbs_use = None
-    try:
-        rbs_use = str2bool(os.getenv('RBS_USE'))
-    except Exception as e:
-        main_logger.warning('Exception when getenv RBS USE: {}'.format(str(e)))
-
-    if rbs_use:
-        try:
-            is_client = ISClient(os.getenv("IMAGE_SERVICE_URL"))
-            main_logger.info("Image Service client created")
-        except Exception as e:
-            main_logger.info("Image Service client creation error: {}".format(str(e)))
-
-        try:
-            rbs_client = RBS_Client(
-                job_id = os.getenv("RBS_JOB_ID"),
-                url = os.getenv("RBS_URL"),
-                build_id = os.getenv("RBS_BUILD_ID"),
-                env_label = os.getenv("RBS_ENV_LABEL"),
-                suite_id = None)
-            main_logger.info("RBS Client created")
-        except Exception as e:
-            main_logger.info(" RBS Client creation error: {}".format(str(e)))
-
     # get OS
     platform_system = platform.system()
 
@@ -172,7 +146,7 @@ def main():
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
             continue
-                    
+
         config_json.pop('gamma', None)
 
         config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
@@ -256,46 +230,6 @@ def main():
             if os.path.exists("tahoe.log"):
                 os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
 
-    if rbs_client:
-                res = []
-                try:
-                    main_logger.info('Try to send results to RBS')
-                    main_logger.info('Scenes list: {}'.format(scenes_list))
-
-                    for case in scenes_list:
-                        case_info_path = os.path.realpath(os.path.join(args.output, "{}{}".format(scene['scene'], CASE_REPORT_SUFFIX)))
-                        main_logger.info('Load case info from file {}'.format(case_info_path))
-                        case_info =  json.load(open(case_info_path))
-                        image_id = is_client.send_image(os.path.realpath(
-                                            os.path.join(args.output, case_info[0]['render_color_path'])))
-                        res.append({
-                                    'name': case['scene'],
-                                    'status': case_info[0]['test_status'],
-                                    'metrics': {
-                                        'render_time': case_info[0]['render_time']
-                                    },
-                                    "artefacts": {
-                                        "rendered_image": {
-                                            "id": image_id
-                                        }
-                                    }
-                                })
-                    main_logger.info("Tests results: {}".format(res))
-
-                    rbs_client.get_suite_id_by_name(str(args.package_name))
-                    print(rbs_client.suite_id)
-                    # send machine info to rbs
-                    env = {"gpu": get_gpu(), **get_machine_info()}
-                    env.pop('os')
-                    env.update({'hostname': env.pop('host'), 'cpu_count': int(env['cpu_count'])})
-                    main_logger.info(env)
-
-                    response = rbs_client.send_test_suite(res=res, env=env)
-                    main_logger.info('Test suite results sent with code {}'.format(response.status_code))
-                    main_logger.info(response.content)
-
-                except Exception as e:
-                    main_logger.info("Test case result creation error: {}".format(str(e)))
 
 
 if __name__ == "__main__":
