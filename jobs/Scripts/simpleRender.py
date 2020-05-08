@@ -250,8 +250,9 @@ def main():
                     main_logger.info('Try to send results to RBS')
 
                     for case in scenes_list:
-                        case_info =  json.load(open(os.path.realpath(
-                                            os.path.join(args.output, "{}{}".format(scene['scene'], CASE_REPORT_SUFFIX)))))
+                        case_info_path = os.path.realpath(os.path.join(args.output, "{}{}".format(scene['scene'], CASE_REPORT_SUFFIX)))
+                        main_logger.info('Load case info from file {}'.format(case_info_path))
+                        case_info =  json.load(open(case_info_path))
                         image_id = is_client.send_image(os.path.realpath(
                                             os.path.join(args.output, case_info[0]['render_color_path'])))
                         res.append({
@@ -266,6 +267,7 @@ def main():
                                         }
                                     }
                                 })
+                    main_logger.info("Tests results: {}".format(res))
 
                     rbs_client.get_suite_id_by_name(str(args.package_name))
                     print(rbs_client.suite_id)
