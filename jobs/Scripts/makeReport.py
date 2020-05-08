@@ -133,8 +133,9 @@ def generateJsonForReport(directory):
                             })
 
     if rbs_client:
-        for group, res in test_groups_res:
-            try:
+        try:
+            main_logger.info('Test group results: {}'.format(test_groups_res))
+            for group, res in test_groups_res:
                 main_logger.info('Try to send results to RBS for test group: {}'.format(group))
                 main_logger.info('Generated results: {}'.format(res))
 
@@ -149,8 +150,8 @@ def generateJsonForReport(directory):
                 main_logger.info('Test suite results sent with code {}'.format(response.status_code))
                 main_logger.info(response.content)
 
-            except Exception as e:
-                main_logger.info("Test case result creation error: {}".format(str(e)))
+        except Exception as e:
+            main_logger.info("Test case result creation error: {}".format(str(e)))
 
 
 def generateReport(directory):
