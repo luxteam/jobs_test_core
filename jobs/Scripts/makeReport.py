@@ -140,18 +140,17 @@ def generateJsonForReport(directory):
 
 
                 rbs_client.get_suite_id_by_name(group)
-                        # send machine info to rbs
-                    env = {"gpu": get_gpu(), **get_machine_info()}
-                    env.pop('os')
-                    env.update({'hostname': env.pop('host'), 'cpu_count': int(env['cpu_count'])})
-                    main_logger.info(env)
+                env = {"gpu": get_gpu(), **get_machine_info()}
+                env.pop('os')
+                env.update({'hostname': env.pop('host'), 'cpu_count': int(env['cpu_count'])})
+                main_logger.info(env)
 
-                    response = rbs_client.send_test_suite(res=res, env=env)
-                    main_logger.info('Test suite results sent with code {}'.format(response.status_code))
-                    main_logger.info(response.content)
+                response = rbs_client.send_test_suite(res=res, env=env)
+                main_logger.info('Test suite results sent with code {}'.format(response.status_code))
+                main_logger.info(response.content)
 
-                except Exception as e:
-                    main_logger.info("Test case result creation error: {}".format(str(e)))
+            except Exception as e:
+                main_logger.info("Test case result creation error: {}".format(str(e)))
 
 
 def generateReport(directory):
