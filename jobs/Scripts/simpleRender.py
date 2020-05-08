@@ -244,10 +244,23 @@ def main():
                 child.terminate()
             p.terminate()
         finally:
-            if rbs_client:
+            with open("render_log.txt", 'a', encoding='utf-8') as file:
+                stdout = stdout.decode("utf-8")
+                file.write(stdout)
+
+            with open("render_log.txt", 'a', encoding='utf-8') as file:
+                file.write("\n ----STEDERR---- \n")
+                stderr = stderr.decode("utf-8")
+                file.write(stderr)
+
+            if os.path.exists("tahoe.log"):
+                os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
+
+    if rbs_client:
                 res = []
                 try:
                     main_logger.info('Try to send results to RBS')
+                    main_logger.info('Scenes list: {}'.format(scenes_list))
 
                     for case in scenes_list:
                         case_info_path = os.path.realpath(os.path.join(args.output, "{}{}".format(scene['scene'], CASE_REPORT_SUFFIX)))
@@ -283,18 +296,6 @@ def main():
 
                 except Exception as e:
                     main_logger.info("Test case result creation error: {}".format(str(e)))
-
-            with open("render_log.txt", 'a', encoding='utf-8') as file:
-                stdout = stdout.decode("utf-8")
-                file.write(stdout)
-
-            with open("render_log.txt", 'a', encoding='utf-8') as file:
-                file.write("\n ----STEDERR---- \n")
-                stderr = stderr.decode("utf-8")
-                file.write(stderr)
-
-            if os.path.exists("tahoe.log"):
-                os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
 
 
 if __name__ == "__main__":
