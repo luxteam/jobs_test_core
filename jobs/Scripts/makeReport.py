@@ -115,7 +115,7 @@ def generateJsonForReport(directory):
 
             if rbs_client:
                 if report['test_group'] not in test_groups_res:
-                    test_groups_res.update({render['test_group']: []})
+                    test_groups_res.update({report['test_group']: []})
                 image_id = is_client.send_image(os.path.realpath(
                                             os.path.join(directory, report['render_color_path'])))
 
