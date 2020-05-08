@@ -134,8 +134,8 @@ def generateJsonForReport(directory):
 
     if rbs_client:
         try:
-            main_logger.info('Test group results: {}'.format(test_groups_res))
-            for group, res in test_groups_res:
+            # main_logger.info('Test group results: {}'.format(test_groups_res))
+            for group, res in test_groups_res.items():
                 main_logger.info('Try to send results to RBS for test group: {}'.format(group))
                 main_logger.info('Generated results: {}'.format(res))
 
