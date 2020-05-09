@@ -5,6 +5,19 @@ RX=$3
 RY=$4
 PASS_LIMIT=$5
 
+shift
+shift
+shift
+shift
+shift
+
+RBS_BUILD_ID=$1
+RBS_JOB_ID=$2
+RBS_URL=$3
+RBS_ENV_LABEL=$4
+IMAGE_SERVICE_URL=$5
+RBS_USE=$6
+
 #if [ "$TEST_PACKAGE" == "" ]
 #then
 #    TEST_PACKAGE = null
