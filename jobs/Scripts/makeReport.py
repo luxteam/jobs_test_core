@@ -126,9 +126,7 @@ def generateJsonForReport(directory):
                                     'render_time': report['render_time']
                                 },
                                 "artefacts": {
-                                    "rendered_image": {
-                                        "id": image_id
-                                    }
+                                    "rendered_image": str(image_id)
                                 }
                             })
 
