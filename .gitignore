@@ -6,6 +6,8 @@ Baseline/
 Work/
 .idea
 
+rprSdk/*
+
 scripts/AOV_Test.bat
 scripts/Anti_Aliasing_Test.bat
 scripts/Base_Lights_Test.bat
