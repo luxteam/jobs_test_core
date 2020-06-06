@@ -7,12 +7,9 @@ import sys
 ROOT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
 
-from jobs_launcher.core.system_info import get_gpu, get_machine_info
+from jobs_launcher.core.system_info import get_gpu
 import jobs_launcher.core.config as core_config
 from jobs_launcher.core.config import main_logger
-
-from jobs_launcher.image_service_client import ISClient
-from jobs_launcher.rbs_client import RBS_Client, str2bool
 
 
 def core_ver_str(core_ver):
@@ -23,35 +20,6 @@ def core_ver_str(core_ver):
 
 
 def generateJsonForReport(directory):
-
-    is_client = None
-    rbs_client = None
-    rbs_use = None
-    try:
-        rbs_use = str2bool(os.getenv('RBS_USE'))
-    except Exception as e:
-        main_logger.warning('Exception when getenv RBS USE: {}'.format(str(e)))
-
-    if rbs_use:
-        try:
-            is_client = ISClient(os.getenv("IMAGE_SERVICE_URL"))
-            main_logger.info("Image Service client created")
-        except Exception as e:
-            main_logger.info("Image Service client creation error: {}".format(str(e)))
-
-        try:
-            rbs_client = RBS_Client(
-                job_id = os.getenv("RBS_JOB_ID"),
-                url = os.getenv("RBS_URL"),
-                build_id = os.getenv("RBS_BUILD_ID"),
-                env_label = os.getenv("RBS_ENV_LABEL"),
-                suite_id = None)
-            main_logger.info("RBS Client created")
-        except Exception as e:
-            main_logger.info(" RBS Client creation error: {}".format(str(e)))
-
-        test_groups_res = {}
-
     cfgJson = list(filter(lambda x: x.startswith('cfg_'), os.listdir(directory)))    
     jsonForFormat = []
     for i in cfgJson:
@@ -112,43 +80,6 @@ def generateJsonForReport(directory):
 
                     with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'w') as file:
                         json.dump([report], file, indent=4)
-
-            if rbs_client:
-                if report['test_group'] not in test_groups_res:
-                    test_groups_res.update({report['test_group']: []})
-                image_id = is_client.send_image(os.path.realpath(
-                                            os.path.join(directory, report['render_color_path'])))
-
-                test_groups_res[report['test_group']].append({
-                                'name': report['test_case'],
-                                'status': report['test_status'],
-                                'metrics': {
-                                    'render_time': report['render_time']
-                                },
-                                "artefacts": {
-                                    "rendered_image": str(image_id)
-                                }
-                            })
-
-    if rbs_client:
-        try:
-            for group, res in test_groups_res.items():
-                main_logger.info('Try to send results to RBS for test group: {}'.format(group))
-                main_logger.info('Generated results: {}'.format(res))
-
-
-                rbs_client.get_suite_id_by_name(group)
-                env = {"gpu": get_gpu(), **get_machine_info()}
-                env.pop('os')
-                env.update({'hostname': env.pop('host'), 'cpu_count': int(env['cpu_count'])})
-                main_logger.info(env)
-
-                response = rbs_client.send_test_suite(res=res, env=env)
-                main_logger.info('Test suite results sent with code {}'.format(response.status_code))
-                main_logger.info(response.content)
-
-        except Exception as e:
-            main_logger.info("Test case result creation error: {}".format(str(e)))
 
 
 def generateReport(directory):
