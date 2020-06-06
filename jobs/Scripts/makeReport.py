@@ -9,7 +9,6 @@ sys.path.append(ROOT_DIR_PATH)
 
 from jobs_launcher.core.system_info import get_gpu
 import jobs_launcher.core.config as core_config
-from jobs_launcher.core.config import main_logger
 
 
 def core_ver_str(core_ver):
@@ -20,15 +19,14 @@ def core_ver_str(core_ver):
 
 
 def generateJsonForReport(directory):
-    cfgJson = list(filter(lambda x: x.startswith('cfg_'), os.listdir(directory)))    
+
+    cfgJson = list(filter(lambda x: x.startswith('cfg_'), os.listdir(directory)))
     jsonForFormat = []
     for i in cfgJson:
         jsonForFormat.append("{}_original.json".format(i[4:-5]))
 
     # format values 
     for jsonReport in jsonForFormat:
-
-
         if os.path.exists(os.path.join(directory,jsonReport)):
             with open(os.path.join(directory, jsonReport)) as f:
                 tmp_json = f.read()

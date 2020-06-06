@@ -216,6 +216,7 @@ def main():
                 child.terminate()
             p.terminate()
         finally:
+
             with open("render_log.txt", 'a', encoding='utf-8') as file:
                 stdout = stdout.decode("utf-8")
                 file.write(stdout)
@@ -227,7 +228,6 @@ def main():
 
             if os.path.exists("tahoe.log"):
                 os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
-
 
 
 if __name__ == "__main__":
