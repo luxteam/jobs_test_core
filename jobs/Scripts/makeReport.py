@@ -20,7 +20,7 @@ def core_ver_str(core_ver):
 
 def generateJsonForReport(directory):
 
-    cfgJson = list(filter(lambda x: x.startswith('cfg_'), os.listdir(directory)))
+    cfgJson = list(filter(lambda x: x.startswith('cfg_'), os.listdir(directory)))    
     jsonForFormat = []
     for i in cfgJson:
         jsonForFormat.append("{}_original.json".format(i[4:-5]))
