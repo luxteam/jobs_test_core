@@ -5,19 +5,6 @@ RX=$3
 RY=$4
 PASS_LIMIT=$5
 
-shift
-shift
-shift
-shift
-shift
-
-export RBS_BUILD_ID=$1
-export RBS_JOB_ID=$2
-export RBS_URL=$3
-export RBS_ENV_LABEL=$4
-export IMAGE_SERVICE_URL=$5
-export RBS_USE=$6
-
 #if [ "$TEST_PACKAGE" == "" ]
 #then
 #    TEST_PACKAGE = null
