@@ -181,7 +181,7 @@ def main():
             cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
                                                                 template=script_path)
             cmdScriptPath = os.path.join(
-                args.output, '{}.bat'.format(scene['scene']))
+                args.output, '{}.bat'.format(scene['scene'].replace(" ", "_")))
         else:
             cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
                 ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=script_path)
