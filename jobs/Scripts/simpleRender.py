@@ -68,7 +68,7 @@ def main():
         exit(-1)
 
     gpu_name = get_gpu()
-    os_name = get_machine_info().get('os', default='Unknown')
+    os_name = get_machine_info().get('os', 'Unknown')
     if not gpu_name:
         main_logger.error("Can't get gpu name")
     if os_name == 'Unknown':
