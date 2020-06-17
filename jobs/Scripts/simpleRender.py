@@ -71,7 +71,7 @@ def main():
     os_name = get_machine_info().get('os', default='Unknown')
     if not gpu_name:
         main_logger.error("Can't get gpu name")
-    if not os_name:
+    if os_name == 'Unknown':
         main_logger.error("Can't get os name")
     render_platform = {os_name, gpu_name}
 
