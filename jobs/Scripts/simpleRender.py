@@ -86,6 +86,7 @@ def main():
             scene['status'] = TEST_CRASH_STATUS
 
         report = RENDER_REPORT_BASE.copy()
+        report.update(RENDER_REPORT_EC_PACK.copy())
         report.update({'test_case': scene['scene'],
                        'test_status': scene['status'],
                        'test_group': args.package_name,
