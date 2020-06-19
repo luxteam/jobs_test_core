@@ -120,6 +120,7 @@ def main():
         if 'aovs' in config_json.keys():
             for key, value in config_json['aovs'].items():
                 report = RENDER_REPORT_BASE.copy()
+                report.update(RENDER_REPORT_EC_PACK.copy())
                 report.update({'test_case': scene['scene'] + key,
                                'test_status': scene['status'],
                                'test_group': args.package_name,

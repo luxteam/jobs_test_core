@@ -34,7 +34,8 @@ def generateJsonForReport(directory):
             tmp_json = tmp_json.replace("\\", "\\\\")
             testJson = json.loads(tmp_json)
 
-            report = core_config.RENDER_REPORT_BASE
+            report = core_config.RENDER_REPORT_BASE.copy()
+            report.update(core_config.RENDER_REPORT_EC_PACK.copy())
 
             report["core_version"] = core_ver_str(int(testJson["version"], 16))
             report["minor_version"] = testJson["version.minor"]
