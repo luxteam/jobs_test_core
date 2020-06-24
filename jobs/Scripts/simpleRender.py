@@ -12,8 +12,7 @@ ROOT_DIR_PATH = os.path.abspath(os.path.join(
     os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
 from jobs_launcher.core.config import *
-from jobs_launcher.core.system_info import get_gpu
-from jobs_launcher.core.system_info import get_os
+from jobs_launcher.core.system_info import get_gpu, get_machine_info
 
 
 def createArgsParser():
@@ -69,10 +68,10 @@ def main():
         exit(-1)
 
     gpu_name = get_gpu()
-    os_name = get_os()
+    os_name = get_machine_info().get('os', 'Unknown')
     if not gpu_name:
         main_logger.error("Can't get gpu name")
-    if not os_name:
+    if os_name == 'Unknown':
         main_logger.error("Can't get os name")
     render_platform = {os_name, gpu_name}
 
@@ -87,6 +86,7 @@ def main():
             scene['status'] = TEST_CRASH_STATUS
 
         report = RENDER_REPORT_BASE.copy()
+        report.update(RENDER_REPORT_EC_PACK.copy())
         report.update({'test_case': scene['scene'],
                        'test_status': scene['status'],
                        'test_group': args.package_name,
@@ -120,6 +120,7 @@ def main():
         if 'aovs' in config_json.keys():
             for key, value in config_json['aovs'].items():
                 report = RENDER_REPORT_BASE.copy()
+                report.update(RENDER_REPORT_EC_PACK.copy())
                 report.update({'test_case': scene['scene'] + key,
                                'test_status': scene['status'],
                                'test_group': args.package_name,
