@@ -68,11 +68,10 @@ def main():
         exit(-1)
 
     gpu_name = get_gpu()
-    machine_info = get_machine_info()
-    os_name = machine_info['os']
+    os_name = get_machine_info().get('os', 'Unknown')
     if not gpu_name:
         main_logger.error("Can't get gpu name")
-    if not os_name:
+    if os_name == 'Unknown':
         main_logger.error("Can't get os name")
     render_platform = {os_name, gpu_name}
 
@@ -87,6 +86,7 @@ def main():
             scene['status'] = TEST_CRASH_STATUS
 
         report = RENDER_REPORT_BASE.copy()
+        report.update(RENDER_REPORT_EC_PACK.copy())
         report.update({'test_case': scene['scene'],
                        'test_status': scene['status'],
                        'test_group': args.package_name,
@@ -120,6 +120,7 @@ def main():
         if 'aovs' in config_json.keys():
             for key, value in config_json['aovs'].items():
                 report = RENDER_REPORT_BASE.copy()
+                report.update(RENDER_REPORT_EC_PACK.copy())
                 report.update({'test_case': scene['scene'] + key,
                                'test_status': scene['status'],
                                'test_group': args.package_name,
@@ -144,7 +145,7 @@ def main():
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
             continue
-
+                    
         config_json.pop('gamma', None)
 
         config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
@@ -181,7 +182,7 @@ def main():
             cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
                                                                 template=script_path)
             cmdScriptPath = os.path.join(
-                args.output, '{}.bat'.format(scene['scene']))
+                args.output, '{}.bat'.format(scene['scene'].replace(" ", "_")))
         else:
             cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
                 ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=script_path)
