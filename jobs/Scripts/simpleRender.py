@@ -228,7 +228,12 @@ def main():
                 file.write(stderr)
 
             if os.path.exists("tahoe.log"):
-                os.rename("tahoe.log", "{}_render.log".format(scene['scene']))
+                tahoe_log_name = "{}_render.log".format(scene['scene'])
+                os.rename("tahoe.log", tahoe_log_name)
+                with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'rw') as f:
+                    report = json.load(f)
+                    report ['tahoe_log'] = tahoe_log_name
+                    json.dump(config_json, f, indent=4)
 
 
 if __name__ == "__main__":
