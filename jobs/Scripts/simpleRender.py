@@ -227,13 +227,17 @@ def main():
                 stderr = stderr.decode("utf-8")
                 file.write(stderr)
 
-            if os.path.exists("tahoe.log"):
-                tahoe_log_name = "{}_render.log".format(scene['scene'])
-                os.rename("tahoe.log", tahoe_log_name)
-                with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'rw') as f:
-                    report = json.load(f)
-                    report ['tahoe_log'] = tahoe_log_name
-                    json.dump(config_json, f, indent=4)
+            try:
+                if os.path.exists("tahoe.log"):
+                    tahoe_log_name = "{}_render.log".format(scene['scene'])
+                    os.rename("tahoe.log", tahoe_log_name)
+                    with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'r') as f:
+                        report = json.load(f)
+                        report['tahoe_log'] = tahoe_log_name
+                    with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as f:
+                        json.dump(config_json, f, indent=4)
+            except Exception as e:
+                main_logger.error(str(e))
 
 
 if __name__ == "__main__":
