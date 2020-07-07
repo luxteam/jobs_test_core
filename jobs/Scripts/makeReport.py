@@ -64,7 +64,7 @@ def generateJsonForReport(directory):
             report['iterations'] = testJson['iteration']
 
             with open(os.path.join(directory, reportName), 'r') as f:
-                report['tahoe_log'] = json.loads(f.read())[0]['tahoe_log']
+                report['tahoe_log'] = json.load(f)[0]['tahoe_log']
             with open(os.path.join(directory, reportName), 'w') as f:
                 json.dump([report], f, indent=' ')
 
@@ -80,7 +80,7 @@ def generateJsonForReport(directory):
                     report['test_case'] = testJson['input'].split(os.path.sep)[-1] + key
 
                     with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'r') as file:
-                        report['tahoe_log'] = json.loads(file.read())[0]['tahoe_log']
+                        report['tahoe_log'] = json.load(file)[0]['tahoe_log']
                     with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'w') as file:
                         json.dump([report], file, indent=4)
 
