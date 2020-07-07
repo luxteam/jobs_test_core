@@ -33,6 +33,7 @@ def generateJsonForReport(directory):
 
             tmp_json = tmp_json.replace("\\", "\\\\")
             testJson = json.loads(tmp_json)
+            reportName = jsonReport.replace("original", "RPR")
 
             report = core_config.RENDER_REPORT_BASE.copy()
             report.update(core_config.RENDER_REPORT_EC_PACK.copy())
@@ -62,7 +63,8 @@ def generateJsonForReport(directory):
             report['height'] = testJson['height']
             report['iterations'] = testJson['iteration']
 
-            reportName = jsonReport.replace("original", "RPR")
+            with open(os.path.join(directory, reportName), 'r') as f:
+                report['tahoe_log'] = json.load(f)[0]['tahoe_log']
             with open(os.path.join(directory, reportName), 'w') as f:
                 json.dump([report], f, indent=' ')
 
@@ -77,6 +79,8 @@ def generateJsonForReport(directory):
                         report['render_color_path'] = value[0]
                     report['test_case'] = testJson['input'].split(os.path.sep)[-1] + key
 
+                    with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'r') as file:
+                        report['tahoe_log'] = json.load(file)[0]['tahoe_log']
                     with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'w') as file:
                         json.dump([report], file, indent=4)
 
