@@ -7,6 +7,7 @@ import shutil
 import json
 import datetime
 import platform
+import xml.etree.ElementTree as ET
 
 ROOT_DIR_PATH = os.path.abspath(os.path.join(
     os.path.dirname(__file__), os.path.pardir, os.path.pardir))
@@ -67,6 +68,25 @@ def main():
         main_logger.error(str(e))
         exit(-1)
 
+    group_timeout = 0
+    try:
+        xml_tree = ET.parse(os.path.join(ROOT_DIR_PATH, 'jobs', 'Tests', args.package_name, 'test.job-manifest.xml'))
+        xml_root = xml_tree.getroot()
+        for child in xml_root:
+            if child.tag == 'execute':
+                target_execute = False
+                for key, value in child.attrib.items():
+                    if key == 'command' and 'simpleRender' in value:
+                        target_execute = True
+                        break
+                if target_execute and 'timeout' in child.attrib:
+                    group_timeout = child.attrib['timeout']
+                    break
+
+    except Exception as e:
+        core_config.main_logger.error("Can't get group timeout")
+        core_config.main_logger.error(str(e))
+
     gpu_name = get_gpu()
     os_name = get_machine_info().get('os', 'Unknown')
     if not gpu_name:
@@ -98,7 +118,8 @@ def main():
                        'tool': "Core",
                        'date_time': datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
-                       'file_name': scene['scene'] + ".png"})
+                       'file_name': scene['scene'] + ".png",
+                       'group_timeout': group_timeout})
 
         with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
@@ -217,6 +238,10 @@ def main():
                 child.terminate()
             p.terminate()
         finally:
+            with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'r') as f:
+                report = json.load(f)
+
+            report[0]["group_timeout_exceeded"] = False
 
             with open("render_log.txt", 'a', encoding='utf-8') as file:
                 stdout = stdout.decode("utf-8")
@@ -231,13 +256,12 @@ def main():
                 if os.path.exists("tahoe.log"):
                     tahoe_log_name = "{}_render.log".format(scene['scene'])
                     os.rename("tahoe.log", tahoe_log_name)
-                    with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'r') as f:
-                        report = json.load(f)
-                        report['tahoe_log'] = tahoe_log_name
-                    with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as f:
-                        json.dump(config_json, f, indent=4)
+                    report[0]['tahoe_log'] = tahoe_log_name
             except Exception as e:
                 main_logger.error(str(e))
+
+            with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as f:
+                json.dump(report, f, indent=4)
 
 
 if __name__ == "__main__":
