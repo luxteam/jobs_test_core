@@ -118,8 +118,10 @@ def main():
                        'tool': "Core",
                        'date_time': datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
-                       'file_name': scene['scene'] + ".png",
-                       'group_timeout': group_timeout})
+                       'file_name': scene['scene'] + ".png",})
+
+        if group_timeout:
+            report.update({'group_timeout': group_timeout})
 
         with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
