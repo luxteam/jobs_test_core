@@ -100,6 +100,9 @@ def main():
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
 
+        if scene['status'] == TEST_IGNORE_STATUS:
+            report.update({'group_timeout_exceeded': False})
+
         with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
 
@@ -127,6 +130,9 @@ def main():
                                'render_device': get_gpu(),
                                'render_color_path': os.path.join('Color', value),
                                'file_name': value})
+
+                if scene['status'] == TEST_IGNORE_STATUS:
+                    report.update({'group_timeout_exceeded': False})
 
                 with open(os.path.join(args.output, "{}_{}{}".format(scene['scene'], key, CASE_REPORT_SUFFIX)), 'w') as file:
                     json.dump([report], file, indent=4)
