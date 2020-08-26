@@ -101,7 +101,7 @@ def main():
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
 
-        if system_pl == "Windows":
+        if platform.system() == "Windows":
             baseline_path_tr = os.path.join(
                 'c:/TestResources/rpr_core_autotests_baselines', args.testType)
         else:
