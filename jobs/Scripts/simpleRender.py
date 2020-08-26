@@ -101,8 +101,12 @@ def main():
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
 
-        baseline_path_tr = os.path.join(
-            'c:/TestResources/rpr_blender_autotests_baselines', args.package_name)
+        if system_pl == "Windows":
+            baseline_path_tr = os.path.join(
+                'c:/TestResources/rpr_core_autotests_baselines', args.testType)
+        else:
+            baseline_path_tr = os.path.expandvars(os.path.join(
+                '$CIS_TOOLS/JN/TestResources/rpr_core_autotests_baselines', args.testType))
 
         baseline_path = os.path.join(
             args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.package_name)
