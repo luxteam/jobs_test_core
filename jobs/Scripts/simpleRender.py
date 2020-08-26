@@ -7,6 +7,7 @@ import shutil
 import json
 import datetime
 import platform
+from shutil import copyfile
 
 ROOT_DIR_PATH = os.path.abspath(os.path.join(
     os.path.dirname(__file__), os.path.pardir, os.path.pardir))
@@ -99,6 +100,31 @@ def main():
                        'date_time': datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
+
+        baseline_path_tr = os.path.join(
+            'c:/TestResources/rpr_blender_autotests_baselines', args.testType)
+
+        baseline_path = os.path.join(
+            args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.testType)
+
+        if not os.path.exists(baseline_path):
+            os.makedirs(baseline_path)
+            os.makedirs(os.path.join(baseline_path, 'Color'))
+
+        try:
+            copyfile(os.path.join(baseline_path_tr, scene['scene'] + CASE_REPORT_SUFFIX),
+                     os.path.join(baseline_path, scene['scene'] + CASE_REPORT_SUFFIX))
+
+            with open(os.path.join(baseline_path, scene['scene'] + CASE_REPORT_SUFFIX)) as baseline:
+                baseline_json = json.load(baseline)
+
+            for thumb in list(set().union([''], THUMBNAIL_PREFIXES)):
+                if thumb + 'render_color_path' and os.path.exists(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path'])):
+                    copyfile(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path']),
+                             os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
+        except:
+            main_logger.error('Failed to copy baseline ' +
+                                          os.path.join(baseline_path_tr, scene['scene'] + CASE_REPORT_SUFFIX))
 
         with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
