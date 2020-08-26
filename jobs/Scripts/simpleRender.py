@@ -102,10 +102,10 @@ def main():
                        'file_name': scene['scene'] + ".png"})
 
         baseline_path_tr = os.path.join(
-            'c:/TestResources/rpr_blender_autotests_baselines', args.testType)
+            'c:/TestResources/rpr_blender_autotests_baselines', args.package_name)
 
         baseline_path = os.path.join(
-            args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.testType)
+            args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.package_name)
 
         if not os.path.exists(baseline_path):
             os.makedirs(baseline_path)
