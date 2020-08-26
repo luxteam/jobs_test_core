@@ -103,10 +103,10 @@ def main():
 
         if platform.system() == "Windows":
             baseline_path_tr = os.path.join(
-                'c:/TestResources/rpr_core_autotests_baselines', args.testType)
+                'c:/TestResources/rpr_core_autotests_baselines', args.package_name)
         else:
             baseline_path_tr = os.path.expandvars(os.path.join(
-                '$CIS_TOOLS/JN/TestResources/rpr_core_autotests_baselines', args.testType))
+                '$CIS_TOOLS/JN/TestResources/rpr_core_autotests_baselines', args.package_name))
 
         baseline_path = os.path.join(
             args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.package_name)
