@@ -21,7 +21,7 @@
 
     <execute command='python "{CommonDir}/scripts/compareByJSON.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
-        <argument>--base_dir "{BaselineDir}/IBL_Northstar64"</argument>
+        <argument>--base_dir "{BaselineDir}"</argument>
     </execute>
 
 </job-manifest>
