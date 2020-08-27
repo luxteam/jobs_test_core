@@ -76,6 +76,20 @@ def main():
         main_logger.error("Can't get os name")
     render_platform = {os_name, gpu_name}
 
+    if platform.system() == "Windows":
+        baseline_path_tr = os.path.join(
+            'c:/TestResources/rpr_core_autotests_baselines', args.package_name)
+    else:
+        baseline_path_tr = os.path.expandvars(os.path.join(
+            '$CIS_TOOLS/JN/TestResources/rpr_core_autotests_baselines', args.package_name))
+
+    baseline_path = os.path.join(
+        args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.package_name)
+
+    if not os.path.exists(baseline_path):
+        os.makedirs(baseline_path)
+        os.makedirs(os.path.join(baseline_path, 'Color'))
+
     for scene in scenes_list:
         # there is list with lists of gpu/os/gpu&os in skip_on
         # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
@@ -100,20 +114,6 @@ def main():
                        'date_time': datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
-
-        if platform.system() == "Windows":
-            baseline_path_tr = os.path.join(
-                'c:/TestResources/rpr_core_autotests_baselines', args.package_name)
-        else:
-            baseline_path_tr = os.path.expandvars(os.path.join(
-                '$CIS_TOOLS/JN/TestResources/rpr_core_autotests_baselines', args.package_name))
-
-        baseline_path = os.path.join(
-            args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.package_name)
-
-        if not os.path.exists(baseline_path):
-            os.makedirs(baseline_path)
-            os.makedirs(os.path.join(baseline_path, 'Color'))
 
         try:
             copyfile(os.path.join(baseline_path_tr, scene['scene'] + CASE_REPORT_SUFFIX),
