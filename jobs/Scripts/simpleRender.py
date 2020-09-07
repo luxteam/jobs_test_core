@@ -129,6 +129,8 @@ def main():
         except:
             main_logger.error('Failed to copy baseline ' +
                                           os.path.join(baseline_path_tr, scene['scene'] + CASE_REPORT_SUFFIX))
+        if scene['status'] == TEST_IGNORE_STATUS:
+            report.update({'group_timeout_exceeded': False})
 
         with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
@@ -157,6 +159,9 @@ def main():
                                'render_device': get_gpu(),
                                'render_color_path': os.path.join('Color', value),
                                'file_name': value})
+
+                if scene['status'] == TEST_IGNORE_STATUS:
+                    report.update({'group_timeout_exceeded': False})
 
                 with open(os.path.join(args.output, "{}_{}{}".format(scene['scene'], key, CASE_REPORT_SUFFIX)), 'w') as file:
                     json.dump([report], file, indent=4)
@@ -247,6 +252,10 @@ def main():
                 child.terminate()
             p.terminate()
         finally:
+            with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'r') as f:
+                report = json.load(f)
+
+            report[0]["group_timeout_exceeded"] = False
 
             with open("render_log.txt", 'a', encoding='utf-8') as file:
                 stdout = stdout.decode("utf-8")
@@ -261,13 +270,12 @@ def main():
                 if os.path.exists("tahoe.log"):
                     tahoe_log_name = "{}_render.log".format(scene['scene'])
                     os.rename("tahoe.log", tahoe_log_name)
-                    with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'r') as f:
-                        report = json.load(f)
-                        report['tahoe_log'] = tahoe_log_name
-                    with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as f:
-                        json.dump(config_json, f, indent=4)
+                    report[0]['tahoe_log'] = tahoe_log_name
             except Exception as e:
                 main_logger.error(str(e))
+
+            with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as f:
+                json.dump(report, f, indent=4)
 
 
 if __name__ == "__main__":
