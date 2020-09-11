@@ -163,7 +163,7 @@ def main():
                 if scene['status'] == TEST_IGNORE_STATUS:
                     report.update({'group_timeout_exceeded': False})
 
-                with open(os.path.join(args.output, "{}_{}{}".format(report['test_case'], CASE_REPORT_SUFFIX)), 'w') as file:
+                with open(os.path.join(args.output, report['test_case'] + CASE_REPORT_SUFFIX), 'w') as file:
                     json.dump([report], file, indent=4)
                 shutil.copyfile(
                     os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
