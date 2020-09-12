@@ -116,10 +116,10 @@ def main():
                        'file_name': scene['scene'] + ".png"})
 
         try:
-            copyfile(os.path.join(baseline_path_tr, scene['scene'] + CASE_REPORT_SUFFIX),
-                     os.path.join(baseline_path, scene['scene'] + CASE_REPORT_SUFFIX))
+            copyfile(os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX),
+                     os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX))
 
-            with open(os.path.join(baseline_path, scene['scene'] + CASE_REPORT_SUFFIX)) as baseline:
+            with open(os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX)) as baseline:
                 baseline_json = json.load(baseline)
 
             for thumb in [''] + THUMBNAIL_PREFIXES:
@@ -128,7 +128,7 @@ def main():
                              os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
         except:
             main_logger.error('Failed to copy baseline ' +
-                                          os.path.join(baseline_path_tr, scene['scene'] + CASE_REPORT_SUFFIX))
+                                          os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX))
         if scene['status'] == TEST_IGNORE_STATUS:
             report.update({'group_timeout_exceeded': False})
 
