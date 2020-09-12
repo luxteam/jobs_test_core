@@ -33,6 +33,37 @@ def createArgsParser():
     return parser
 
 
+def copy_baselines(args, report):
+    baseline_path = os.path.join(
+        args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.package_name)
+
+    if not os.path.exists(baseline_path):
+        os.makedirs(baseline_path)
+        os.makedirs(os.path.join(baseline_path, 'Color'))
+
+    if platform.system() == "Windows":
+        baseline_path_tr = os.path.join(
+            'c:/TestResources/rpr_core_autotests_baselines', args.package_name)
+    else:
+        baseline_path_tr = os.path.expandvars(os.path.join(
+            '$CIS_TOOLS/../TestResources/rpr_core_autotests_baselines', args.package_name))
+
+    try:
+        copyfile(os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX),
+                    os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX))
+
+        with open(os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX)) as baseline:
+            baseline_json = json.load(baseline)
+
+        for thumb in [''] + THUMBNAIL_PREFIXES:
+            if thumb + 'render_color_path' and os.path.exists(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path'])):
+                copyfile(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path']),
+                            os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
+    except:
+        main_logger.error('Failed to copy baseline ' +
+                                        os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX))
+
+
 def main():
     args = createArgsParser().parse_args()
 
@@ -76,20 +107,6 @@ def main():
         main_logger.error("Can't get os name")
     render_platform = {os_name, gpu_name}
 
-    if platform.system() == "Windows":
-        baseline_path_tr = os.path.join(
-            'c:/TestResources/rpr_core_autotests_baselines', args.package_name)
-    else:
-        baseline_path_tr = os.path.expandvars(os.path.join(
-            '$CIS_TOOLS/../TestResources/rpr_core_autotests_baselines', args.package_name))
-
-    baseline_path = os.path.join(
-        args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.package_name)
-
-    if not os.path.exists(baseline_path):
-        os.makedirs(baseline_path)
-        os.makedirs(os.path.join(baseline_path, 'Color'))
-
     for scene in scenes_list:
         # there is list with lists of gpu/os/gpu&os in skip_on
         # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
@@ -115,20 +132,8 @@ def main():
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
 
-        try:
-            copyfile(os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX),
-                     os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX))
+        copy_baselines(args, report)
 
-            with open(os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX)) as baseline:
-                baseline_json = json.load(baseline)
-
-            for thumb in [''] + THUMBNAIL_PREFIXES:
-                if thumb + 'render_color_path' and os.path.exists(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path'])):
-                    copyfile(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path']),
-                             os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
-        except:
-            main_logger.error('Failed to copy baseline ' +
-                                          os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX))
         if scene['status'] == TEST_IGNORE_STATUS:
             report.update({'group_timeout_exceeded': False})
 
@@ -169,6 +174,8 @@ def main():
                     os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
                     os.path.join(args.output, 'Color', value))
 
+                copy_baselines(args, report)
+
     for scene in scenes_list:
 
         if scene['status'] == TEST_IGNORE_STATUS:
@@ -180,7 +187,7 @@ def main():
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
             continue
-                    
+
         config_json.pop('gamma', None)
 
         config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
