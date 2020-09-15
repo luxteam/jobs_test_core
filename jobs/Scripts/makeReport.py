@@ -81,9 +81,9 @@ def generateJsonForReport(directory):
                         report['render_color_path'] = value[0]
                     report['test_case'] = testJson['input'].split(os.path.sep)[-1] + key
 
-                    with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'r') as file:
+                    with open(os.path.join(directory, reportName.replace('_RPR', key + '_RPR')), 'r') as file:
                         report['tahoe_log'] = json.load(file)[0]['tahoe_log']
-                    with open(os.path.join(directory, reportName.replace('RPR', key + '_RPR')), 'w') as file:
+                    with open(os.path.join(directory, reportName.replace('_RPR', key + '_RPR')), 'w') as file:
                         json.dump([report], file, indent=4)
 
 
