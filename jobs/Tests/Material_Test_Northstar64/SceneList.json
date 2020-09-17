@@ -1,26 +1,50 @@
 [
     {
-        "scene": "RPR_Nodes.rpr"
+        "scene": "RPR_Nodes.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     },
     {
-        "scene": "Material_Test.rpr"
+        "scene": "Material_Test.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     },
     {
-        "scene": "Material_Test_NonSSS.rpr"
+        "scene": "Material_Test_NonSSS.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     },
     {
-        "scene": "Material_TestSSS.rpr"
+        "scene": "Material_TestSSS.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     },
     {
-        "scene": "SSSTypesTest.rpr"
+        "scene": "SSSTypesTest.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     },
     {
-        "scene": "PBR_Test.rpr"
+        "scene": "PBR_Test.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     },
     {
-        "scene": "Refraction.rpr"
+        "scene": "Refraction.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     },
     {
-        "scene": "Material_TestVolume.rpr"
+        "scene": "Material_TestVolume.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     }
 ]

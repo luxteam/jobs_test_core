@@ -1,8 +1,14 @@
 [
     {
-        "scene": "InstanceMotionBlurTest.rpr"
+        "scene": "InstanceMotionBlurTest.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     },
     {
-        "scene": "MotionBlurTest.rpr"
+        "scene": "MotionBlurTest.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
     }
 ]
