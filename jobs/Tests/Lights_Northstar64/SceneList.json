@@ -1,32 +1,17 @@
 [
     {
-        "scene": "Caustic_Single_Test.rpr",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "scene": "Caustic_Single_Test.rpr"
     },
     {
-        "scene": "Directional_Light.rpr",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "scene": "Directional_Light.rpr"
     },
     {
-        "scene": "IES_Light.rpr",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "scene": "IES_Light.rpr"
     },
     {
-        "scene": "Physical_Light.rpr",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "scene": "Physical_Light.rpr"
     },
     {
-        "scene": "Portal_Light_Test.rpr",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "scene": "Portal_Light_Test.rpr"
     }
 ]

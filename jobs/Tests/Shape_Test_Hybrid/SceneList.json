@@ -2,7 +2,7 @@
     {
         "scene": "Instances_multi_materials.rpr",
         "skip_on": [
-            ["GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
         ]
     }
 ]

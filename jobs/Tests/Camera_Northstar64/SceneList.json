@@ -1,34 +1,19 @@
 [
     {
-        "scene": "CameraTest.rpr",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "scene": "CameraTest.rpr"
     },
     {
         "scene": "CubeMap.rpr",
-        "status": "skipped",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "status": "skipped"
     },
     {
         "scene": "CubeMapStereo.rpr",
-        "status": "skipped",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "status": "skipped"
     },
     {
-        "scene": "SpericalPanorama.rpr",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "scene": "SpericalPanorama.rpr"
     },
     {
-        "scene": "SpericalPanoramaStereo.rpr",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
-        ]
+        "scene": "SpericalPanoramaStereo.rpr"
     }
 ]
