@@ -13,6 +13,7 @@
         <argument>--package_name "IBL_Northstar64"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
         <argument>--test_list "{Root}/Tests/IBL_Northstar64/SceneList.json"</argument>
+        <argument>--update_refs "{UpdateRefs}"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>
@@ -22,6 +23,7 @@
     <execute command='python "{CommonDir}/scripts/compareByJSON.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
         <argument>--base_dir "{BaselineDir}"</argument>
+        <argument>--update_refs "{UpdateRefs}"</argument>
     </execute>
 
 </job-manifest>
