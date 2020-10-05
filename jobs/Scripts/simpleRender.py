@@ -7,6 +7,7 @@ import shutil
 import json
 import datetime
 import platform
+from shutil import copyfile
 
 ROOT_DIR_PATH = os.path.abspath(os.path.join(
     os.path.dirname(__file__), os.path.pardir, os.path.pardir))
@@ -28,8 +29,41 @@ def createArgsParser():
     parser.add_argument('--output', required=True, metavar="<path>")
     parser.add_argument('--test_list', required=True)
     parser.add_argument('--timeout', required=False, default=600)
+    parser.add_argument('--update_refs', required=True)
 
     return parser
+
+
+def copy_baselines(args, report):
+    baseline_path = os.path.join(
+        args.output, os.path.pardir, os.path.pardir, os.path.pardir, 'Baseline', args.package_name)
+
+    if not os.path.exists(baseline_path):
+        os.makedirs(baseline_path)
+        os.makedirs(os.path.join(baseline_path, 'Color'))
+
+    if platform.system() == "Windows":
+        baseline_path_tr = os.path.join(
+            'c:/TestResources/rpr_core_autotests_baselines', args.package_name)
+    else:
+        baseline_path_tr = os.path.expandvars(os.path.join(
+            '$CIS_TOOLS/../TestResources/rpr_core_autotests_baselines', args.package_name))
+
+    if 'Update' not in args.update_refs:
+        try:
+            copyfile(os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX),
+                        os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX))
+
+            with open(os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX)) as baseline:
+                baseline_json = json.load(baseline)
+
+            for thumb in [''] + THUMBNAIL_PREFIXES:
+                if thumb + 'render_color_path' and os.path.exists(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path'])):
+                    copyfile(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path']),
+                                os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
+        except:
+            main_logger.error('Failed to copy baseline ' +
+                                            os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX))
 
 
 def main():
@@ -100,6 +134,8 @@ def main():
                        'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
                        'file_name': scene['scene'] + ".png"})
 
+        copy_baselines(args, report)
+
         if scene['status'] == TEST_IGNORE_STATUS:
             report.update({'group_timeout_exceeded': False})
 
@@ -134,11 +170,13 @@ def main():
                 if scene['status'] == TEST_IGNORE_STATUS:
                     report.update({'group_timeout_exceeded': False})
 
-                with open(os.path.join(args.output, "{}_{}{}".format(scene['scene'], key, CASE_REPORT_SUFFIX)), 'w') as file:
+                with open(os.path.join(args.output, report['test_case'] + CASE_REPORT_SUFFIX), 'w') as file:
                     json.dump([report], file, indent=4)
                 shutil.copyfile(
                     os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
                     os.path.join(args.output, 'Color', value))
+
+                copy_baselines(args, report)
 
     for scene in scenes_list:
 
@@ -151,7 +189,7 @@ def main():
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
             continue
-                    
+
         config_json.pop('gamma', None)
 
         config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
