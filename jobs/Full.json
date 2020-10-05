@@ -26,6 +26,12 @@
         "Material_Test_Northstar64":"",
         "ShadowCatcher_Northstar64":"",
         "Shape_Test_Northstar64":"",
-        "AA_Test_Scene_Northstar64":""
+        "AA_Test_Scene_Northstar64":"",
+        "CPU_Hybrid":"",
+        "CPU_Tahoe64":"",
+        "CPU_Northstar64":"",
+        "Dual_Hybrid":"",
+        "Dual_Tahoe64":"",
+        "Dual_Northstar64":""
     }
 }

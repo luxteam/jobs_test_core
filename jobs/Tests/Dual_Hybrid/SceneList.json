@@ -1,0 +1,8 @@
+[
+    {
+        "scene": "CPU-Dual-Test.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
+    }
+]
