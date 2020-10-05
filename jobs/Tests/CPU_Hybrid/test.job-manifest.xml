@@ -13,6 +13,7 @@
         <argument>--package_name "CPU_Hybrid"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
         <argument>--test_list "{Root}/Tests/CPU_Hybrid/SceneList.json"</argument>
+        <argument>--update_refs "{UpdateRefs}"</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>
@@ -22,6 +23,7 @@
     <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
         <argument>--base_dir "{BaselineDir}/CPU_Hybrid"</argument>
+        <argument>--update_refs "{UpdateRefs}"</argument>
     </execute>
 
 </job-manifest>

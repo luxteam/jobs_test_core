@@ -22,6 +22,7 @@
     <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
         <argument>--base_dir "{BaselineDir}/Dual_Hybrid"</argument>
+        <argument>--update_refs "{UpdateRefs}"</argument>
     </execute>
 
 </job-manifest>
