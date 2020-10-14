@@ -90,11 +90,26 @@ def main():
         os.system('chmod +x {}'.format(os.path.abspath(args.tool)))
 
     scenes_list = []
-    try:
-        with open(os.path.join(os.path.dirname(sys.argv[0]), args.test_list)) as f:
-            scenes_list = json.load(f)
 
-        os.makedirs(os.path.join(args.output, "Color"))
+    os.makedirs(os.path.join(args.output, "Color"))
+
+    # FIXME: refactor report building of Core: make reports parallel with render
+    try:
+        test_cases_path = os.path.realpath(os.path.join(os.path.abspath(args.output), 'test_cases.json'))
+        copyfile(args.test_list, test_cases_path)
+    except Exception as e:
+        main_logger.error("Can't copy SceneList.json")
+        main_logger.error(str(e))
+        exit(-1)
+
+    try:
+        with open(test_cases_path, 'r') as file:
+            scenes_list = json.load(file)
+        for case in scenes_list:
+            if 'status' not in case:
+                case['status'] = 'active'
+        with open(test_cases_path, 'w') as file:
+            json.dump(scenes_list, file, indent=4)
         main_logger.info("Scenes to render: {}".format([name['scene'] for name in scenes_list]))
     except OSError as e:
         main_logger.error("Failed to read test cases json. ")

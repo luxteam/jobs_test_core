@@ -25,6 +25,13 @@ def generateJsonForReport(directory):
     for i in cfgJson:
         jsonForFormat.append("{}_original.json".format(i[4:-5]))
 
+    # FIXME: refactor report building of Core: make reports parallel with render
+    test_cases_path = os.path.join(directory, 'test_cases.json')
+    with open(test_cases_path, 'r') as cases_file:
+        cases = json.load(cases_file)
+    for case in cases:
+        case['status'] = 'done'
+
     # format values 
     for jsonReport in jsonForFormat:
         if os.path.exists(os.path.join(directory,jsonReport)):
@@ -85,6 +92,9 @@ def generateJsonForReport(directory):
                         report['tahoe_log'] = json.load(file)[0]['tahoe_log']
                     with open(os.path.join(directory, reportName.replace('_RPR', key + '_RPR')), 'w') as file:
                         json.dump([report], file, indent=4)
+
+    with open(test_cases_path, 'w') as file:
+        json.dump(cases, file, indent=4)
 
 
 def generateReport(directory):
