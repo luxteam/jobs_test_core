@@ -260,7 +260,7 @@ def main():
         rc = 1
 
         try:
-            stdout, stderr = p.communicate(timeout=args.timeout)
+            stdout, stderr = p.communicate(timeout=float(args.timeout))
         except (psutil.TimeoutExpired, subprocess.TimeoutExpired) as err:
             main_logger.error("Render has been aborted by timeout")
             rc = -1
