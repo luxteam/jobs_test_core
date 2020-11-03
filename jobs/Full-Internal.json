@@ -1,0 +1,33 @@
+{
+    "split":true,
+    "groups":{
+        "AOV_Tahoe64":"",
+        "Camera_Tahoe64":"",
+        "IBL_Tahoe64":"",
+        "Hair_Tahoe64":"",
+        "Lights_Tahoe64":"",
+        "Quality_test_Tahoe64":"",
+        "Tone_Mapping_Tahoe64":"",
+        "Material_Test_Tahoe64":"",
+        "ShadowCatcher_Tahoe64":"",
+        "Shape_Test_Tahoe64":"",
+        "AA_Test_Scene_Tahoe64":"",
+        "AOV_Northstar64":"",
+        "Camera_Northstar64":"",
+        "IBL_Northstar64":"",
+        "Hair_Northstar64":"",
+        "Lights_Northstar64":"",
+        "Quality_test_Northstar64":"",
+        "Tone_Mapping_Northstar64":"",
+        "Material_Test_Northstar64":"",
+        "ShadowCatcher_Northstar64":"",
+        "Shape_Test_Northstar64":"",
+        "AA_Test_Scene_Northstar64":"",
+        "CPU_Tahoe64":"",
+        "CPU_Northstar64":"",
+        "Dual_Tahoe64":"",
+        "Dual_Northstar64":"",
+        "Performance_Tahoe64":"",
+        "Performance_Northstar64":""
+    }
+}
