@@ -73,6 +73,7 @@ def generateJsonForReport(directory):
             with open(os.path.join(directory, reportName), 'r') as f:
                 rpr_report = json.load(f)[0]
                 report['tahoe_log'] = rpr_report['tahoe_log']
+                report['core_scene_configuration'] = rpr_report['core_scene_configuration']
                 report['group_timeout_exceeded'] = rpr_report['group_timeout_exceeded']
             with open(os.path.join(directory, reportName), 'w') as f:
                 json.dump([report], f, indent=' ')
