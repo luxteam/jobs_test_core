@@ -72,6 +72,8 @@ def main():
     # get OS
     platform_system = platform.system()
 
+    engine = None
+
     # parse package naming for getting engien
     if "Hybrid" in args.package_name:
         engine = "Hybrid"
@@ -134,27 +136,29 @@ def main():
         else:
             scene['status'] = TEST_CRASH_STATUS
 
+        scene_name = scene['scene'].split('/')[-1]
+
         report = RENDER_REPORT_BASE.copy()
         report.update(RENDER_REPORT_EC_PACK.copy())
-        report.update({'test_case': scene['scene'],
+        report.update({'test_case': scene_name,
                        'test_status': scene['status'],
                        'test_group': args.package_name,
-                       'scene_name': scene['scene'],
+                       'scene_name': scene_name,
                        'render_device': get_gpu(),
                        'width': args.resolution_x,
                        'height': args.resolution_y,
                        'iterations': args.pass_limit,
                        'tool': "Core",
                        'date_time': datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
-                       'render_color_path': os.path.join('Color', scene['scene'] + ".png"),
-                       'file_name': scene['scene'] + ".png"})
+                       'render_color_path': os.path.join('Color', scene_name + ".png"),
+                       'file_name': scene_name + ".png"})
 
         copy_baselines(args, report)
 
         if scene['status'] == TEST_IGNORE_STATUS:
             report.update({'group_timeout_exceeded': False})
 
-        with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as file:
+        with open(os.path.join(args.output, scene_name + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
 
         try:
@@ -165,7 +169,7 @@ def main():
             main_logger.error("Can't create img stub: {}".format(str(err)))
 
         try:
-            with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, scene_name.replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
@@ -175,7 +179,7 @@ def main():
             for key, value in config_json['aovs'].items():
                 report = RENDER_REPORT_BASE.copy()
                 report.update(RENDER_REPORT_EC_PACK.copy())
-                report.update({'test_case': scene['scene'] + key,
+                report.update({'test_case': scene_name + key,
                                'test_status': scene['status'],
                                'test_group': args.package_name,
                                'render_device': get_gpu(),
@@ -195,11 +199,13 @@ def main():
 
     for scene in scenes_list:
 
+        scene_name = scene['scene'].split('/')[-1]
+
         if scene['status'] == TEST_IGNORE_STATUS:
             continue
 
         try:
-            with open(os.path.join(args.res_path, args.package_name, scene['scene'].replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, scene_name.replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
@@ -207,21 +213,22 @@ def main():
 
         config_json.pop('gamma', None)
 
-        config_json["output"] = os.path.join("Color", scene['scene'] + ".png")
-        config_json["output.json"] = scene['scene'] + "_original.json"
+        config_json["output"] = os.path.join("Color", scene_name + ".png")
+        config_json["output.json"] = scene_name + "_original.json"
 
-        if platform_system == 'Windows':
-            config_json["plugin"] = "{}.dll".format(engine)
-        elif platform_system == 'Darwin':
-            if os.path.isfile(os.path.join(tool_path, "lib{}.dylib".format(engine))):
-                config_json["plugin"] = "lib{}.dylib".format(engine)
+        if engine:
+            if platform_system == 'Windows':
+                config_json["plugin"] = "{}.dll".format(engine)
+            elif platform_system == 'Darwin':
+                if os.path.isfile(os.path.join(tool_path, "lib{}.dylib".format(engine))):
+                    config_json["plugin"] = "lib{}.dylib".format(engine)
+                else:
+                    config_json["plugin"] = "{}.dylib".format(engine)
             else:
-                config_json["plugin"] = "{}.dylib".format(engine)
-        else:
-            if os.path.isfile(os.path.join(tool_path, "lib{}.so".format(engine))):
-                config_json["plugin"] = "lib{}.so".format(engine)
-            else:
-                config_json["plugin"] = "{}.so".format(engine)
+                if os.path.isfile(os.path.join(tool_path, "lib{}.so".format(engine))):
+                    config_json["plugin"] = "lib{}.so".format(engine)
+                else:
+                    config_json["plugin"] = "{}.so".format(engine)
 
         # if arg zero - use default value
         config_json["width"] = args.resolution_x if args.resolution_x else config_json["width"]
@@ -233,20 +240,20 @@ def main():
                 config_json['aovs'].update({key: 'Color/' + value})
 
         script_path = os.path.join(
-            args.output, "cfg_{}.json".format(scene['scene']))
+            args.output, "cfg_{}.json".format(scene_name))
         scene_path = os.path.join(
-            args.res_path, args.package_name, scene['scene'])
+            args.res_path, args.package_name, scene['scene'].replace('/', os.path.sep))
 
         if platform_system == "Windows":
             cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
                                                                 template=script_path)
             cmdScriptPath = os.path.join(
-                args.output, '{}.bat'.format(scene['scene'].replace(" ", "_")))
+                args.output, '{}.bat'.format(scene_name.replace(" ", "_")))
         else:
             cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
                 ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=script_path)
             cmdScriptPath = os.path.join(
-                args.output, '{}.sh'.format(scene['scene'].replace(" ", "_")))
+                args.output, '{}.sh'.format(scene_name.replace(" ", "_")))
 
         try:
             with open(script_path, 'w') as f:
@@ -268,7 +275,7 @@ def main():
         rc = 1
 
         try:
-            stdout, stderr = p.communicate(timeout=args.timeout)
+            stdout, stderr = p.communicate(timeout=float(args.timeout))
         except (psutil.TimeoutExpired, subprocess.TimeoutExpired) as err:
             main_logger.error("Render has been aborted by timeout")
             rc = -1
@@ -276,7 +283,7 @@ def main():
                 child.terminate()
             p.terminate()
         finally:
-            with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'r') as f:
+            with open(os.path.join(args.output, scene_name + CASE_REPORT_SUFFIX), 'r') as f:
                 report = json.load(f)
 
             report[0]["group_timeout_exceeded"] = False
@@ -292,7 +299,7 @@ def main():
 
             try:
                 if os.path.exists("tahoe.log"):
-                    tahoe_log_name = "{}_render.log".format(scene['scene'])
+                    tahoe_log_name = "{}_render.log".format(scene_name)
                     os.rename("tahoe.log", tahoe_log_name)
                     report[0]['tahoe_log'] = tahoe_log_name
             except Exception as e:
@@ -302,7 +309,7 @@ def main():
             if os.path.exists(core_scene_configuration):
                 report[0]["core_scene_configuration"] = core_scene_configuration
 
-            with open(os.path.join(args.output, scene['scene'] + CASE_REPORT_SUFFIX), 'w') as f:
+            with open(os.path.join(args.output, scene_name + CASE_REPORT_SUFFIX), 'w') as f:
                 json.dump(report, f, indent=4)
 
 
