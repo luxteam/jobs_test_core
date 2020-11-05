@@ -305,6 +305,10 @@ def main():
             except Exception as e:
                 main_logger.error(str(e))
 
+            core_scene_configuration = "cfg_{}.json".format(scene['scene'])
+            if os.path.exists(core_scene_configuration):
+                report[0]["core_scene_configuration"] = core_scene_configuration
+
             with open(os.path.join(args.output, scene_name + CASE_REPORT_SUFFIX), 'w') as f:
                 json.dump(report, f, indent=4)
 
