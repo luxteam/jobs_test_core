@@ -1,0 +1,37 @@
+[
+    {
+        "scene": "Material_Test.rpr",
+        "name": "Material_Test.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
+        ]
+    },
+    {
+        "scene": "Material_Test_NonSSS.rpr",
+        "name": "Material_Test_NonSSS.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
+        ]
+    },
+    {
+        "scene": "SSSTypesTest.rpr",
+        "name": "SSSTypesTest.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
+        ]
+    },
+    {
+        "scene": "PBR_Test.rpr",
+        "name": "PBR_Test.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
+        ]
+    },
+    {
+        "scene": "Refraction.rpr",
+        "name": "Refraction.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
+        ]
+    }
+]

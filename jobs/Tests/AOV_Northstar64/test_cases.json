@@ -1,0 +1,9 @@
+[
+    {
+        "scene": "AOVTest.rpr",
+        "name": "AOVTest.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"]
+        ]
+    }
+]

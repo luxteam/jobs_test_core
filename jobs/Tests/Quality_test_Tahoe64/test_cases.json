@@ -1,0 +1,66 @@
+[
+    {
+        "scene": "Max Diffuse 1.rpr",
+        "name": "Max Diffuse 1.rpr"
+    },
+    {
+        "scene": "Max Diffuse 2.rpr",
+        "name": "Max Diffuse 2.rpr"
+    },
+    {
+        "scene": "Max Diffuse 3.rpr",
+        "name": "Max Diffuse 3.rpr"
+    },
+    {
+        "scene": "Max Refraction 1.rpr",
+        "name": "Max Refraction 1.rpr"
+    },
+    {
+        "scene": "Max Refraction 2.rpr",
+        "name": "Max Refraction 2.rpr"
+    },
+    {
+        "scene": "Max Refraction 3.rpr",
+        "name": "Max Refraction 3.rpr"
+    },
+    {
+        "scene": "Max Shadow 1.rpr",
+        "name": "Max Shadow 1.rpr"
+    },
+    {
+        "scene": "Max Shadow 2.rpr",
+        "name": "Max Shadow 2.rpr"
+    },
+    {
+        "scene": "Max Shadow 3.rpr",
+        "name": "Max Shadow 3.rpr"
+    },
+    {
+        "scene": "RayDepth2.rpr",
+        "name": "RayDepth2.rpr"
+    },
+    {
+        "scene": "RayDepth3.rpr",
+        "name": "RayDepth3.rpr"
+    },
+    {
+        "scene": "RayDepth4.rpr",
+        "name": "RayDepth4.rpr"
+    },
+    {
+        "scene": "RayEpsilon0.rpr",
+        "name": "RayEpsilon0.rpr"
+    },
+    {
+        "scene": "RayEpsilon0_001.rpr",
+        "name": "RayEpsilon0_001.rpr"
+    },
+    {
+        "scene": "RayEpsilon0_01.rpr",
+        "name": "RayEpsilon0_01.rpr"
+    },
+    {
+        "scene": "RayEpsilon0_1.rpr",
+        "name": "RayEpsilon0_1.rpr"
+    }
+]

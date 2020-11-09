@@ -1,0 +1,30 @@
+[
+    {
+        "scene": "acca_restaurant/acca_restaurant.rpr",
+        "name": "acca_restaurant/acca_restaurant.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"]
+        ]
+    },
+    {
+        "scene": "bedroom_with_lights-RPRNEXT-75.rpr",
+        "name": "bedroom_with_lights-RPRNEXT-75.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"]
+        ]
+    },
+    {
+        "scene": "ninja.rpr",
+        "name": "ninja.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"]
+        ]
+    },
+    {
+        "scene": "plants_cam4.rpr",
+        "name": "plants_cam4.rpr",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"]
+        ]
+    }
+]

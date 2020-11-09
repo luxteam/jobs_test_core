@@ -1,0 +1,10 @@
+[
+    {
+        "scene": "InstanceMotionBlurTest.rpr",
+        "name": "InstanceMotionBlurTest.rpr"
+    },
+    {
+        "scene": "MotionBlurTest.rpr",
+        "name": "MotionBlurTest.rpr"
+    }
+]

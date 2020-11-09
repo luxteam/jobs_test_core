@@ -12,7 +12,7 @@
         <argument>--output "{OutputDir}"</argument>
         <argument>--package_name "CPU_Hybrid"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
-        <argument>--test_list "{Root}/Tests/CPU_Hybrid/SceneList.json"</argument>
+        <argument>--test_list "{Root}/Tests/CPU_Hybrid/test_cases.json"</argument>
         <argument>--update_refs "{UpdateRefs}"</argument>
     </execute>
 
