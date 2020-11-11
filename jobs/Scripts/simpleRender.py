@@ -3,15 +3,17 @@ import sys
 import os
 import subprocess
 import psutil
-import shutil
 import json
 import datetime
 import platform
 from shutil import copyfile
+from shutil import SameFileError
 
 ROOT_DIR_PATH = os.path.abspath(os.path.join(
     os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 sys.path.append(ROOT_DIR_PATH)
+
+# DO NOT REPLACE THIS IMPORTS UNDER ROOT_DIR_PATH
 from jobs_launcher.core.config import *
 from jobs_launcher.core.system_info import get_gpu, get_machine_info
 import jobs_launcher.core.config as core_config
@@ -77,9 +79,8 @@ def generate_json_for_report(original_cfg_json, dir_with_json):
     cfg_json = os.path.join(dir_with_json, original_cfg_json)
     if os.path.exists(cfg_json):
         with open(cfg_json) as f:
-            tmp_json = f.read()
+            test_json = json.loads(f.read().replace("\\", "\\\\"))
 
-        test_json = json.loads(tmp_json.replace("\\", "\\\\"))
         report_name = original_cfg_json.replace("original", "RPR")
 
         report = core_config.RENDER_REPORT_BASE.copy()
@@ -135,44 +136,20 @@ def generate_json_for_report(original_cfg_json, dir_with_json):
                     json.dump([report], file, indent=4)
 
 
-def main():
-    args = createArgsParser().parse_args()
-
-    platform_system = platform.system()  # get os name
-    engine = args.package_name if args.package_name in ["Hybrid", "Tahoe64", "Northstar64"] else None  # get rpr engine
-    # get tool executable path and abspath.
+# Configure simpleRender.py script context
+def configure_context(args):
+    ps = platform.system()
+    engine = None
+    for e in ["Hybrid", "Tahoe64", "Northstar64"]:  # get rpr engine
+        if e in args.package_name:
+            engine = e
+            break
     args.tool = os.path.abspath(args.tool)
     tool_path = os.path.dirname(args.tool)
     args.output = os.path.abspath(args.output)
-    # unix systems executive file permissions
-    if platform_system != "Windows":
+    # set unix systems executive file permissions
+    if ps != "Windows":
         os.system('chmod +x {}'.format(os.path.abspath(args.tool)))
-
-    #configure workdir
-    os.makedirs(os.path.join(args.output, "Color"))
-    try:
-        test_cases_path = os.path.realpath(os.path.join(os.path.abspath(args.output), 'test_cases.json'))
-        copyfile(args.test_list, test_cases_path)
-    except Exception as e:
-        main_logger.error("Can't copy test_cases.json")
-        main_logger.error(str(e))
-        exit(-1)
-
-    test_cases = []
-    try:
-        with open(test_cases_path, 'r') as file:
-            test_cases = json.load(file)
-        for case in test_cases:
-            if 'status' not in case:
-                case['status'] = 'active'
-        with open(test_cases_path, 'w') as file:
-            json.dump(test_cases, file, indent=4)
-        main_logger.info("Scenes to render: {}".format([name['scene'] for name in test_cases]))
-    except OSError as e:
-        main_logger.error("Failed to read test_cases.json")
-        main_logger.error(str(e))
-        exit(-1)
-
     gpu_name = get_gpu()
     os_name = get_machine_info().get('os', 'Unknown')
     if not gpu_name:
@@ -180,21 +157,58 @@ def main():
     if os_name == 'Unknown':
         main_logger.error("Can't get os name")
     render_platform = {os_name, gpu_name}
+    return ps, engine, tool_path, render_platform
 
-    for case in test_cases:
+
+# Sets statuses to group of aovs cases
+def set_aovs_group_status(case, status):
+    for aov in case['aovs']:
+        aov['status'] = status
+
+
+# Get aovs group status
+def get_aovs_group_status(case):
+    return case['aovs'][0]['status'] if (set(list(map(lambda aov: aov['status'], case['aov'])))) == 1 else TEST_CRASH_STATUS
+
+
+# Configure workdir
+def configure_workdir(workdir, tests):
+    try:
+        os.makedirs(os.path.join(workdir, "Color"))
+        test_cases_path = os.path.realpath(os.path.join(os.path.abspath(workdir), 'test_cases.json'))
+        copyfile(tests, test_cases_path)
+        with open(test_cases_path, 'r') as file:
+            test_cases = json.load(file)
+        for case in test_cases:
+            if 'aovs' in case:
+                set_aovs_group_status(case, 'active')
+            if 'status' not in case:
+                case['status'] = 'active'
+        with open(test_cases_path, 'w') as file:
+            json.dump(test_cases, file, indent=4)
+        main_logger.info("Scenes to render: {}".format([name['scene'] for name in test_cases]))
+        return test_cases, test_cases_path
+    except OSError as e:
+        main_logger.error("Failed to read test_cases.json")
+        raise e
+    except (SameFileError, IOError) as e:
+        main_logger.error("Can't copy test_cases.json")
+        raise e
+
+# Prepare cases before execute
+def prepare_cases(args, cases, platform_config):
+    for case in cases:
         # there is list with lists of gpu/os/gpu&os in skip_on
         # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
         # with that skip_on case will be skipped on OSX, GeForce GTX 1080 Ti and Windows with Vega
         main_logger.info("info: {}".format(case.get('status', '')))
-        skip_pass = sum(
-            render_platform & set(skip_config) == set(skip_config) for skip_config in case.get('skip_on', ''))
-        if skip_pass or case.get('status', '') == "skipped":
-            case['status'] = TEST_IGNORE_STATUS
-        else:
-            case['status'] = TEST_CRASH_STATUS
-
-        case_name = case['scene'].split('/')[-1]
-
+        skip_pass = sum(platform_config &
+                        set(skip_config) == set(skip_config) for skip_config in case.get('skip_on', ''))
+        case_status = TEST_IGNORE_STATUS if (skip_pass or case.get('status', '') == "skipped") else TEST_CRASH_STATUS
+        case['status'] = case_status
+        if 'aovs' in case:
+            set_aovs_group_status(case, case_status)
+        case_name = case['case']
         report = RENDER_REPORT_BASE.copy()
         report.update(RENDER_REPORT_EC_PACK.copy())
         report.update({'test_case': case_name,
@@ -219,7 +233,7 @@ def main():
             json.dump([report], file, indent=4)
 
         try:
-            shutil.copyfile(
+            copyfile(
                 os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
                 os.path.join(args.output, 'Color', report['file_name']))
         except OSError or FileNotFoundError as err:
@@ -248,14 +262,45 @@ def main():
 
                 with open(os.path.join(args.output, report['test_case'] + CASE_REPORT_SUFFIX), 'w') as file:
                     json.dump([report], file, indent=4)
-                shutil.copyfile(
+                copyfile(
                     os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
                     os.path.join(args.output, 'Color', value))
 
                 copy_baselines(args, report)
 
+
+def set_plugin_format(engine, os_name, tool_path, config_json):
+    if os_name == 'Windows':
+        config_json["plugin"] = "{}.dll".format(engine)
+    elif os_name == 'Darwin':
+        if os.path.isfile(os.path.join(tool_path, "lib{}.dylib".format(engine))):
+            config_json["plugin"] = "lib{}.dylib".format(engine)
+        else:
+            config_json["plugin"] = "{}.dylib".format(engine)
+    else:
+        if os.path.isfile(os.path.join(tool_path, "lib{}.so".format(engine))):
+            config_json["plugin"] = "lib{}.so".format(engine)
+        else:
+            config_json["plugin"] = "{}.so".format(engine)
+
+
+def build_render_scripts(os_name, tool, scene, template, out_dir, case):
+    cmd_command = ''
+    cmd_command += '{ld}"{to}" "{s}" "{te}"\n'.format(
+        ld='' if os_name == 'Windows' else 'export LD_LIBRARY_PATH=' + os.path.dirname(tool) + ":$LD_LIBRARY_PATH\n",
+        to=os.path.abspath(tool) if os_name == 'Windows' else tool,
+        s=scene,
+        te=template
+    )
+    script_name = str(case.replace(' ', '_')) + '.' + 'bat' if os_name == 'Windows' else 'sh'
+    cmd_script = os.path.join(out_dir, script_name)
+    return cmd_command, cmd_script
+
+
+# Execute render cases
+def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_path, args):
     for case in test_cases:
-        case_name = case['scene'].split('/')[-1]
+        case_name = case['case']
         if case['status'] == TEST_IGNORE_STATUS:
             continue
         try:
@@ -267,21 +312,8 @@ def main():
         config_json.pop('gamma', None)
         config_json["output"] = os.path.join("Color", case_name + ".png")
         config_json["output.json"] = case_name + "_original.json"
-
         if engine:
-            if platform_system == 'Windows':
-                config_json["plugin"] = "{}.dll".format(engine)
-            elif platform_system == 'Darwin':
-                if os.path.isfile(os.path.join(tool_path, "lib{}.dylib".format(engine))):
-                    config_json["plugin"] = "lib{}.dylib".format(engine)
-                else:
-                    config_json["plugin"] = "{}.dylib".format(engine)
-            else:
-                if os.path.isfile(os.path.join(tool_path, "lib{}.so".format(engine))):
-                    config_json["plugin"] = "lib{}.so".format(engine)
-                else:
-                    config_json["plugin"] = "{}.so".format(engine)
-
+            set_plugin_format(engine, platform_system, tool_path, config_json)
         # if arg zero - use default value
         config_json["width"] = args.resolution_x if args.resolution_x else config_json["width"]
         config_json["height"] = args.resolution_y if args.resolution_y else config_json["height"]
@@ -294,28 +326,21 @@ def main():
         script_path = os.path.join(args.output, "cfg_{}.json".format(case_name))
         scene_path = os.path.join(args.res_path, args.package_name, case['scene'].replace('/', os.path.sep))
 
-        if platform_system == "Windows":
-            cmdRun = '"{tool}" "{scene}" "{template}"\n'.format(tool=os.path.abspath(args.tool), scene=scene_path,
-                                                                template=script_path)
-            cmdScriptPath = os.path.join(args.output, '{}.bat'.format(case_name.replace(" ", "_")))
-        else:
-            cmdRun = 'export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH\n"{tool}" "{scene}" "{template}"\n'.format(
-                ld_path=os.path.dirname(args.tool), tool=args.tool, scene=scene_path, template=script_path)
-            cmdScriptPath = os.path.join(args.output, '{}.sh'.format(case_name.replace(" ", "_")))
-
+        cmd_run, cmd_script_path = build_render_scripts(platform_system, args.tool, scene_path, script_path,
+                                                        args.output, case_name)
         try:
             with open(script_path, 'w') as f:
                 json.dump(config_json, f, indent=4)
-            with open(cmdScriptPath, 'w') as f:
-                f.write(cmdRun)
+            with open(cmd_script_path, 'w') as f:
+                f.write(cmd_run)
             if platform.system() != "Windows":
-                os.system('chmod +x {}'.format(cmdScriptPath))
+                os.system('chmod +x {}'.format(cmd_script_path))
         except OSError as err:
             main_logger.error("Can't save render scripts: {}".format(str(err)))
             continue
 
         os.chdir(args.output)
-        p = psutil.Popen(cmdScriptPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = psutil.Popen(cmd_script_path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         try:
             stdout, stderr = p.communicate(timeout=float(args.timeout))
@@ -347,16 +372,31 @@ def main():
             except Exception as e:
                 main_logger.error(str(e))
 
-            core_scene_configuration = "cfg_{}.json".format(case['scene'])
+            core_scene_configuration = "cfg_{}.json".format(case['case'])
             if os.path.exists(core_scene_configuration):
                 report[0]["core_scene_configuration"] = core_scene_configuration
 
             with open(os.path.join(args.output, case_name + CASE_REPORT_SUFFIX), 'w') as f:
                 json.dump(report, f, indent=4)
             with open(test_cases_path, "w") as f:
-                case["status"] = "done"
+                case['status'] = "done"
+                if 'aovs' in case:
+                    set_aovs_group_status(case, 'done')
                 json.dump(test_cases, f, indent=4)
             generate_json_for_report(core_scene_configuration, args.output)
+
+
+def main():
+    args = createArgsParser().parse_args()
+    platform_system, engine, tool_path, render_platform = configure_context(args)
+    try:
+        test_cases, test_cases_path = configure_workdir(args.output, args.test_list)  # configure workdir
+        prepare_cases(args, test_cases, render_platform)
+        execute_cases(test_cases, test_cases_path, engine, platform_system, tool_path, args)
+    except Exception as e:
+        main_logger.error(str(e))
+        exit(-1)
+
 
 if __name__ == "__main__":
     exit(main())

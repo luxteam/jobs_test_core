@@ -1,30 +1,30 @@
 [
     {
         "scene": "Tone Mapping Autolinear.rpr",
-        "name": "Tone Mapping Autolinear.rpr"
+        "case": "Tone Mapping Autolinear.rpr"
     },
     {
         "scene": "Tone Mapping Linear.rpr",
-        "name": "Tone Mapping Linear.rpr"
+        "case": "Tone Mapping Linear.rpr"
     },
     {
         "scene": "Tone Mapping MaxWhite.rpr",
-        "name": "Tone Mapping MaxWhite.rpr"
+        "case": "Tone Mapping MaxWhite.rpr"
     },
     {
         "scene": "Tone Mapping None.rpr",
-        "name": "Tone Mapping None.rpr"
+        "case": "Tone Mapping None.rpr"
     },
     {
         "scene": "Tone Mapping Photolinear.rpr",
-        "name": "Tone Mapping Photolinear.rpr"
+        "case": "Tone Mapping Photolinear.rpr"
     },
     {
         "scene": "Tone Mapping Reinhard02.rpr",
-        "name": "Tone Mapping Reinhard02.rpr"
+        "case": "Tone Mapping Reinhard02.rpr"
     },
     {
         "scene": "Tone Mapping White_Balance.rpr",
-        "name": "Tone Mapping White_Balance.rpr"
+        "case": "Tone Mapping White_Balance.rpr"
     }
 ]
