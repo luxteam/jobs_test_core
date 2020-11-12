@@ -1,0 +1,22 @@
+[
+    {
+        "scene": "CameraTest.rpr",
+        "case": "CameraTest.rpr"
+    },
+    {
+        "scene": "CubeMap.rpr",
+        "case": "CubeMap.rpr"
+    },
+    {
+        "scene": "CubeMapStereo.rpr",
+        "case": "CubeMapStereo.rpr"
+    },
+    {
+        "scene": "SpericalPanorama.rpr",
+        "case": "SpericalPanorama.rpr"
+    },
+    {
+        "scene": "SpericalPanoramaStereo.rpr",
+        "case": "SpericalPanoramaStereo.rpr"
+    }
+]

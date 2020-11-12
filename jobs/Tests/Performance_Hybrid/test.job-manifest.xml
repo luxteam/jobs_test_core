@@ -12,7 +12,7 @@
         <argument>--output "{OutputDir}"</argument>
         <argument>--package_name "Performance_Hybrid"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
-        <argument>--test_list "{Root}/Tests/Performance_Hybrid/SceneList.json"</argument>
+        <argument>--test_list "{Root}/Tests/Performance_Hybrid/test_cases.json"</argument>
         <argument>--update_refs "{UpdateRefs}"</argument>
         <argument>--timeout 1800</argument>
     </execute>
