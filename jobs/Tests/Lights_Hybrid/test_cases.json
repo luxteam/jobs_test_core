@@ -3,21 +3,21 @@
         "scene": "Caustic_Single_Test.rpr",
         "case": "Caustic_Single_Test.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
         ]
     },
     {
         "scene": "Directional_Light.rpr",
         "case": "Directional_Light.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
         ]
     },
     {
         "scene": "Physical_Light.rpr",
         "case": "Physical_Light.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"]
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
         ]
     }
 ]

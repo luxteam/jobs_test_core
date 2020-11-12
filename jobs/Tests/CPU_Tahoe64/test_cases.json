@@ -3,7 +3,7 @@
         "scene": "CPU-Dual-Test.rpr",
         "case": "CPU-Dual-Test.rpr",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
+            ["Darwin 10.14.6(64bit)"], ["Darwin 10.15.7(64bit)"]
         ]
     }
 ]
