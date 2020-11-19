@@ -76,13 +76,13 @@ def core_ver_str(core_ver):
     return "%x.%x.%x" % (mj, mn, r)
 
 
-def generate_json_for_report(original_cfg_json, dir_with_json):
-    cfg_json = os.path.join(dir_with_json, "{}_original.json".format(original_cfg_json))
+def generate_json_for_report(case_name, dir_with_json):
+    cfg_json = os.path.join(dir_with_json, "{}_original.json".format(case_name))
     if os.path.exists(cfg_json):
         with open(cfg_json) as f:
             test_json = json.loads(f.read().replace("\\", "\\\\"))
 
-        report_name = original_cfg_json.replace("original", "RPR")
+        report_name = cfg_json.replace("original", "RPR")
 
         report = core_config.RENDER_REPORT_BASE.copy()
         report.update(core_config.RENDER_REPORT_EC_PACK.copy())
@@ -116,7 +116,6 @@ def generate_json_for_report(original_cfg_json, dir_with_json):
             rpr_report = json.load(f)[0]
             report['tahoe_log'] = rpr_report['tahoe_log']
             report['core_scene_configuration'] = rpr_report['core_scene_configuration']
-            report['group_timeout_exceeded'] = rpr_report['group_timeout_exceeded']
         with open(os.path.join(dir_with_json, report_name), 'w') as f:
             json.dump([report], f, indent=' ')
 
@@ -385,7 +384,7 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
                 if 'aovs' in case:
                     set_aovs_group_status(case, 'done')
                 json.dump(test_cases, f, indent=4)
-            generate_json_for_report(core_scene_configuration, args.output)
+            generate_json_for_report(case['case'], args.output)
 
 
 def main():
