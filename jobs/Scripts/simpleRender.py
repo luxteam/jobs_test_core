@@ -111,7 +111,7 @@ def generate_json_for_report(case_name, dir_with_json):
         report['width'] = test_json['width']
         report['height'] = test_json['height']
         report['iterations'] = test_json['iteration']
-        report['group_timeout_exceeded'] = test_json['group_timeout_exceeded']
+        report['group_timeout_exceeded'] = False
 
         with open(os.path.join(dir_with_json, report_name), 'r') as f:
             rpr_report = json.load(f)[0]
