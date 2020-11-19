@@ -111,6 +111,7 @@ def generate_json_for_report(case_name, dir_with_json):
         report['width'] = test_json['width']
         report['height'] = test_json['height']
         report['iterations'] = test_json['iteration']
+        report['group_timeout_exceeded'] = test_json['group_timeout_exceeded']
 
         with open(os.path.join(dir_with_json, report_name), 'r') as f:
             rpr_report = json.load(f)[0]
@@ -379,12 +380,12 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
 
             with open(os.path.join(args.output, case_name + CASE_REPORT_SUFFIX), 'w') as f:
                 json.dump(report, f, indent=4)
+            generate_json_for_report(case['case'], args.output)
             with open(test_cases_path, "w") as f:
                 case['status'] = "done"
                 if 'aovs' in case:
                     set_aovs_group_status(case, 'done')
                 json.dump(test_cases, f, indent=4)
-            generate_json_for_report(case['case'], args.output)
 
 
 def main():
