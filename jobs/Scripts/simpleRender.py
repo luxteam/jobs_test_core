@@ -60,8 +60,7 @@ def copy_baselines(args, report):
                 baseline_json = json.load(baseline)
 
             for thumb in [''] + THUMBNAIL_PREFIXES:
-                if thumb + 'render_color_path' and os.path.exists(
-                        os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path'])):
+                if thumb + 'render_color_path' in baseline_json and os.path.exists(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path'])):
                     copyfile(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path']),
                              os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
         except:
