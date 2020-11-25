@@ -180,7 +180,7 @@ def configure_workdir(args, tests, engine):
         with open(test_cases_path, 'r') as file:
             test_cases = json.load(file)
         for case in test_cases:
-            with open(os.path.join(args.res_path, args.package_name, case['scene'].replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, case['scene'].split('/')[-1].replace('.rpr', '.json'))) as file:
                 config_json = json.load(file)
             if 'aovs' in config_json:
                 case['aovs'] = []
@@ -244,7 +244,7 @@ def prepare_cases(args, cases, platform_config, engine):
             json.dump([report], file, indent=4)
 
         try:
-            with open(os.path.join(args.res_path, args.package_name, case['scene'].replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, case['scene'].split('/')[-1].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
@@ -308,7 +308,7 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
         if case['status'] == TEST_IGNORE_STATUS:
             continue
         try:
-            with open(os.path.join(args.res_path, args.package_name, case['scene'].replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, case['scene'].split('/')[-1].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
@@ -377,7 +377,7 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
             except Exception as e:
                 main_logger.error(str(e))
 
-            core_scene_configuration = "cfg_{}.json".format(case['scene'])
+            core_scene_configuration = "cfg_{}.json".format(case['scene'].split('/')[-1])
             if os.path.exists(core_scene_configuration):
                 report[0]["core_scene_configuration"] = core_scene_configuration
 
