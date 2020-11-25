@@ -53,10 +53,10 @@ def copy_baselines(args, report):
 
     if 'Update' not in args.update_refs:
         try:
-            copyfile(os.path.join(baseline_path_tr, report['scene_name'] + CASE_REPORT_SUFFIX),
-                     os.path.join(baseline_path, report['scene_name'] + CASE_REPORT_SUFFIX))
+            copyfile(os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX),
+                     os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX))
 
-            with open(os.path.join(baseline_path, report['scene_name'] + CASE_REPORT_SUFFIX)) as baseline:
+            with open(os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX)) as baseline:
                 baseline_json = json.load(baseline)
 
             for thumb in [''] + THUMBNAIL_PREFIXES:
@@ -65,7 +65,7 @@ def copy_baselines(args, report):
                              os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
         except:
             main_logger.error('Failed to copy baseline ' +
-                              os.path.join(baseline_path_tr, report['scene_name'] + CASE_REPORT_SUFFIX))
+                              os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX))
 
 
 def core_ver_str(core_ver):
@@ -75,7 +75,7 @@ def core_ver_str(core_ver):
     return "%x.%x.%x" % (mj, mn, r)
 
 
-def generate_json_for_report(case_name, dir_with_json):
+def generate_json_for_report(case_name, dir_with_json, engine):
     cfg_json = os.path.join(dir_with_json, "{}_original.json".format(case_name))
     if os.path.exists(cfg_json):
         with open(cfg_json) as f:
@@ -96,12 +96,12 @@ def generate_json_for_report(case_name, dir_with_json):
         report["render_device"] = get_gpu()
         report["test_group"] = dir_with_json.split(os.path.sep)[-1]
         report["scene_name"] = test_json["input"].split(os.path.sep)[-1]
-        report["test_case"] = test_json["input"].split(os.path.sep)[-1]
+        report["test_case"] = case_name
         if type(test_json["input"]) is str:
             report["file_name"] = test_json["input"].split(os.path.sep)[-1] + ".png"
         elif type(test_json["input"]) is list:
             report["file_name"] = test_json["input"][0].split(os.path.sep)[-1] + ".png"
-        report["render_color_path"] = os.path.join("Color", test_json["input"].split(os.path.sep)[-1] + ".png")
+        report["render_color_path"] = os.path.join("Color", case_name + ".png")
         report["tool"] = "Core"
         report["render_time"] = test_json["render.time.ms"] / 1000
         report['date_time'] = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
@@ -123,11 +123,11 @@ def generate_json_for_report(case_name, dir_with_json):
             for key, value in test_json['aovs'].items():
                 report["render_time"] = 0.0
                 if type(value) is str:
-                    report['file_name'] = value.split(os.path.sep)[-1]
-                    report['render_color_path'] = value
+                    value_with_engine = value.replace('.png', engine + '.png')
                 elif type(value) is list:
-                    report['file_name'] = value[0].split(os.path.sep)[-1]
-                    report['render_color_path'] = value[0]
+                    value_with_engine = value[0].replace('.png', engine + '.png')
+                report['file_name'] = value_with_engine.split(os.path.sep)[-1]
+                report['render_color_path'] = value_with_engine
                 report['test_case'] = test_json['input'].split(os.path.sep)[-1] + key
 
                 with open(os.path.join(dir_with_json, report_name.replace('_RPR', key + '_RPR')), 'r') as file:
@@ -172,16 +172,20 @@ def get_aovs_group_status(case):
 
 
 # Configure workdir
-def configure_workdir(workdir, tests):
+def configure_workdir(args, tests, engine):
     try:
-        os.makedirs(os.path.join(workdir, "Color"))
-        test_cases_path = os.path.realpath(os.path.join(os.path.abspath(workdir), 'test_cases.json'))
+        os.makedirs(os.path.join(args.output, "Color"))
+        test_cases_path = os.path.realpath(os.path.join(os.path.abspath(args.output), 'test_cases.json'))
         copyfile(tests, test_cases_path)
         with open(test_cases_path, 'r') as file:
             test_cases = json.load(file)
         for case in test_cases:
-            if 'aovs' in case:
-                set_aovs_group_status(case, 'active')
+            with open(os.path.join(args.res_path, args.package_name, case['scene'].replace('.rpr', '.json'))) as file:
+                config_json = json.load(file)
+            if 'aovs' in config_json:
+                case['aovs'] = []
+                for aov in config_json['aovs']:
+                    case['aovs'].append({'aov': aov, 'status': 'active'})
             if 'status' not in case:
                 case['status'] = 'active'
         with open(test_cases_path, 'w') as file:
@@ -196,7 +200,7 @@ def configure_workdir(workdir, tests):
         raise e
 
 # Prepare cases before execute
-def prepare_cases(args, cases, platform_config):
+def prepare_cases(args, cases, platform_config, engine):
     for case in cases:
         # there is list with lists of gpu/os/gpu&os in skip_on
         # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
@@ -248,14 +252,15 @@ def prepare_cases(args, cases, platform_config):
 
         if 'aovs' in config_json.keys():
             for key, value in config_json['aovs'].items():
+                value_with_engine = value.replace('.png', engine + '.png')
                 report = RENDER_REPORT_BASE.copy()
                 report.update(RENDER_REPORT_EC_PACK.copy())
                 report.update({'test_case': case['case'] + key,
                                'test_status': case_status,
                                'test_group': args.package_name,
                                'render_device': get_gpu(),
-                               'render_color_path': os.path.join('Color', value),
-                               'file_name': value})
+                               'render_color_path': os.path.join('Color', value_with_engine),
+                               'file_name': value_with_engine})
 
                 if case['status'] == TEST_IGNORE_STATUS:
                     report.update({'group_timeout_exceeded': False})
@@ -264,7 +269,7 @@ def prepare_cases(args, cases, platform_config):
                     json.dump([report], file, indent=4)
                 copyfile(
                     os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
-                    os.path.join(args.output, 'Color', value))
+                    os.path.join(args.output, 'Color', value_with_engine))
 
                 copy_baselines(args, report)
 
@@ -320,7 +325,8 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
 
         if 'aovs' in config_json.keys():
             for key, value in config_json['aovs'].items():
-                config_json['aovs'].update({key: 'Color/' + value})
+                value_with_engine = value.replace('.png', engine + '.png')
+                config_json['aovs'].update({key: 'Color/' + value_with_engine})
 
         script_path = os.path.join(args.output, "cfg_{}.json".format(case['case']))
         scene_path = os.path.join(args.res_path, args.package_name, case['scene'].replace('/', os.path.sep))
@@ -371,13 +377,13 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
             except Exception as e:
                 main_logger.error(str(e))
 
-            core_scene_configuration = "cfg_{}.json".format(case['case'])
+            core_scene_configuration = "cfg_{}.json".format(case['scene'])
             if os.path.exists(core_scene_configuration):
                 report[0]["core_scene_configuration"] = core_scene_configuration
 
             with open(os.path.join(args.output, case['case'] + CASE_REPORT_SUFFIX), 'w') as f:
                 json.dump(report, f, indent=4)
-            generate_json_for_report(case['case'], args.output)
+            generate_json_for_report(case['case'], args.output, engine)
             with open(test_cases_path, "w") as f:
                 case['status'] = "done"
                 if 'aovs' in case:
@@ -389,8 +395,8 @@ def main():
     args = createArgsParser().parse_args()
     platform_system, engine, tool_path, render_platform = configure_context(args)
     try:
-        test_cases, test_cases_path = configure_workdir(args.output, args.test_list)  # configure workdir
-        prepare_cases(args, test_cases, render_platform)
+        test_cases, test_cases_path = configure_workdir(args, args.test_list, engine)  # configure workdir
+        prepare_cases(args, test_cases, render_platform, engine)
         execute_cases(test_cases, test_cases_path, engine, platform_system, tool_path, args)
     except Exception as e:
         main_logger.error(str(e))
