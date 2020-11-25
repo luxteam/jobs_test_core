@@ -53,10 +53,10 @@ def copy_baselines(args, report):
 
     if 'Update' not in args.update_refs:
         try:
-            copyfile(os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX),
-                     os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX))
+            copyfile(os.path.join(baseline_path_tr, report['scene_name'] + CASE_REPORT_SUFFIX),
+                     os.path.join(baseline_path, report['scene_name'] + CASE_REPORT_SUFFIX))
 
-            with open(os.path.join(baseline_path, report['test_case'] + CASE_REPORT_SUFFIX)) as baseline:
+            with open(os.path.join(baseline_path, report['scene_name'] + CASE_REPORT_SUFFIX)) as baseline:
                 baseline_json = json.load(baseline)
 
             for thumb in [''] + THUMBNAIL_PREFIXES:
@@ -65,7 +65,7 @@ def copy_baselines(args, report):
                              os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
         except:
             main_logger.error('Failed to copy baseline ' +
-                              os.path.join(baseline_path_tr, report['test_case'] + CASE_REPORT_SUFFIX))
+                              os.path.join(baseline_path_tr, report['scene_name'] + CASE_REPORT_SUFFIX))
 
 
 def core_ver_str(core_ver):
@@ -209,21 +209,20 @@ def prepare_cases(args, cases, platform_config):
             case['status'] = case_status
             if 'aovs' in case:
                 set_aovs_group_status(case, case_status)
-        case_name = case['case']
         report = RENDER_REPORT_BASE.copy()
         report.update(RENDER_REPORT_EC_PACK.copy())
-        report.update({'test_case': case_name,
+        report.update({'test_case': case['case'],
                        'test_status': case_status,
                        'test_group': args.package_name,
-                       'scene_name': case_name,
+                       'scene_name': case['scene'],
                        'render_device': get_gpu(),
                        'width': args.resolution_x,
                        'height': args.resolution_y,
                        'iterations': args.pass_limit,
                        'tool': "Core",
                        'date_time': datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
-                       'render_color_path': os.path.join('Color', case_name + ".png"),
-                       'file_name': case_name + ".png"})
+                       'render_color_path': os.path.join('Color', case['case'] + ".png"),
+                       'file_name': case['case'] + ".png"})
 
         copy_baselines(args, report)
 
@@ -237,11 +236,11 @@ def prepare_cases(args, cases, platform_config):
         except OSError or FileNotFoundError as err:
             main_logger.error("Can't create img stub: {}".format(str(err)))
 
-        with open(os.path.join(args.output, case_name + CASE_REPORT_SUFFIX), 'w') as file:
+        with open(os.path.join(args.output, case['case'] + CASE_REPORT_SUFFIX), 'w') as file:
             json.dump([report], file, indent=4)
 
         try:
-            with open(os.path.join(args.res_path, args.package_name, case_name.replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, case['scene'].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
@@ -251,7 +250,7 @@ def prepare_cases(args, cases, platform_config):
             for key, value in config_json['aovs'].items():
                 report = RENDER_REPORT_BASE.copy()
                 report.update(RENDER_REPORT_EC_PACK.copy())
-                report.update({'test_case': case_name + key,
+                report.update({'test_case': case['case'] + key,
                                'test_status': case_status,
                                'test_group': args.package_name,
                                'render_device': get_gpu(),
@@ -301,18 +300,17 @@ def build_render_scripts(os_name, tool, scene, template, out_dir, case):
 # Execute render cases
 def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_path, args):
     for case in test_cases:
-        case_name = case['case']
         if case['status'] == TEST_IGNORE_STATUS:
             continue
         try:
-            with open(os.path.join(args.res_path, args.package_name, case_name + '.json' )) as file:
+            with open(os.path.join(args.res_path, args.package_name, case['scene'].replace('.rpr', '.json'))) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))
             continue
         config_json.pop('gamma', None)
-        config_json["output"] = os.path.join("Color", case_name + ".png")
-        config_json["output.json"] = case_name + "_original.json"
+        config_json["output"] = os.path.join("Color", case['case'] + ".png")
+        config_json["output.json"] = case['case'] + "_original.json"
         if engine:
             set_plugin_format(engine, platform_system, tool_path, config_json)
         # if arg zero - use default value
@@ -324,11 +322,11 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
             for key, value in config_json['aovs'].items():
                 config_json['aovs'].update({key: 'Color/' + value})
 
-        script_path = os.path.join(args.output, "cfg_{}.json".format(case_name))
+        script_path = os.path.join(args.output, "cfg_{}.json".format(case['case']))
         scene_path = os.path.join(args.res_path, args.package_name, case['scene'].replace('/', os.path.sep))
 
         cmd_run, cmd_script_path = build_render_scripts(platform_system, args.tool, scene_path, script_path,
-                                                        args.output, case_name)
+                                                        args.output, case['case'])
         try:
             with open(script_path, 'w') as f:
                 json.dump(config_json, f, indent=4)
@@ -351,7 +349,7 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
                 child.terminate()
             p.terminate()
         finally:
-            with open(os.path.join(args.output, case_name + CASE_REPORT_SUFFIX), 'r') as f:
+            with open(os.path.join(args.output, case['case'] + CASE_REPORT_SUFFIX), 'r') as f:
                 report = json.load(f)
 
             report[0]["group_timeout_exceeded"] = False
@@ -367,7 +365,7 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
 
             try:
                 if os.path.exists("tahoe.log"):
-                    tahoe_log_name = "{}_render.log".format(case_name)
+                    tahoe_log_name = "{}_render.log".format(case['case'])
                     os.rename("tahoe.log", tahoe_log_name)
                     report[0]['tahoe_log'] = tahoe_log_name
             except Exception as e:
@@ -377,7 +375,7 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
             if os.path.exists(core_scene_configuration):
                 report[0]["core_scene_configuration"] = core_scene_configuration
 
-            with open(os.path.join(args.output, case_name + CASE_REPORT_SUFFIX), 'w') as f:
+            with open(os.path.join(args.output, case['case'] + CASE_REPORT_SUFFIX), 'w') as f:
                 json.dump(report, f, indent=4)
             generate_json_for_report(case['case'], args.output)
             with open(test_cases_path, "w") as f:
