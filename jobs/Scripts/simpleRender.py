@@ -123,11 +123,11 @@ def generate_json_for_report(case_name, dir_with_json, engine):
             for key, value in test_json['aovs'].items():
                 report["render_time"] = 0.0
                 if type(value) is str:
-                    value_with_engine = value.replace('.png', engine + '.png')
+                    report['file_name'] = value.split(os.path.sep)[-1]
+                    report['render_color_path'] = value
                 elif type(value) is list:
-                    value_with_engine = value[0].replace('.png', engine + '.png')
-                report['file_name'] = value_with_engine.split(os.path.sep)[-1]
-                report['render_color_path'] = value_with_engine
+                    report['file_name'] = value[0].split(os.path.sep)[-1]
+                    report['render_color_path'] = value[0]
                 report['test_case'] = test_json['input'].split(os.path.sep)[-1] + key
 
                 with open(os.path.join(dir_with_json, report_name.replace('_RPR', key + '_RPR')), 'r') as file:
