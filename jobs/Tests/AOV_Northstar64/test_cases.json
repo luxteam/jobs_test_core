@@ -1,89 +1,9 @@
 [
     {
         "scene": "AOVTest.rpr",
-        "case": "AOVTest.rpr",
+        "case": "AOVTest_Northstar64",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"], ["Darwin 10.15.7(64bit)"]
-        ],
-        "aovs": [
-            {
-                "aov": "opacity"
-            },
-            {
-                "aov": "opacity"
-            },
-            {
-                "aov": "world.coordinate"
-            },
-            {
-                "aov": "uv"
-            },
-            {
-                "aov": "material.id"
-            },
-            {
-                "aov": "normal.geom"
-            },
-            {
-                "aov": "normal"
-            },
-            {
-                "aov": "depth"
-            },
-            {
-                "aov": "object.id"
-            },
-            {
-                "aov": "group.id"
-            },
-            {
-                "aov": "shadow.catcher"
-            },
-            {
-                "aov": "reflection.catcher"
-            },
-            {
-                "aov": "background"
-            },
-            {
-                "aov": "emission"
-            },
-            {
-                "aov": "velocity"
-            },
-            {
-                "aov": "direct.illumination"
-            },
-            {
-                "aov": "indirect.illumination"
-            },
-            {
-                "aov": "ao"
-            },
-            {
-                "aov": "direct.diffuse"
-            },
-            {
-                "aov": "direct.reflect"
-            },
-            {
-                "aov": "indirect.diffuse"
-            },
-            {
-                "aov": "indirect.reflect"
-            },
-            {
-                "aov": "refract"
-            },
-            {
-                "aov": "volume"
-            },
-            {
-                "aov": "albedo.diffuse"
-            },
-            {
-                "aov": "variance"
-            }
         ]
     }
 ]

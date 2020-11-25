@@ -1,35 +1,35 @@
 [
     {
         "scene": "Material_Test.rpr",
-        "case": "Material_Test.rpr",
+        "case": "Material_Test_Hybrid",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
         ]
     },
     {
         "scene": "Material_Test_NonSSS.rpr",
-        "case": "Material_Test_NonSSS.rpr",
+        "case": "Material_Test_NonSSS_Hybrid",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"], ["Ubuntu 18.04(64bit)"]
         ]
     },
     {
         "scene": "SSSTypesTest.rpr",
-        "case": "SSSTypesTest.rpr",
+        "case": "SSSTypesTest_Hybrid",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
         ]
     },
     {
         "scene": "PBR_Test.rpr",
-        "case": "PBR_Test.rpr",
+        "case": "PBR_Test_Hybrid",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"], ["Ubuntu 18.04(64bit)"]
         ]
     },
     {
         "scene": "Refraction.rpr",
-        "case": "Refraction.rpr",
+        "case": "Refraction_Hybrid",
         "skip_on": [
             ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
         ]

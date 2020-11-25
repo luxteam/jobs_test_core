@@ -9,11 +9,13 @@
     git submodule update
     ```
 
- 3. Put `CoreAssets` scenes placed in `C:/TestResources`.
+ 3. Put `CoreAssets` scenes in `C:/TestResources`.
  
     ***You should use the specific scenes which defined in `test_cases.json` files in `jobs/Tests/` folders.***
 
- 4. Run `run.bat` on Windows or `run.sh` only from `scripts` folder with customised arguments with space separator:
+ 4. Create folder `rprSdk` and put there executable files and application libraries.
+
+ 5. Run `run.bat` on Windows or `run.sh` only from `scripts` folder with customised arguments with space separator:
 
     * Second arg sets `FILE_FILTER`.
     * Third arg sets `TEST_FILTER`.

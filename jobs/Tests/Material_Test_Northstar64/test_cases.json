@@ -1,34 +1,34 @@
 [
     {
         "scene": "RPR_Nodes.rpr",
-        "case": "RPR_Nodes.rpr"
+        "case": "RPR_Nodes_Northstar64"
     },
     {
         "scene": "Material_Test.rpr",
-        "case": "Material_Test.rpr"
+        "case": "Material_Test_Northstar64"
     },
     {
         "scene": "Material_Test_NonSSS.rpr",
-        "case": "Material_Test_NonSSS.rpr"
+        "case": "Material_Test_NonSSS_Northstar64"
     },
     {
         "scene": "Material_TestSSS.rpr",
-        "case": "Material_TestSSS.rpr"
+        "case": "Material_TestSSS_Northstar64"
     },
     {
         "scene": "SSSTypesTest.rpr",
-        "case": "SSSTypesTest.rpr"
+        "case": "SSSTypesTest_Northstar64"
     },
     {
         "scene": "PBR_Test.rpr",
-        "case": "PBR_Test.rpr"
+        "case": "PBR_Test_Northstar64"
     },
     {
         "scene": "Refraction.rpr",
-        "case": "Refraction.rpr"
+        "case": "Refraction_Northstar64"
     },
     {
         "scene": "Material_TestVolume.rpr",
-        "case": "Material_TestVolume.rpr"
+        "case": "Material_TestVolume_Northstar64"
     }
 ]

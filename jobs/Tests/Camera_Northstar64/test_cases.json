@@ -1,24 +1,24 @@
 [
     {
         "scene": "CameraTest.rpr",
-        "case": "CameraTest.rpr"
+        "case": "CameraTest_Northstar64"
     },
     {
         "scene": "CubeMap.rpr",
-        "case": "CubeMap.rpr",
+        "case": "CubeMap_Northstar64",
         "status": "skipped"
     },
     {
         "scene": "CubeMapStereo.rpr",
-        "case": "CubeMapStereo.rpr",
+        "case": "CubeMapStereo_Northstar64",
         "status": "skipped"
     },
     {
         "scene": "SpericalPanorama.rpr",
-        "case": "SpericalPanorama.rpr"
+        "case": "SpericalPanorama_Northstar64"
     },
     {
         "scene": "SpericalPanoramaStereo.rpr",
-        "case": "SpericalPanoramaStereo.rpr"
+        "case": "SpericalPanoramaStereo_Northstar64"
     }
 ]

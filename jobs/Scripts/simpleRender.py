@@ -305,7 +305,7 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
         if case['status'] == TEST_IGNORE_STATUS:
             continue
         try:
-            with open(os.path.join(args.res_path, args.package_name, case_name.replace('.rpr', '.json'))) as file:
+            with open(os.path.join(args.res_path, args.package_name, case_name + '.json' )) as file:
                 config_json = json.loads(file.read())
         except OSError as err:
             main_logger.error("Can't read CoreAssets: {}".format(str(err)))

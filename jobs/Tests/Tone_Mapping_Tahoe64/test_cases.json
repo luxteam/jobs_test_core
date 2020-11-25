@@ -1,30 +1,30 @@
 [
     {
         "scene": "Tone Mapping Autolinear.rpr",
-        "case": "Tone Mapping Autolinear.rpr"
+        "case": "Tone Mapping Autolinear_Tahoe64"
     },
     {
         "scene": "Tone Mapping Linear.rpr",
-        "case": "Tone Mapping Linear.rpr"
+        "case": "Tone Mapping Linear_Tahoe64"
     },
     {
         "scene": "Tone Mapping MaxWhite.rpr",
-        "case": "Tone Mapping MaxWhite.rpr"
+        "case": "Tone Mapping MaxWhite_Tahoe64"
     },
     {
         "scene": "Tone Mapping None.rpr",
-        "case": "Tone Mapping None.rpr"
+        "case": "Tone Mapping None_Tahoe64"
     },
     {
         "scene": "Tone Mapping Photolinear.rpr",
-        "case": "Tone Mapping Photolinear.rpr"
+        "case": "Tone Mapping Photolinear_Tahoe64"
     },
     {
         "scene": "Tone Mapping Reinhard02.rpr",
-        "case": "Tone Mapping Reinhard02.rpr"
+        "case": "Tone Mapping Reinhard02_Tahoe64"
     },
     {
         "scene": "Tone Mapping White_Balance.rpr",
-        "case": "Tone Mapping White_Balance.rpr"
+        "case": "Tone Mapping White_Balance_Tahoe64"
     }
 ]
