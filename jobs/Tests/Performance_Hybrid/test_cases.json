@@ -1,30 +1,30 @@
 [
     {
         "scene": "acca_restaurant/acca_restaurant.rpr",
-        "case": "acca_restaurant/acca_restaurant_Hybrid",
+        "case": "acca_restaurant_Hybrid",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"]
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Darwin 10.15.7(64bit)"]
         ]
     },
     {
         "scene": "bedroom_with_lights-RPRNEXT-75.rpr",
         "case": "bedroom_with_lights-RPRNEXT-75_Hybrid",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"]
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Darwin 10.15.7(64bit)"]
         ]
     },
     {
         "scene": "ninja.rpr",
         "case": "ninja_Hybrid",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"]
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Darwin 10.15.7(64bit)"]
         ]
     },
     {
         "scene": "plants_cam4.rpr",
         "case": "plants_cam4_Hybrid",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"]
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Darwin 10.15.7(64bit)"]
         ]
     }
 ]

@@ -6,6 +6,7 @@ import psutil
 import json
 import datetime
 import platform
+import traceback
 from shutil import copyfile
 from shutil import SameFileError
 
@@ -59,8 +60,7 @@ def copy_baselines(args, report):
                 baseline_json = json.load(baseline)
 
             for thumb in [''] + THUMBNAIL_PREFIXES:
-                if thumb + 'render_color_path' and os.path.exists(
-                        os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path'])):
+                if thumb + 'render_color_path' in baseline_json and os.path.exists(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path'])):
                     copyfile(os.path.join(baseline_path_tr, baseline_json[thumb + 'render_color_path']),
                              os.path.join(baseline_path, baseline_json[thumb + 'render_color_path']))
         except:
@@ -75,13 +75,13 @@ def core_ver_str(core_ver):
     return "%x.%x.%x" % (mj, mn, r)
 
 
-def generate_json_for_report(original_cfg_json, dir_with_json):
-    cfg_json = os.path.join(dir_with_json, original_cfg_json)
+def generate_json_for_report(case_name, dir_with_json):
+    cfg_json = os.path.join(dir_with_json, "{}_original.json".format(case_name))
     if os.path.exists(cfg_json):
         with open(cfg_json) as f:
             test_json = json.loads(f.read().replace("\\", "\\\\"))
 
-        report_name = original_cfg_json.replace("original", "RPR")
+        report_name = cfg_json.replace("original", "RPR")
 
         report = core_config.RENDER_REPORT_BASE.copy()
         report.update(core_config.RENDER_REPORT_EC_PACK.copy())
@@ -110,12 +110,12 @@ def generate_json_for_report(original_cfg_json, dir_with_json):
         report['width'] = test_json['width']
         report['height'] = test_json['height']
         report['iterations'] = test_json['iteration']
+        report['group_timeout_exceeded'] = False
 
         with open(os.path.join(dir_with_json, report_name), 'r') as f:
             rpr_report = json.load(f)[0]
             report['tahoe_log'] = rpr_report['tahoe_log']
             report['core_scene_configuration'] = rpr_report['core_scene_configuration']
-            report['group_timeout_exceeded'] = rpr_report['group_timeout_exceeded']
         with open(os.path.join(dir_with_json, report_name), 'w') as f:
             json.dump([report], f, indent=' ')
 
@@ -205,14 +205,15 @@ def prepare_cases(args, cases, platform_config):
         skip_pass = sum(platform_config &
                         set(skip_config) == set(skip_config) for skip_config in case.get('skip_on', ''))
         case_status = TEST_IGNORE_STATUS if (skip_pass or case.get('status', '') == "skipped") else TEST_CRASH_STATUS
-        case['status'] = case_status
-        if 'aovs' in case:
-            set_aovs_group_status(case, case_status)
+        if case_status == TEST_IGNORE_STATUS:
+            case['status'] = case_status
+            if 'aovs' in case:
+                set_aovs_group_status(case, case_status)
         case_name = case['case']
         report = RENDER_REPORT_BASE.copy()
         report.update(RENDER_REPORT_EC_PACK.copy())
         report.update({'test_case': case_name,
-                       'test_status': case['status'],
+                       'test_status': case_status,
                        'test_group': args.package_name,
                        'scene_name': case_name,
                        'render_device': get_gpu(),
@@ -229,15 +230,15 @@ def prepare_cases(args, cases, platform_config):
         if case['status'] == TEST_IGNORE_STATUS:
             report.update({'group_timeout_exceeded': False})
 
-        with open(os.path.join(args.output, case_name + CASE_REPORT_SUFFIX), 'w') as file:
-            json.dump([report], file, indent=4)
-
         try:
             copyfile(
                 os.path.join(ROOT_DIR_PATH, 'jobs_launcher', 'common', 'img', report['test_status'] + ".png"),
                 os.path.join(args.output, 'Color', report['file_name']))
         except OSError or FileNotFoundError as err:
             main_logger.error("Can't create img stub: {}".format(str(err)))
+
+        with open(os.path.join(args.output, case_name + CASE_REPORT_SUFFIX), 'w') as file:
+            json.dump([report], file, indent=4)
 
         try:
             with open(os.path.join(args.res_path, args.package_name, case_name.replace('.rpr', '.json'))) as file:
@@ -251,7 +252,7 @@ def prepare_cases(args, cases, platform_config):
                 report = RENDER_REPORT_BASE.copy()
                 report.update(RENDER_REPORT_EC_PACK.copy())
                 report.update({'test_case': case_name + key,
-                               'test_status': case['status'],
+                               'test_status': case_status,
                                'test_group': args.package_name,
                                'render_device': get_gpu(),
                                'render_color_path': os.path.join('Color', value),
@@ -378,12 +379,12 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
 
             with open(os.path.join(args.output, case_name + CASE_REPORT_SUFFIX), 'w') as f:
                 json.dump(report, f, indent=4)
+            generate_json_for_report(case['case'], args.output)
             with open(test_cases_path, "w") as f:
                 case['status'] = "done"
                 if 'aovs' in case:
                     set_aovs_group_status(case, 'done')
                 json.dump(test_cases, f, indent=4)
-            generate_json_for_report(core_scene_configuration, args.output)
 
 
 def main():
@@ -395,6 +396,7 @@ def main():
         execute_cases(test_cases, test_cases_path, engine, platform_system, tool_path, args)
     except Exception as e:
         main_logger.error(str(e))
+        main_logger.error("Traceback: {}".format(traceback.format_exc()))
         exit(-1)
 
 

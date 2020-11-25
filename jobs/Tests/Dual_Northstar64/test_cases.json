@@ -1,6 +1,7 @@
 [
     {
         "scene": "CPU-Dual-Test.rpr",
-        "case": "CPU-Dual-Test_Northstar64"
+        "case": "CPU-Dual-Test_Northstar64",
+        "status": "skipped"
     }
 ]

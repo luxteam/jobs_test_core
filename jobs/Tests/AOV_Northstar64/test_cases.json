@@ -3,7 +3,7 @@
         "scene": "AOVTest.rpr",
         "case": "AOVTest_Northstar64",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"]
+            ["Darwin 10.14.6(64bit)"], ["Darwin 10.15.7(64bit)"]
         ]
     }
 ]
