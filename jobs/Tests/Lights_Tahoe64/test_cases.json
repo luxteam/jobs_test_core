@@ -1,22 +1,22 @@
 [
     {
         "scene": "Caustic_Single_Test.rpr",
-        "case": "Caustic_Single_Test.rpr"
+        "case": "Caustic_Single_Test_Tahoe64"
     },
     {
         "scene": "Directional_Light.rpr",
-        "case": "Directional_Light.rpr"
+        "case": "Directional_Light_Tahoe64"
     },
     {
         "scene": "IES_Light.rpr",
-        "case": "IES_Light.rpr"
+        "case": "IES_Light_Tahoe64"
     },
     {
         "scene": "Physical_Light.rpr",
-        "case": "Physical_Light.rpr"
+        "case": "Physical_Light_Tahoe64"
     },
     {
         "scene": "Portal_Light_Test.rpr",
-        "case": "Portal_Light_Test.rpr"
+        "case": "Portal_Light_Test_Tahoe64"
     }
 ]

@@ -1,10 +1,10 @@
 [
     {
         "scene": "InstanceMotionBlurTest.rpr",
-        "case": "InstanceMotionBlurTest.rpr"
+        "case": "InstanceMotionBlurTest_Northstar64"
     },
     {
         "scene": "MotionBlurTest.rpr",
-        "case": "MotionBlurTest.rpr"
+        "case": "MotionBlurTest_Northstar64"
     }
 ]

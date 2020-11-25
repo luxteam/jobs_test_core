@@ -1,10 +1,10 @@
 [
     {
         "scene": "IBL_Rotation.rpr",
-        "case": "IBL_Rotation.rpr"
+        "case": "IBL_Rotation_Tahoe64"
     },
     {
         "scene": "Sun_and_Sky.rpr",
-        "case": "Sun_and_Sky.rpr"
+        "case": "Sun_and_Sky_Tahoe64"
     }
 ]
