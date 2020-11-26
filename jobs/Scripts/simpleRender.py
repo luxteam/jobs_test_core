@@ -128,7 +128,7 @@ def generate_json_for_report(case_name, dir_with_json, engine):
                 elif type(value) is list:
                     report['file_name'] = value[0].split(os.path.sep)[-1]
                     report['render_color_path'] = value[0]
-                report['test_case'] = test_json['input'].split(os.path.sep)[-1] + key
+                report['test_case'] = case_name + key
 
                 with open(os.path.join(dir_with_json, report_name.replace('_RPR', key + '_RPR')), 'r') as file:
                     report['tahoe_log'] = json.load(file)[0]['tahoe_log']
