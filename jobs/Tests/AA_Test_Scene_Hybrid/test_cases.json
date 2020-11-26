@@ -1,0 +1,128 @@
+[
+    {
+        "scene": "AA_BlackmanHarris_3.rpr",
+        "case": "AA_BlackmanHarris_3_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_BlackmanHarris_2.rpr",
+        "case": "AA_BlackmanHarris_2_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_BlackmanHarris_1.rpr",
+        "case": "AA_BlackmanHarris_1_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Lanczos_3.rpr",
+        "case": "AA_Lanczos_3_Hybrid_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Lanczos_2.rpr",
+        "case": "AA_Lanczos_2_Hybrid_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Lanczos_1.rpr",
+        "case": "AA_Lanczos_1_Hybrid_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Gaussian_3.rpr",
+        "case": "AA_Gaussian_3_Hybrid_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Gaussian_2.rpr",
+        "case": "AA_Gaussian_2_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Gaussian_1.rpr",
+        "case": "AA_Gaussian_1_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Triangle_3.rpr",
+        "case": "AA_Triangle_3_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Triangle_2.rpr",
+        "case": "AA_Triangle_2_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Triangle_1.rpr",
+        "case": "AA_Triangle_1_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Box_3.rpr",
+        "case": "AA_Box_3_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Box_2.rpr",
+        "case": "AA_Box_2_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Box_1.rpr",
+        "case": "AA_Box_1_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Mitchel_3.rpr",
+        "case": "AA_Mitchel_3_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Mitchel_2.rpr",
+        "case": "AA_Mitchel_2_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    },
+    {
+        "scene": "AA_Mitchel_1.rpr",
+        "case": "AA_Mitchel_1_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"]
+        ]
+    }
+]

@@ -1,0 +1,66 @@
+[
+    {
+        "scene": "Max Diffuse 1.rpr",
+        "case": "Max Diffuse 1_Northstar64"
+    },
+    {
+        "scene": "Max Diffuse 2.rpr",
+        "case": "Max Diffuse 2_Northstar64"
+    },
+    {
+        "scene": "Max Diffuse 3.rpr",
+        "case": "Max Diffuse 3_Northstar64"
+    },
+    {
+        "scene": "Max Refraction 1.rpr",
+        "case": "Max Refraction 1_Northstar64"
+    },
+    {
+        "scene": "Max Refraction 2.rpr",
+        "case": "Max Refraction 2_Northstar64"
+    },
+    {
+        "scene": "Max Refraction 3.rpr",
+        "case": "Max Refraction 3_Northstar64"
+    },
+    {
+        "scene": "Max Shadow 1.rpr",
+        "case": "Max Shadow 1_Northstar64"
+    },
+    {
+        "scene": "Max Shadow 2.rpr",
+        "case": "Max Shadow 2_Northstar64"
+    },
+    {
+        "scene": "Max Shadow 3.rpr",
+        "case": "Max Shadow 3_Northstar64"
+    },
+    {
+        "scene": "RayDepth2.rpr",
+        "case": "RayDepth2_Northstar64"
+    },
+    {
+        "scene": "RayDepth3.rpr",
+        "case": "RayDepth3_Northstar64"
+    },
+    {
+        "scene": "RayDepth4.rpr",
+        "case": "RayDepth4_Northstar64"
+    },
+    {
+        "scene": "RayEpsilon0.rpr",
+        "case": "RayEpsilon0_Northstar64"
+    },
+    {
+        "scene": "RayEpsilon0_001.rpr",
+        "case": "RayEpsilon0_001_Northstar64"
+    },
+    {
+        "scene": "RayEpsilon0_01.rpr",
+        "case": "RayEpsilon0_01_Northstar64"
+    },
+    {
+        "scene": "RayEpsilon0_1.rpr",
+        "case": "RayEpsilon0_1_Northstar64"
+    }
+]

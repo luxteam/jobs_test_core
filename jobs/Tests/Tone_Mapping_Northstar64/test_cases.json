@@ -1,0 +1,30 @@
+[
+    {
+        "scene": "Tone Mapping Autolinear.rpr",
+        "case": "Tone Mapping Autolinear_Northstar64"
+    },
+    {
+        "scene": "Tone Mapping Linear.rpr",
+        "case": "Tone Mapping Linear_Northstar64"
+    },
+    {
+        "scene": "Tone Mapping MaxWhite.rpr",
+        "case": "Tone Mapping MaxWhite_Northstar64"
+    },
+    {
+        "scene": "Tone Mapping None.rpr",
+        "case": "Tone Mapping None_Northstar64"
+    },
+    {
+        "scene": "Tone Mapping Photolinear.rpr",
+        "case": "Tone Mapping Photolinear_Northstar64"
+    },
+    {
+        "scene": "Tone Mapping Reinhard02.rpr",
+        "case": "Tone Mapping Reinhard02_Northstar64"
+    },
+    {
+        "scene": "Tone Mapping White_Balance.rpr",
+        "case": "Tone Mapping White_Balance_Northstar64"
+    }
+]

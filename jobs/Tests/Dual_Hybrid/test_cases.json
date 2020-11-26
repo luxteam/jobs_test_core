@@ -1,0 +1,10 @@
+[
+    {
+        "scene": "CPU-Dual-Test.rpr",
+        "case": "CPU-Dual-Test_Hybrid",
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["Darwin 10.15.7(64bit)"]
+        ],
+        "status": "skipped"
+    }
+]

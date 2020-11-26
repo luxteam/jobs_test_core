@@ -1,0 +1,34 @@
+[
+    {
+        "scene": "RPR_Nodes.rpr",
+        "case": "RPR_Nodes_Tahoe64"
+    },
+    {
+        "scene": "Material_Test.rpr",
+        "case": "Material_Test_Tahoe64"
+    },
+    {
+        "scene": "Material_Test_NonSSS.rpr",
+        "case": "Material_Test_NonSSS_Tahoe64"
+    },
+    {
+        "scene": "Material_TestSSS.rpr",
+        "case": "Material_TestSSS_Tahoe64"
+    },
+    {
+        "scene": "SSSTypesTest.rpr",
+        "case": "SSSTypesTest_Tahoe64"
+    },
+    {
+        "scene": "PBR_Test.rpr",
+        "case": "PBR_Test_Tahoe64"
+    },
+    {
+        "scene": "Refraction.rpr",
+        "case": "Refraction_Tahoe64"
+    },
+    {
+        "scene": "Material_TestVolume.rpr",
+        "case": "Material_TestVolume_Tahoe64"
+    }
+]

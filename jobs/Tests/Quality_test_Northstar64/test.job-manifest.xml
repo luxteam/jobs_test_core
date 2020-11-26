@@ -12,7 +12,7 @@
         <argument>--output "{OutputDir}"</argument>
         <argument>--package_name "Quality_test_Northstar64"</argument>
         <argument>--res_path "{ScenesDir}"</argument>
-        <argument>--test_list "{Root}/Tests/Quality_test_Northstar64/SceneList.json"</argument>
+        <argument>--test_list "{Root}/Tests/Quality_test_Northstar64/test_cases.json"</argument>
         <argument>--update_refs "{UpdateRefs}"</argument>
     </execute>
 

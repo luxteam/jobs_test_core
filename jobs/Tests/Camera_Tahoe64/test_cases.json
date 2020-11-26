@@ -1,0 +1,22 @@
+[
+    {
+        "scene": "CameraTest.rpr",
+        "case": "CameraTest_Tahoe64"
+    },
+    {
+        "scene": "CubeMap.rpr",
+        "case": "CubeMap_Tahoe64"
+    },
+    {
+        "scene": "CubeMapStereo.rpr",
+        "case": "CubeMapStereo_Tahoe64"
+    },
+    {
+        "scene": "SpericalPanorama.rpr",
+        "case": "SpericalPanorama_Tahoe64"
+    },
+    {
+        "scene": "SpericalPanoramaStereo.rpr",
+        "case": "SpericalPanoramaStereo_Tahoe64"
+    }
+]
