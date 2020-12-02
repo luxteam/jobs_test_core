@@ -200,7 +200,7 @@ def configure_workdir(args, tests, engine):
         raise e
 
 # Prepare cases before execute
-def prepare_cases(args, cases, platform_config, engine):
+def prepare_cases(args, cases, platform_config, engine, test_cases_path):
     for case in cases:
         # there is list with lists of gpu/os/gpu&os in skip_on
         # for example: [['Darwin'], ['Windows', 'Radeon RX Vega'], ['GeForce GTX 1080 Ti']]
@@ -210,9 +210,11 @@ def prepare_cases(args, cases, platform_config, engine):
                         set(skip_config) == set(skip_config) for skip_config in case.get('skip_on', ''))
         case_status = TEST_IGNORE_STATUS if (skip_pass or case.get('status', '') == "skipped") else TEST_CRASH_STATUS
         if case_status == TEST_IGNORE_STATUS:
-            case['status'] = case_status
-            if 'aovs' in case:
-                set_aovs_group_status(case, case_status)
+            with open(test_cases_path, "w") as f:
+                case['status'] = case_status
+                if 'aovs' in case:
+                    set_aovs_group_status(case, case_status)
+                json.dump(cases, f, indent=4)
         report = RENDER_REPORT_BASE.copy()
         report.update(RENDER_REPORT_EC_PACK.copy())
         report.update({'test_case': case['case'],
@@ -396,7 +398,7 @@ def main():
     platform_system, engine, tool_path, render_platform = configure_context(args)
     try:
         test_cases, test_cases_path = configure_workdir(args, args.test_list, engine)  # configure workdir
-        prepare_cases(args, test_cases, render_platform, engine)
+        prepare_cases(args, test_cases, render_platform, engine, test_cases_path)
         execute_cases(test_cases, test_cases_path, engine, platform_system, tool_path, args)
     except Exception as e:
         main_logger.error(str(e))
