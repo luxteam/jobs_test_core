@@ -45,11 +45,13 @@
     },
     {
         "scene": "Blender_2_81_the_junk_Shop/Blender_2_81_the_junk_Shop.rpr",
-        "case": "Blender_2_81_the_junk_Shop_Northstar64"
+        "case": "Blender_2_81_the_junk_Shop_Northstar64",
+        "status": "skipped"
     },
     {
         "scene": "compound_collision_chain/compound_collision_chain.rpr",
-        "case": "compound_collision_chain_Northstar64"
+        "case": "compound_collision_chain_Northstar64",
+        "status": "skipped"
     },
     {
         "scene": "motion_blur/motion_blur.rpr",
