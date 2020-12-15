@@ -14,7 +14,7 @@
         <argument>--res_path "{ScenesDir}"</argument>
         <argument>--test_list "{Root}/Tests/Performance_Northstar64/test_cases.json"</argument>
         <argument>--update_refs "{UpdateRefs}"</argument>
-        <argument>--timeout 1800</argument>
+        <argument>--timeout 3600</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}/makeReport.py"'>
