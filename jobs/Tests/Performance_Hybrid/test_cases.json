@@ -26,5 +26,33 @@
         "skip_on": [
             ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Darwin 10.15.7(64bit)"]
         ]
+    },
+    {
+        "scene": "3_BridgeBooble/3_BridgeBooble.rpr",
+        "case": "3_BridgeBooble_Northstar64"
+    },
+    {
+        "scene": "Car_Demo/Car_Demo.rpr",
+        "case": "Car_Demo_Northstar64"
+    },
+    {
+        "scene": "Chevrolet/Chevrolet.rpr",
+        "case": "Chevrolet_Northstar64"
+    },
+    {
+        "scene": "Tree_Creature/Tree_Creature.rpr",
+        "case": "Tree_Creature_Northstar64"
+    },
+    {
+        "scene": "Blender_2_81_the_junk_Shop/Blender_2_81_the_junk_Shop.rpr",
+        "case": "Blender_2_81_the_junk_Shop_Northstar64"
+    },
+    {
+        "scene": "compound_collision_chain/compound_collision_chain.rpr",
+        "case": "compound_collision_chain_Northstar64"
+    },
+    {
+        "scene": "motion_blur/motion_blur.rpr",
+        "case": "motion_blur_Northstar64"
     }
 ]
