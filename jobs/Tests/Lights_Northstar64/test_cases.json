@@ -14,9 +14,5 @@
     {
         "scene": "Physical_Light.rpr",
         "case": "Physical_Light_Northstar64"
-    },
-    {
-        "scene": "Portal_Light_Test.rpr",
-        "case": "Portal_Light_Test_Northstar64"
     }
 ]
