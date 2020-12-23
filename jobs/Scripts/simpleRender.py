@@ -379,7 +379,7 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
             except Exception as e:
                 main_logger.error(str(e))
 
-            core_scene_configuration = "cfg_{}.json".format(case['scene'].split('/')[-1])
+            core_scene_configuration = "cfg_{}.json".format(case['case'])
             if os.path.exists(core_scene_configuration):
                 report[0]["core_scene_configuration"] = core_scene_configuration
 
