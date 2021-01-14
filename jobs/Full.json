@@ -32,8 +32,6 @@
         "CPU_Northstar64":"",
         "Dual_Hybrid":"",
         "Dual_Tahoe64":"",
-        "Dual_Northstar64":"",
-        "Performance_Tahoe64":"",
-        "Performance_Northstar64":""
+        "Dual_Northstar64":""
     }
 }
