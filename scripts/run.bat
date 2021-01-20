@@ -13,4 +13,4 @@ if not defined UPDATE_REFS set UPDATE_REFS="No"
 
 python -m pip install -r ../jobs_launcher/install/requirements.txt
 
-python ..\jobs_launcher\executeTests.py --file_filter %FILE_FILTER% --test_filter %TESTS_FILTER% --tests_root ..\jobs --work_root ..\Work\Results --work_dir Core --cmd_variables Tool "..\\rprSdk\\RprsRender64.exe" RenderDevice gpu ResPath "C:\TestResources\CoreAssets" PassLimit %PASS_LIMIT% rx %RX% ry %RY% UpdateRefs %UPDATE_REFS%
+python ..\jobs_launcher\executeTests.py --file_filter %FILE_FILTER% --test_filter %TESTS_FILTER% --tests_root ..\jobs --work_root ..\Work\Results --work_dir Core --cmd_variables Tool "..\\rprSdk\\RprsRender64.exe" RenderDevice gpu ResPath "C:\TestResources\rpr_core" PassLimit %PASS_LIMIT% rx %RX% ry %RY% UpdateRefs %UPDATE_REFS%
