@@ -9,7 +9,10 @@
     },
     {
         "scene": "Material_Test_NonSSS.rpr",
-        "case": "Material_Test_NonSSS_Tahoe64"
+        "case": "Material_Test_NonSSS_Tahoe64",
+        "skip_on": [
+            ["Ubuntu 18.04(64bit)", "AMD Radeon VII"], ["Ubuntu 20.04(64bit)", "AMD Radeon VII"]
+        ]
     },
     {
         "scene": "Material_TestSSS.rpr",
