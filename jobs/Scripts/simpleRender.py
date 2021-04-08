@@ -362,14 +362,18 @@ def execute_cases(test_cases, test_cases_path, engine, platform_system, tool_pat
 
             report[0]["group_timeout_exceeded"] = False
 
-            with open("render_log.txt", 'a', encoding='utf-8') as file:
-                stdout = stdout.decode("utf-8")
-                file.write(stdout)
+            try:
+                with open("render_log.txt", 'a', encoding='utf-8') as file:
+                    stdout = stdout.decode("utf-8")
+                    file.write(stdout)
 
-            with open("render_log.txt", 'a', encoding='utf-8') as file:
-                file.write("\n ----STEDERR---- \n")
-                stderr = stderr.decode("utf-8")
-                file.write(stderr)
+                with open("render_log.txt", 'a', encoding='utf-8') as file:
+                    file.write("\n ----STEDERR---- \n")
+                    stderr = stderr.decode("utf-8")
+                    file.write(stderr)
+            except Exception as e:
+                main_logger.error("Failed to save logs")
+                main_logger.error(str(e))
 
             try:
                 if os.path.exists("tahoe.log"):
