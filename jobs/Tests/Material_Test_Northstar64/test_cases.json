@@ -25,7 +25,8 @@
     },
     {
         "scene": "Refraction.rpr",
-        "case": "Refraction_Northstar64"
+        "case": "Refraction_Northstar64",
+        "status": "skipped"
     },
     {
         "scene": "Material_TestVolume.rpr",
