@@ -61,6 +61,7 @@
     },
     {
         "scene": "RayEpsilon0_1.rpr",
-        "case": "RayEpsilon0_1_Northstar64"
+        "case": "RayEpsilon0_1_Northstar64",
+        "status": "skipped"
     }
 ]
