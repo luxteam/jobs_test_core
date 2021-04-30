@@ -26,7 +26,9 @@
     {
         "scene": "Refraction.rpr",
         "case": "Refraction_Northstar64",
-        "status": "skipped"
+        "skip_on": [
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Ubuntu 20.04(64bit)"], ["Darwin 10.15.7(64bit)"], ["Darwin 10.16(64bit)"]
+        ]
     },
     {
         "scene": "Material_TestVolume.rpr",

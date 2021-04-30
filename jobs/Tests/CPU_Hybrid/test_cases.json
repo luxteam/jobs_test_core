@@ -2,9 +2,9 @@
     {
         "scene": "CPU-Dual-Test.rpr",
         "case": "CPU-Dual-Test_Hybrid",
-        "status": "skipped",
+        "status": "active",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"], ["Darwin 10.16(64bit)"]
+            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Ubuntu 20.04(64bit)"], ["Darwin 10.15.7(64bit)"], ["Darwin 10.16(64bit)"]
         ]
     }
 ]
