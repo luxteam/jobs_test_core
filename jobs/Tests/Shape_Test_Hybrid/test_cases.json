@@ -3,7 +3,7 @@
         "scene": "Instances_multi_materials.rpr",
         "case": "Instances_multi_materials_Hybrid",
         "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["GeForce RTX 2080 Ti"], ["Ubuntu 18.04(64bit)"], ["Darwin 10.16(64bit)"]
+            ["Darwin 10.14.6(64bit)"], ["GeForce GTX 980"], ["Darwin 10.15.7(64bit)"], ["Ubuntu 18.04(64bit)"], ["Darwin 10.16(64bit)"]
         ]
     }
 ]
