@@ -3,7 +3,7 @@
 
     <outpath value="{OutputDir}"/>
 
-    <execute command='python "{ResourcesDir}/simpleRender.py"'>
+    <execute command='python "{ResourcesDir}/simpleRender.py"' timeout="6000">
         <argument>--tool "{Tool}"</argument>
         <argument>--render_mode "{RenderDevice}"</argument>
         <argument>--pass_limit {PassLimit}</argument>
