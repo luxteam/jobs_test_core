@@ -6,16 +6,12 @@
     {
         "scene": "CubeMap.rpr",
         "case": "CubeMap_Northstar64",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Ubuntu 20.04(64bit)"], ["Darwin 10.15.7(64bit)"], ["Darwin 10.16(64bit)"]
-        ]
+        "status": "skipped"
     },
     {
         "scene": "CubeMapStereo.rpr",
         "case": "CubeMapStereo_Northstar64",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Ubuntu 20.04(64bit)"], ["Darwin 10.15.7(64bit)"], ["Darwin 10.16(64bit)"]
-        ]
+        "status": "skipped"
     },
     {
         "scene": "SpericalPanorama.rpr",
