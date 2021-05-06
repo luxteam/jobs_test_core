@@ -58,16 +58,12 @@
     {
         "scene": "Blender_2_81_the_junk_Shop/Blender_2_81_the_junk_Shop.rpr",
         "case": "Blender_2_81_the_junk_Shop_Northstar64",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Ubuntu 20.04(64bit)"], ["Darwin 10.15.7(64bit)"]
-        ]
+        "status": "skipped"
     },
     {
         "scene": "compound_collision_chain/compound_collision_chain.rpr",
         "case": "compound_collision_chain_Northstar64",
-        "skip_on": [
-            ["Darwin 10.14.6(64bit)"], ["Ubuntu 18.04(64bit)"], ["Ubuntu 20.04(64bit)"], ["Darwin 10.15.7(64bit)"]
-        ]
+        "status": "skipped"
     },
     {
         "scene": "motion_blur/motion_blur.rpr",
